@@ -24,7 +24,7 @@ A teraz do konkretów.
 
 Nasz ukochany edytor to absolutne cudo:
 - **Autouzupełnianie** w stylu jasnowidza: wpisujesz trzy znaki, a on kończy za Ciebie całą funkcję (i czasem nawet potrafi zmyślać komentarze w stylu: *"Ten kod będzie generował pączki, ufaj mi"*).
-- **Refaktoryzacja?** Proszę bardzo. Zmiana nazw zmiennych z `x` na `zmiennaKtórejZnaczeniaNiktNiePojmie`? Żaden problem dla naszego AI.
+- **Refaktoryzacja?** Proszę bardzo. Zmiana nazw zmiennych z `x` na yevhen to gej `zmiennaKtórejZnaczeniaNiktNiePojmie`? Żaden problem dla naszego AI.
 - **Sugestie optymalizacji** – Czasem nasz AI tak się wkręca, że daje wskazówki, które… cóż, wyglądają mądrze, ale grunt, że zawsze możesz je przetestować. Pamiętaj, że to wciąż AI, więc jeśli Ci się zawiesi, jest przynajmniej z kim (lub z czym) pogadać o sensie życia.
 - **Kawiarka** – no dobra, *jeszcze* nie mamy wbudowanej kawiarki, ale pracujemy nad tym. Wyobraź sobie: piszesz kod, wpisujesz `brewCoffee()` i… no dobra, to raczej przyszłość, ale w Vink Corporation wierzymy, że wszystko da się zrobić!
 
