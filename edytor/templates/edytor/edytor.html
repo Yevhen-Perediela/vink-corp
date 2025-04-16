@@ -10,8 +10,24 @@
 <body>
     <header>
         <h1>Edytor</h1>
+        <input type="text" placeholder="Wyszukaj...">
+        <span>
+            <button id="czat">Czat</button>
+            <button id="to-do">to-do</button>
+            <button id="AI">AI</button>
+        </span>
     </header>
     <div id="main-wrap">
+        <div id="small-menu">
+            <div id="small-menu-top">
+                <img src="{% static 'img/folders.png' %}">
+                <img src="{% static 'img/github.png' %}">
+            </div>
+            <div id="small-menu-bottom">
+                <img id='sett' src="{% static 'img/settings.png' %}">
+                <img id='ava' src="{% static 'img/avatar.png' %}">
+            </div>
+        </div>
         <div id="menu">
             <p> → plik 1</p>
             <p> → → plik 3</p>
@@ -22,9 +38,6 @@
             Czat
         </div>
     </div>
-    <footer>
-        j
-    </footer>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
     <script src="{% static 'edytor.js' %}"></script>
 </body>
