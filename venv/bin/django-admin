@@ -1,4 +1,4 @@
-#!/home/yevhen/Dokumenty/vink-corp/vink/venv/bin/py
+#!/home/yevhen/Dokumenty/vink-corp/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
