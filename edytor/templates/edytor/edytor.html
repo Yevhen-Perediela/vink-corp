@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edytor</title>
+    <link rel="stylesheet" href="{% static 'edytor.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Edytor</h1>
+    </header>
+    <div id="main-wrap">
+        <div id="menu">
+            <p> → plik 1</p>
+            <p> → → plik 3</p>
+            <p> → plik 2</p>
+        </div>
+        <div id="editor"></div>
+        <div id="chatgpt">
+            Czat
+        </div>
+    </div>
+    <footer>
+        j
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+    <script src="{% static 'edytor.js' %}"></script>
+</body>
+</html>    
