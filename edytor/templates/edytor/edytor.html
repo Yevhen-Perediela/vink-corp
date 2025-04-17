@@ -20,18 +20,22 @@
     <div id="main-wrap">
         <div id="small-menu">
             <div id="small-menu-top">
-                <img src="{% static 'img/folders.png' %}">
-                <img src="{% static 'img/github.png' %}">
+                <img src="{% static 'img/folders.png' %}" onclick="showFolders(this)">
+                <img src="{% static 'img/github.png' %}" onclick="showGit()">
             </div>
             <div id="small-menu-bottom">
                 <img id='sett' src="{% static 'img/settings.png' %}">
                 <img id='ava' src="{% static 'img/avatar.png' %}">
             </div>
         </div>
-        <div id="menu">
+        <div class="menu" id="folders">
             <p> → plik 1</p>
             <p> → → plik 3</p>
             <p> → plik 2</p>
+        </div>
+        <div class="menu" id="github">
+            <input type="text" placeholder="Link do repo..." id="repoUrl">
+            <button id="git" onclick="loadRepoTree()">Wczytaj</button>
         </div>
         <div id="editor"></div>
         <div id="chatgpt">
@@ -40,5 +44,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
     <script src="{% static 'edytor.js' %}"></script>
+    <script src="{% static 'edytor-frontend.js' %}"></script>
 </body>
 </html>    

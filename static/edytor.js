@@ -2,7 +2,7 @@ require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45
   require(['vs/editor/editor.main'], function () {
     window.editor = monaco.editor.create(document.getElementById('editor'), {
       value: `// Hello, Vink 👋\nconsole.log("Edit me!");`,
-      language: 'javascript',
+      language: 'python',
       theme: 'vs-dark',
       automaticLayout: true,
     });

@@ -17,8 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from .api import get_repo_tree, get_file_from_github
 
 
 urlpatterns = [
-    path('', views.edytor, name='edytor')
+    path('', views.edytor, name='edytor'),
+    path('api/github-tree/', get_repo_tree),
+    path('api/github-file/', get_file_from_github),
 ]

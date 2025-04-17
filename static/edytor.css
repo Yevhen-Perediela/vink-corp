@@ -78,13 +78,16 @@ h1{
     filter: invert(100%);
     width: 30px;
 }
-#menu{
+.menu{
     width: 15%;
     height: 95vh;
     border-right: 1px solid rgb(136, 136, 136);
     color: white;
     padding: 20px;
     box-sizing: border-box;
+}
+#github{
+    display: none;
 }
 #editor{
     width: 65%;
@@ -94,4 +97,29 @@ h1{
     width: 20%;
     height: 95vh;
     border-left: 1px solid rgb(136, 136, 136);
+}
+
+
+
+.tree-item {
+    cursor: pointer;
+    padding-left: 10px;
+    user-select: none;
+}
+
+.folder::before {
+content: "📁 ";
+}
+
+.file::before {
+content: "📄 ";
+}
+
+.nested {
+display: none;
+padding-left: 15px;
+}
+
+.active {
+display: block;
 }
