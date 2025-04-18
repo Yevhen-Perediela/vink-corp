@@ -40,7 +40,12 @@
         </div>
         <div id="editor"></div>
         <div id="chatgpt">
-            Czat
+            <div id="chat-messages" style="height: 90%; overflow-y: auto; color: white; padding: 10px;"></div>
+                <div id="chat-input" style="padding: 10px;">
+                    <input type="text" id="user-input" placeholder="Napisz coś..." style="width: 70%;">
+                    <button onclick="sendChatMessage()">Wyślij</button>
+        </div>
+
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>

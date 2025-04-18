@@ -24,4 +24,5 @@ urlpatterns = [
     path('', views.edytor, name='edytor'),
     path('api/github-tree/', get_repo_tree),
     path('api/github-file/', get_file_from_github),
+    path('', views.chat_view, name='chat_view'),
 ]
