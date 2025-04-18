@@ -93,6 +93,9 @@ h1{
     width: 65%;
     height: 95vh;
 }
+#folders{
+    overflow-y: auto;
+}
 #chatgpt{
     width: 20%;
     height: 95vh;
@@ -123,3 +126,11 @@ padding-left: 15px;
 .active {
 display: block;
 }
+
+.icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  

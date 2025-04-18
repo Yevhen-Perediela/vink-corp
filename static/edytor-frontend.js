@@ -2,6 +2,54 @@ var git = document.getElementById("github");
 var edytor = document.getElementById("editor");
 var folders = document.getElementById("folders");
 
+const extensionToLanguage = {
+    'py': 'python',
+    'js': 'javascript',
+    'ts': 'typescript',
+    'html': 'html',
+    'css': 'css',
+    'json': 'json',
+    'php': 'php',
+    'md': 'markdown',
+    'sh': 'shell',
+    'c': 'c',
+    'cpp': 'cpp',
+    'java': 'java',
+    'cs': 'csharp',
+    'txt': 'plaintext',
+};
+const extensionToIconURL = {
+    'py': 'file_type_python.svg',
+    'js': 'file_type_js.svg',
+    'ts': 'file_type_typescript.svg',
+    'html': 'file_type_html.svg',
+    'css': 'file_type_css.svg',
+    'json': 'file_type_json.svg',
+    'php': 'file_type_php.svg',
+    'md': 'file_type_markdown.svg',
+    'sh': 'file_type_shell.svg',
+    'c': 'file_type_c.svg',
+    'cpp': 'file_type_cpp.svg',
+    'java': 'file_type_java.svg',
+    'cs': 'file_type_csharp.svg',
+    'txt': 'file_type_text.svg',
+    'default': 'default_file.svg',
+};
+
+function getIconURL(extension) {
+    const filename = extensionToIconURL[extension] || extensionToIconURL['default'];
+    return `https://cdn.jsdelivr.net/npm/vscode-icons@11.11.0/icons/${filename}`;
+}
+
+
+function setLanguageByFilename(filename) {
+    const ext = filename.split('.').pop();
+    const language = extensionToLanguage[ext] || 'plaintext';
+    monaco.editor.setModelLanguage(editor.getModel(), language);
+}
+
+
+
 function showFolders(el) {
     if (folders.style.display === "block") {
         folders.style.display = "none";
@@ -27,15 +75,29 @@ function showGit(el) {
 
 
 function loadRepoTree() {
-    const url = document.getElementById('repoUrl').value;
+    const url = localStorage.getItem('cur-repoUrl') || document.getElementById('repoUrl').value;
     localStorage.setItem('cur-repoUrl', url);
+
     fetch(`/edytor/api/github-tree/?url=${encodeURIComponent(url)}`)
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error("Nie udało się pobrać repozytorium.");
+            return res.json();
+        })
         .then(tree => {
-            const files = tree.filter(entry => entry.type === 'blob');
-            renderFileTree(files);
+            if (!Array.isArray(tree)) {
+                console.error("Nieprawidłowa odpowiedź API:", tree);
+                alert(tree.error || "Wystąpił błąd przy ładowaniu repo.");
+                return;
+            }
+            // NIE twórz już zmiennej files!
+            renderFileTree(tree);  // <-- tutaj przekazujemy całe drzewo (foldery + pliki)
+        })
+        .catch(err => {
+            alert("Błąd podczas ładowania repo: " + err.message);
         });
 }
+
+loadRepoTree()
 
 
 function loadFile(path) {
@@ -45,6 +107,7 @@ function loadFile(path) {
         .then(data => {
             if (data.content) {
                 editor.setValue(data.content);
+                setLanguageByFilename(data.filename);
             }
         });
 }
@@ -72,30 +135,36 @@ function renderFileTree(tree) {
     function createTreeNode(obj, name = '') {
         const div = document.createElement('div');
         const isFile = obj.__file;
+    
         if (isFile) {
-            div.textContent = name;
+            const ext = name.split('.').pop().toLowerCase();
+            const iconURL = getIconURL(ext);
             div.classList.add('tree-item', 'file');
+            div.innerHTML = `<img src="${iconURL}" class="icon"> ${name}`;
             div.onclick = () => loadFile(obj.path);
         } else {
+            const iconURL = "https://cdn.jsdelivr.net/npm/vscode-icons@11.11.0/icons/default_folder.svg";
             const summary = document.createElement('div');
-            summary.textContent = name;
             summary.classList.add('tree-item', 'folder');
+            summary.innerHTML = `<img src="${iconURL}" class="icon"> ${name}`;
             summary.onclick = () => nested.classList.toggle('active');
-
+    
             const nested = document.createElement('div');
             nested.classList.add('nested');
-
+    
             Object.keys(obj).forEach(childName => {
                 if (childName !== '__file') {
                     nested.appendChild(createTreeNode(obj[childName], childName));
                 }
             });
-
+    
             div.appendChild(summary);
             div.appendChild(nested);
         }
+    
         return div;
     }
+    
 
     Object.keys(root).forEach(name => {
         container.appendChild(createTreeNode(root[name], name));
