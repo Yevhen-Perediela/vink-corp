@@ -93,7 +93,9 @@ h1{
     width: 65%;
     height: 95vh;
 }
-
+#folders{
+    overflow-y: auto;
+}
 #chatgpt {
     width: 20%;
     height: 95vh;
@@ -121,6 +123,40 @@ h1{
     color: white;
     margin-left: 5px;
 }
+.user-message {
+    background-color: #333;
+    align-self:flex-end;
+    text-align: right;
+    color: white;
+    padding: 4%;
+    border-radius: 15px;
+}
+
+.ai-message {
+    align-self: flex-start;
+    color: white;
+    padding: 4%;
+}
+.chat-message {
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 80%;
+    width: fit-content;         /* szerokosc do zawartości */
+    word-wrap: break-word;      /* łamie długie słowa */
+    white-space: pre-wrap;      /* zachowuje \n i spacje */
+    line-height: 1.4;
+    font-size: 14px;
+}
+#chat-messages {
+    padding: 10px;
+    overflow-y: auto;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
 
 
 .tree-item {
@@ -146,3 +182,10 @@ padding-left: 15px;
 display: block;
 }
 
+.icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  

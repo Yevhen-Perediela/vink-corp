@@ -170,3 +170,49 @@ function renderFileTree(tree) {
         container.appendChild(createTreeNode(root[name], name));
     });
 }
+const chatBox = document.getElementById('chat-messages');
+const chatInput = document.getElementById('user-input');
+
+function sendChatMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    appendMessage("You", message);
+    chatInput.value = "";
+
+    fetch("/edytor/api/ai/chat/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt: message })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.response) {
+            appendMessage("AI", data.response);
+        } else {
+            appendMessage("AI", "Brak odpowiedzi.");
+        }
+    })
+    .catch(() => {
+        appendMessage("AI", "Wystąpił błąd sieci.");
+    });
+}
+
+function appendMessage(who, text) {
+    const msg = document.createElement("div");
+    msg.classList.add('chat-message');
+    if (who === "You") {
+        msg.classList.add('user-message');
+    } else {
+        msg.classList.add('ai-message');
+    }
+    msg.innerHTML = `${text}`;    
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+window.addEventListener("load", () => {
+    appendMessage("You", "Co potrafisz?");
+    appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
+});
