@@ -20,5 +20,5 @@ from todo import views
 
 
 urlpatterns = [
-    path('', views.home, name='main-todo')
+    path('', views.main, name='main-todo')
 ]
