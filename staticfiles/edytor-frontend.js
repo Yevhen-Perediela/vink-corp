@@ -19,27 +19,28 @@ const extensionToLanguage = {
     'txt': 'plaintext',
 };
 const extensionToIconURL = {
-    'py': 'file_type_python.svg',
-    'js': 'file_type_js.svg',
-    'ts': 'file_type_typescript.svg',
-    'html': 'file_type_html.svg',
-    'css': 'file_type_css.svg',
-    'json': 'file_type_json.svg',
-    'php': 'file_type_php.svg',
-    'md': 'file_type_markdown.svg',
-    'sh': 'file_type_shell.svg',
-    'c': 'file_type_c.svg',
-    'cpp': 'file_type_cpp.svg',
-    'java': 'file_type_java.svg',
-    'cs': 'file_type_csharp.svg',
-    'txt': 'file_type_text.svg',
-    'default': 'default_file.svg',
+    'py': 'python/python-original.svg',
+    'js': 'javascript/javascript-original.svg',
+    'ts': 'typescript/typescript-original.svg',
+    'html': 'html5/html5-original.svg',
+    'css': 'css3/css3-original.svg',
+    'json': 'code/code-original.svg',
+    'php': 'php/php-original.svg',
+    'md': 'markdown/markdown-original.svg',
+    'sh': 'bash/bash-original.svg',
+    'c': 'c/c-original.svg',
+    'cpp': 'cplusplus/cplusplus-original.svg',
+    'java': 'java/java-original.svg',
+    'cs': 'csharp/csharp-original.svg',
+    'txt': 'code/code-original.svg',
+    'default': 'java/folder-original.svg',
 };
 
 function getIconURL(extension) {
     const filename = extensionToIconURL[extension] || extensionToIconURL['default'];
-    return `https://cdn.jsdelivr.net/npm/vscode-icons@11.11.0/icons/${filename}`;
+    return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${filename}`;
 }
+
 
 
 function setLanguageByFilename(filename) {
@@ -143,10 +144,10 @@ function renderFileTree(tree) {
             div.innerHTML = `<img src="${iconURL}" class="icon"> ${name}`;
             div.onclick = () => loadFile(obj.path);
         } else {
-            const iconURL = "https://cdn.jsdelivr.net/npm/vscode-icons@11.11.0/icons/default_folder.svg";
+            const iconURL = "https://github.com/vscode-icons/vscode-icons/default_folder.svg";
             const summary = document.createElement('div');
             summary.classList.add('tree-item', 'folder');
-            summary.innerHTML = `<img src="${iconURL}" class="icon"> ${name}`;
+            summary.innerHTML = ` ${name}`;
             summary.onclick = () => nested.classList.toggle('active');
     
             const nested = document.createElement('div');

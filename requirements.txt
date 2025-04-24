@@ -1,4 +1,4 @@
-openai
+openai~=1.75.0
 python-dotenv
 djangorestframework
 requests

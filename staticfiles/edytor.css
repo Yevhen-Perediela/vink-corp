@@ -169,9 +169,7 @@ h1{
 content: "📁 ";
 }
 
-.file::before {
-content: "📄 ";
-}
+
 
 .nested {
 display: none;
