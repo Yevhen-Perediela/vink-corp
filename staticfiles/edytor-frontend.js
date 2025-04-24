@@ -19,45 +19,26 @@ const extensionToLanguage = {
     'txt': 'plaintext',
 };
 const extensionToIconURL = {
-    'py': 'file_type_python.svg',
-    'js': 'file_type_js.svg',
-    'ts': 'file_type_typescript.svg',
-    'html': 'file_type_html.svg',
-    'css': 'file_type_css.svg',
-    'json': 'file_type_json.svg',
-    'php': 'file_type_php.svg',
-    'md': 'file_type_markdown.svg',
-    'sh': 'file_type_shell.svg',
-    'c': 'file_type_c.svg',
-    'cpp': 'file_type_cpp.svg',
-    'java': 'file_type_java.svg',
-    'cs': 'file_type_csharp.svg',
-    'txt': 'file_type_text.svg',
-    'default': 'default_file.svg',
+    'py': 'python/python-original.svg',
+    'js': 'javascript/javascript-original.svg',
+    'ts': 'typescript/typescript-original.svg',
+    'html': 'html5/html5-original.svg',
+    'css': 'css3/css3-original.svg',
+    'json': 'code/code-original.svg',
+    'php': 'php/php-original.svg',
+    'md': 'markdown/markdown-original.svg',
+    'sh': 'bash/bash-original.svg',
+    'c': 'c/c-original.svg',
+    'cpp': 'cplusplus/cplusplus-original.svg',
+    'java': 'java/java-original.svg',
+    'cs': 'csharp/csharp-original.svg',
+    'txt': 'code/code-original.svg',
+    'default': 'java/folder-original.svg',
 };
 
 function getIconURL(extension) {
-    // Mapowanie rozszerzeń na klasy FontAwesome
-    const extensionToIconClass = {
-        'py': 'fab fa-python',     // Ikona Pythona
-        'js': 'fab fa-js',         // Ikona JavaScriptu
-        'ts': 'fab fa-js',         // Ikona TypeScriptu
-        'html': 'fas fa-file-code', // Ikona HTML
-        'css': 'fas fa-file-code', // Ikona CSS
-        'json': 'fas fa-file-code', // Ikona JSON
-        'php': 'fab fa-php',       // Ikona PHP
-        'md': 'fas fa-file-alt',   // Ikona Markdown
-        'sh': 'fas fa-terminal',   // Ikona Shell
-        'c': 'fas fa-file-code',   // Ikona C
-        'cpp': 'fab fa-cuttlefish', // Ikona C++
-        'java': 'fab fa-java',     // Ikona Java
-        'cs': 'fab fa-microsoft',  // Ikona C#
-        'txt': 'fas fa-file-alt',  // Ikona Text
-        'default': 'fas fa-file'   // Domyślna ikona pliku
-    };
-
-    // Zwróć odpowiednią klasę FontAwesome na podstawie rozszerzenia
-    return extensionToIconClass[extension] || extensionToIconClass['default'];
+    const filename = extensionToIconURL[extension] || extensionToIconURL['default'];
+    return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${filename}`;
 }
 
 
@@ -168,10 +149,10 @@ function renderFileTree(tree) {
             div.innerHTML = `<i class="${iconClass}"></i> ${name}`;  // Ikona FontAwesome
             div.onclick = () => loadFile(obj.path);
         } else {
-            const iconClass = "fas fa-folder";  // Ikona folderu
+            const iconURL = "https://github.com/vscode-icons/vscode-icons/default_folder.svg";
             const summary = document.createElement('div');
             summary.classList.add('tree-item', 'folder');
-            summary.innerHTML = `<i class="${iconClass}"></i> ${name}`;
+            summary.innerHTML = ` ${name}`;
             summary.onclick = () => nested.classList.toggle('active');
     
             const nested = document.createElement('div');
