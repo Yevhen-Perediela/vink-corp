@@ -110,13 +110,9 @@ h1{
     user-select: none;
 }
 
-.folder::before {
-content: "📁 ";
-}
+vtbyn
 
-.file::before {
-content: "📄 ";
-}
+
 
 .nested {
 display: none;
@@ -134,3 +130,33 @@ display: block;
     margin-right: 6px;
   }
   
+
+
+
+
+/* Kolory dla poszczególnych rozszerzeń */
+.fab.fa-python {
+    color: #306998; /* Kolor Pythona */
+}
+
+.fab.fa-js {
+    color: #f7df1e; /* Kolor JavaScriptu */
+}
+
+.fab.fa-php {
+    color: #8e44ad; /* Kolor PHP */
+}
+
+.fas.fa-file-code {
+    color: #28a745; /* Kolor dla plików kodu (HTML, CSS, JS itd.) */
+}
+
+.fas.fa-file-alt {
+    color: #f39c12; /* Kolor Markdown */
+}
+
+.fas.fa-terminal {
+    color: #2d3436; /* Kolor dla plików Shell */
+}
+
+/* Możesz również dodać inne kolory dla pozostałych ikon */
