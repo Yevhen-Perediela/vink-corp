@@ -1,1 +1,56 @@
-``
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Edytor</h1>
+        <input type="text" placeholder="Wyszukaj...">
+        <span>
+            <button id="czat">Czat</button>
+            <button id="to-do">to-do</button>
+        </span>
+    </header>
+    <div id="main-wrap">
+        <div id="small-menu">
+            <div id="small-menu-top">
+                <img src="{% static 'img/folders.png' %}" onclick="showFolders(this)">
+                <img src="{% static 'img/github.png' %}" onclick="showGit()">
+            </div>
+            <div id="small-menu-bottom">
+                <img id='sett' src="{% static 'img/settings.png' %}">
+                <img id='ava' src="{% static 'img/avatar.png' %}">
+            </div>
+        </div>
+        <div id="chatgpt">
+            <div id="chat-messages" style="height: 90%; overflow-y: auto; color: white; padding: 10px;"></div>
+                <div id="chat-input" style="padding: 10px;">
+                    <input type="text" id="user-input" placeholder="Napisz coś..." style="width: 70%;">
+                    <button onclick="sendChatMessage()">Wyślij</button>
+            </div>
+        </div>
+        <div class="menu" id="github">
+            <input type="text" placeholder="Link do repo..." id="repoUrl">
+            <button id="git" onclick="loadRepoTree()">Wczytaj</button>
+        </div>
+        <div class="todo">
+            <div class="todo_panel">
+                <button onclick="changeToDoView('canban')">Canban</button> | <button onclick="changeToDoView('list')">List</button> | <button onclick="changeToDoView('kalendarz')">Kalendarz</button> | <button onclick="changeToDoView('mind_board')">Mind board</button> | <button onclick="changeToDoView('whiteboard')">Whiteboard</button>
+            </div>
+            <div class="todo_content">
+                <div class="canban">Canban</div>
+                <div class="list">List</div>
+                <div class="kalendarz">Kalendarz</div>
+                <div class="mind_board">Mind board</div>
+                <div class="whiteboard">Whiteboard</div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'todo/script.js' %}"></script>
+</body>
+</html>

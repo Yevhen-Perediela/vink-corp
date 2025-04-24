@@ -37,9 +37,29 @@ const extensionToIconURL = {
 };
 
 function getIconURL(extension) {
-    const filename = extensionToIconURL[extension] || extensionToIconURL['default'];
-    return `https://cdn.jsdelivr.net/npm/vscode-icons@11.11.0/icons/${filename}`;
+    // Mapowanie rozszerzeń na klasy FontAwesome
+    const extensionToIconClass = {
+        'py': 'fab fa-python',     // Ikona Pythona
+        'js': 'fab fa-js',         // Ikona JavaScriptu
+        'ts': 'fab fa-js',         // Ikona TypeScriptu
+        'html': 'fas fa-file-code', // Ikona HTML
+        'css': 'fas fa-file-code', // Ikona CSS
+        'json': 'fas fa-file-code', // Ikona JSON
+        'php': 'fab fa-php',       // Ikona PHP
+        'md': 'fas fa-file-alt',   // Ikona Markdown
+        'sh': 'fas fa-terminal',   // Ikona Shell
+        'c': 'fas fa-file-code',   // Ikona C
+        'cpp': 'fab fa-cuttlefish', // Ikona C++
+        'java': 'fab fa-java',     // Ikona Java
+        'cs': 'fab fa-microsoft',  // Ikona C#
+        'txt': 'fas fa-file-alt',  // Ikona Text
+        'default': 'fas fa-file'   // Domyślna ikona pliku
+    };
+
+    // Zwróć odpowiednią klasę FontAwesome na podstawie rozszerzenia
+    return extensionToIconClass[extension] || extensionToIconClass['default'];
 }
+
 
 
 function setLanguageByFilename(filename) {
@@ -75,8 +95,13 @@ function showGit(el) {
 
 
 function loadRepoTree() {
-    const url = localStorage.getItem('cur-repoUrl') || document.getElementById('repoUrl').value;
-    localStorage.setItem('cur-repoUrl', url);
+    let url =  document.getElementById('repoUrl').value;
+    if(url != ""){
+        localStorage.setItem('cur-repoUrl', url);
+    }else{
+        url = localStorage.getItem('cur-repoUrl');
+    }    
+
 
     fetch(`/edytor/api/github-tree/?url=${encodeURIComponent(url)}`)
         .then(res => {
@@ -137,16 +162,16 @@ function renderFileTree(tree) {
         const isFile = obj.__file;
     
         if (isFile) {
-            const ext = name.split('.').pop().toLowerCase();
-            const iconURL = getIconURL(ext);
+            const ext = name.split('.').pop().toLowerCase();  // Pobranie rozszerzenia pliku
+            const iconClass = getIconURL(ext);  // Uzyskanie klasy FontAwesome dla ikony
             div.classList.add('tree-item', 'file');
-            div.innerHTML = `<img src="${iconURL}" class="icon"> ${name}`;
+            div.innerHTML = `<i class="${iconClass}"></i> ${name}`;  // Ikona FontAwesome
             div.onclick = () => loadFile(obj.path);
         } else {
-            const iconURL = "https://cdn.jsdelivr.net/npm/vscode-icons@11.11.0/icons/default_folder.svg";
+            const iconClass = "fas fa-folder";  // Ikona folderu
             const summary = document.createElement('div');
             summary.classList.add('tree-item', 'folder');
-            summary.innerHTML = `<img src="${iconURL}" class="icon"> ${name}`;
+            summary.innerHTML = `<i class="${iconClass}"></i> ${name}`;
             summary.onclick = () => nested.classList.toggle('active');
     
             const nested = document.createElement('div');
@@ -164,12 +189,13 @@ function renderFileTree(tree) {
     
         return div;
     }
-    
 
     Object.keys(root).forEach(name => {
         container.appendChild(createTreeNode(root[name], name));
     });
 }
+
+
 const chatBox = document.getElementById('chat-messages');
 const chatInput = document.getElementById('user-input');
 
@@ -177,7 +203,7 @@ function sendChatMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
 
-    appendMessage("You", message);
+    appendMessage("Ty", message);
     chatInput.value = "";
 
     fetch("/edytor/api/ai/chat/", {
@@ -202,17 +228,11 @@ function sendChatMessage() {
 
 function appendMessage(who, text) {
     const msg = document.createElement("div");
-    msg.classList.add('chat-message');
-    if (who === "You") {
-        msg.classList.add('user-message');
-    } else {
-        msg.classList.add('ai-message');
-    }
-    msg.innerHTML = `${text}`;    
+    msg.innerHTML = `<b>${who}:</b><br>${text}<br><br>`;
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 window.addEventListener("load", () => {
-    appendMessage("You", "Co potrafisz?");
+    appendMessage("Ty", "Co potrafisz?");
     appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
 });

@@ -89,14 +89,20 @@ h1{
 #github{
     display: none;
 }
-#editor{
-    width: 65%;
+.todo{
+    width: 75%;
     height: 95vh;
+    display: flex;
+    flex-direction: column;
+}
+#folders{
+    overflow-y: auto;
 }
 #chatgpt {
     width: 20%;
     height: 95vh;
     border-left: 1px solid rgb(136, 136, 136);
+    border-right: 1px solid rgb(136, 136, 136);
     display: flex;
     flex-direction: column;
     background-color: #1e1e1e;
@@ -162,10 +168,6 @@ h1{
     user-select: none;
 }
 
-vtbyn
-
-
-
 .nested {
 display: none;
 padding-left: 15px;
@@ -182,10 +184,6 @@ display: block;
     margin-right: 6px;
   }
   
-
-
-
-
 /* Kolory dla poszczególnych rozszerzeń */
 .fab.fa-python {
     color: #306998; /* Kolor Pythona */
@@ -212,3 +210,65 @@ display: block;
 }
 
 /* Możesz również dodać inne kolory dla pozostałych ikon */
+
+.todo_panel {
+    height: 35px;
+    color: rgb(200, 200, 200);
+    padding: 10px;
+    border-bottom: 1px solid rgb(136, 136, 136);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 25px;
+    justify-content: center;
+    position: relative;
+    padding-left: 15%;
+    padding-right: 15%;
+}
+
+.todo_panel > button {
+    height: 35px;
+    flex: 1;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: rgb(60, 60, 60);
+    border: none;
+    outline: none;
+    color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.todo_panel:hover > button {
+    flex: 0.8;
+}
+
+.todo_panel > button:hover,
+.todo_panel > button.active {
+    height: 40px;
+    flex: 1.5;
+    background-color: rgb(255, 132, 0);
+    z-index: 10;
+}
+
+.todo > .todo_content {
+    flex-grow: 1;
+}
+
+.todo > .todo_content > div {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    color: white;
+}
+
+.todo > .todo_content > div:nth-child(1) {
+    display: flex;
+}
+
+.todo > .todo_content > div:nth-child(n + 2) {
+    display: none;
+}
