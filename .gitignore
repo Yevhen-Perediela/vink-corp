@@ -2,8 +2,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
-requirements.txt
-venv
 # C extensions
 *.so
 
@@ -69,6 +67,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+venv
 
 # Pytest
 .pytest_cache/
