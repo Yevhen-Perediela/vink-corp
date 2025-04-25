@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Logowanie</title>
-    <link rel="stylesheet" href="{% static 'auth.css' %}">
 </head>
 <body>
-<h2>Logowanie</h2>
-<form method="POST">
-    {% csrf_token %}
-    <input type="text" name="username" placeholder="Nazwa użytkownika">
-    <input type="password" name="password" placeholder="Hasło">
-    <button type="submit">Zaloguj</button>
-</form>
+    <h1>Zaloguj się</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Zaloguj się</button>
+    </form>
 </body>
 </html>

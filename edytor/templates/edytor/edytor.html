@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edytor</title>
     <link rel="stylesheet" href="{% static 'edytor.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script> -->
 </head>
 <body>
     <header>
@@ -29,9 +31,7 @@
             </div>
         </div>
         <div class="menu" id="folders">
-            <p> → plik 1</p>
-            <p> → → plik 3</p>
-            <p> → plik 2</p>
+            <p>Wczytaj repo</p>
         </div>
         <div class="menu" id="github">
             <input type="text" placeholder="Link do repo..." id="repoUrl">
@@ -39,7 +39,11 @@
         </div>
         <div id="editor"></div>
         <div id="chatgpt">
-            Czat
+            <div id="chat-messages" style="height: 90%; overflow-y: auto; color: white; padding: 10px;"></div>
+                <div id="chat-input" style="padding: 10px;">
+                    <input type="text" id="user-input" placeholder="Napisz coś..." style="width: 70%;">
+                    <button onclick="sendChatMessage()">Wyślij</button>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
