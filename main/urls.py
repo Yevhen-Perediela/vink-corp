@@ -1,7 +1,7 @@
 """
 URL configuration for vink project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+The `urlpatterns` list routesyf URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
 Examples:
 Function views
@@ -16,8 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from main.auth.views import login_view  # 👈 импорт твоего login_view
 
 urlpatterns = [
-
+    path('', login_view, name='home'),  # 👈 это главная страница — теперь login
+    path('login/', login_view, name='login'),
+    path('admin/', admin.site.urls),
+    path('edytor/', include('edytor.urls')),
+    path('todo/', include('todo.urls')),
 ]
+

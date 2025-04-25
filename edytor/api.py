@@ -31,8 +31,16 @@ def get_repo_tree(request):
         return JsonResponse({'error': 'Nie można pobrać drzewa repo'}, status=400)
 
     try:
-        tree_data = r.json()
-        return JsonResponse(tree_data.get('tree', []), safe=False)
+        try:
+            tree_data = r.json()
+            if 'tree' not in tree_data:
+                print("Brak klucza 'tree' w odpowiedzi:", tree_data)
+                return JsonResponse({'error': 'Odpowiedź nie zawiera struktury plików'}, status=500)
+            return JsonResponse(tree_data['tree'], safe=False)
+        except Exception as e:
+            print("Błąd parsowania JSON z drzewa:", e)
+            return JsonResponse({'error': 'Błąd danych drzewa'}, status=500)
+
     except Exception as e:
         print("Błąd parsowania JSON z drzewa:", e)
         return JsonResponse({'error': 'Błąd danych drzewa'}, status=500)

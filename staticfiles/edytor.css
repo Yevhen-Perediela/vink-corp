@@ -1,0 +1,189 @@
+*{
+    margin: 0px;
+    padding: 0px;
+ 
+}
+body{
+    background-color: rgb(19, 19, 19);
+    font-family: sans-serif;
+}
+header{
+    width: 98vw;
+    height: 5vh;
+    border-bottom: 1px solid rgb(136, 136, 136);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: black;
+    padding: 0px 1vw;
+}
+
+header input{
+    width: 30vw;
+    border-radius: 4px;
+    background-color: rgb(39, 39, 39);
+    border: 0px;
+    padding: 5px;
+    color: white;
+}
+
+header input:focus{
+    outline: none;
+}
+header span button{
+    border: 0px;
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+
+h1{
+    color: white;
+    font-size: 22px;
+}
+#main-wrap{
+    display: flex;
+}
+#small-menu{
+    width: 5%;
+    height: 95vh;
+    border-right: 1px solid rgb(136, 136, 136);
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    justify-content: space-between;
+}
+#small-menu-top{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#small-menu-top img{
+    width: 40px;
+    margin: 10px;
+    filter: invert(100%);
+}
+
+#small-menu-bottom{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#small-menu-bottom #ava{
+    width: 45px;
+    margin: 10px;
+}
+#small-menu-bottom #sett{
+    filter: invert(100%);
+    width: 30px;
+}
+.menu{
+    width: 15%;
+    height: 95vh;
+    border-right: 1px solid rgb(136, 136, 136);
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+#github{
+    display: none;
+}
+#editor{
+    width: 65%;
+    height: 95vh;
+}
+#folders{
+    overflow-y: auto;
+}
+#chatgpt {
+    width: 20%;
+    height: 95vh;
+    border-left: 1px solid rgb(136, 136, 136);
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+    color: white;
+    font-size: 14px;
+}
+#chat-input input {
+    background-color: #2e2e2e;
+    border: none;
+    color: white;
+    padding: 5px;
+}
+#chat-input input:focus {
+    outline: none;
+}
+#chat-input button {
+    padding: 5px 10px;
+    background-color: #007acc;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    margin-left: 5px;
+}
+.user-message {
+    background-color: #333;
+    align-self:flex-end;
+    text-align: right;
+    color: white;
+    padding: 4%;
+    border-radius: 15px;
+}
+
+.ai-message {
+    align-self: flex-start;
+    color: white;
+    padding: 4%;
+}
+.chat-message {
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 80%;
+    width: fit-content;         /* szerokosc do zawartości */
+    word-wrap: break-word;      /* łamie długie słowa */
+    white-space: pre-wrap;      /* zachowuje \n i spacje */
+    line-height: 1.4;
+    font-size: 14px;
+}
+#chat-messages {
+    padding: 10px;
+    overflow-y: auto;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+
+
+.tree-item {
+    cursor: pointer;
+    padding-left: 10px;
+    user-select: none;
+}
+
+.folder::before {
+content: "📁 ";
+}
+
+
+
+.nested {
+display: none;
+padding-left: 15px;
+}
+
+.active {
+display: block;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  
