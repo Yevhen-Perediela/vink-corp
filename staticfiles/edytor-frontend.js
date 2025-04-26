@@ -32,13 +32,15 @@ const extensionToIconURL = {
     'cpp': 'cplusplus/cplusplus-original.svg',
     'java': 'java/java-original.svg',
     'cs': 'csharp/csharp-original.svg',
-    'txt': 'code/code-original.svg',
-    'default': 'java/folder-original.svg',
 };
 
 function getIconURL(extension) {
-    const filename = extensionToIconURL[extension] || extensionToIconURL['default'];
-    return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${filename}`;
+    const filename = extensionToIconURL[extension];
+    if (filename) {
+        return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${filename}`;
+    } else {
+        return 'https://img.icons8.com/?size=100&id=1395&format=png&color=FFFFFF';
+    }
 }
 
 
@@ -76,13 +78,8 @@ function showGit(el) {
 
 
 function loadRepoTree() {
-    let url =  document.getElementById('repoUrl').value;
-    if(url != ""){
-        localStorage.setItem('cur-repoUrl', url);
-    }else{
-        url = localStorage.getItem('cur-repoUrl');
-    }    
-
+    const url = localStorage.getItem('cur-repoUrl') || document.getElementById('repoUrl').value;
+    localStorage.setItem('cur-repoUrl', url);
 
     fetch(`/edytor/api/github-tree/?url=${encodeURIComponent(url)}`)
         .then(res => {
@@ -144,25 +141,39 @@ function renderFileTree(tree) {
     
         if (isFile) {
             const ext = name.split('.').pop().toLowerCase();  // Pobranie rozszerzenia pliku
-            const iconClass = getIconURL(ext);  // Uzyskanie klasy FontAwesome dla ikony
+            const iconURL = getIconURL(ext);
             div.classList.add('tree-item', 'file');
-            div.innerHTML = `<i class="${iconClass}"></i> ${name}`;  // Ikona FontAwesome
+            div.innerHTML = `<img src="${iconURL}" alt="${ext}" class="tree_item_img"> ${name}`;
+
             div.onclick = () => loadFile(obj.path);
         } else {
-            const iconURL = "https://github.com/vscode-icons/vscode-icons/default_folder.svg";
+            const iconURL = "https://cdn.creazilla.com/icons/3234388/folder-icon-md.png";
             const summary = document.createElement('div');
             summary.classList.add('tree-item', 'folder');
-            summary.innerHTML = ` ${name}`;
+            summary.innerHTML = `
+                <img src="${iconURL}" alt="folder" class="tree_item_img"> 
+                ${name}
+            `;
             summary.onclick = () => nested.classList.toggle('active');
+
     
             const nested = document.createElement('div');
             nested.classList.add('nested');
     
-            Object.keys(obj).forEach(childName => {
-                if (childName !== '__file') {
+            Object.keys(obj)
+                .filter(childName => childName !== '__file')
+                .sort((a, b) => {
+                    const aIsFile = obj[a].__file;
+                    const bIsFile = obj[b].__file;
+                    if (aIsFile === bIsFile) {
+                        return a.localeCompare(b); // sortuj alfabetycznie w obrębie folderów/pliki
+                    }
+                    return aIsFile ? 1 : -1; // foldery najpierw, potem pliki
+                })
+                .forEach(childName => {
                     nested.appendChild(createTreeNode(obj[childName], childName));
-                }
-            });
+                });
+
     
             div.appendChild(summary);
             div.appendChild(nested);
@@ -170,13 +181,12 @@ function renderFileTree(tree) {
     
         return div;
     }
+    
 
     Object.keys(root).forEach(name => {
         container.appendChild(createTreeNode(root[name], name));
     });
 }
-
-
 const chatBox = document.getElementById('chat-messages');
 const chatInput = document.getElementById('user-input');
 
@@ -184,7 +194,7 @@ function sendChatMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
 
-    appendMessage("Ty", message);
+    appendMessage("You", message);
     chatInput.value = "";
 
     fetch("/edytor/api/ai/chat/", {
@@ -209,11 +219,17 @@ function sendChatMessage() {
 
 function appendMessage(who, text) {
     const msg = document.createElement("div");
-    msg.innerHTML = `<b>${who}:</b><br>${text}<br><br>`;
+    msg.classList.add('chat-message');
+    if (who === "You") {
+        msg.classList.add('user-message');
+    } else {
+        msg.classList.add('ai-message');
+    }
+    msg.innerHTML = `${text}`;    
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 window.addEventListener("load", () => {
-    appendMessage("Ty", "Co potrafisz?");
+    appendMessage("You", "Co potrafisz?");
     appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
 });
