@@ -40,12 +40,38 @@
         </div>
         <div class="todo">
             <div class="todo_panel">
-                <button onclick="changeToDoView('canban')">Canban</button> | <button onclick="changeToDoView('list')">List</button> | <button onclick="changeToDoView('kalendarz')">Kalendarz</button> | <button onclick="changeToDoView('mind_board')">Mind board</button> | <button onclick="changeToDoView('whiteboard')">Whiteboard</button>
+                <button onclick="changeToDoView('canban')">Canban</button> |
+                 <button onclick="changeToDoView('list')">List</button> |
+                  <button onclick="changeToDoView('kalendarz')">Kalendarz</button> |
+                   <button onclick="changeToDoView('mind_board')">Mind board</button> |
+                    <button onclick="changeToDoView('whiteboard')">Whiteboard</button>
             </div>
             <div class="todo_content">
                 <div class="canban">Canban</div>
-                <div class="list">List</div>
-                <div class="kalendarz">Kalendarz</div>
+                <div class="list">
+                    <div class="addProjectContainer">
+                        <input type="text" class="add_project_input" placeholder="Nowy projekt">
+                        <button class="add_project_button" onclick="addProject()"><div class="line1"><div class="line2"></div></button>
+                        <div class="sortProjectContainer" onclick="changeTaskSort()">
+                                <div class="oneInLine">
+                                    <div></div>
+                                </div>
+                                <div class="twoInLine">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="list_contents">
+                        
+                    </div>
+                </div>
+                <div class="kalendarz">
+                    
+                    <div class="calendarContent">
+
+                    </div>
+                </div>
                 <div class="mind_board">Mind board</div>
                 <div class="whiteboard">Whiteboard</div>
             </div>

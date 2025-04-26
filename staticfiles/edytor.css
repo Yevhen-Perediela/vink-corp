@@ -1,15 +1,19 @@
 *{
     margin: 0px;
     padding: 0px;
- 
+    box-sizing: border-box;
 }
-body{
+body, html{
     background-color: rgb(19, 19, 19);
     font-family: sans-serif;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 header{
-    width: 98vw;
-    height: 5vh;
+    width: 100%;
+    height: 5%;
     border-bottom: 1px solid rgb(136, 136, 136);
     display: flex;
     justify-content: space-between;
@@ -19,7 +23,7 @@ header{
 }
 
 header input{
-    width: 30vw;
+    width: 30%;
     border-radius: 4px;
     background-color: rgb(39, 39, 39);
     border: 0px;
@@ -42,10 +46,11 @@ h1{
 }
 #main-wrap{
     display: flex;
+    height: 100%;
 }
 #small-menu{
     width: 5%;
-    height: 95vh;
+    height: 100%;
     border-right: 1px solid rgb(136, 136, 136);
     display: flex;
     flex-direction: column;
@@ -80,7 +85,7 @@ h1{
 }
 .menu{
     width: 15%;
-    height: 95vh;
+    height: 100%;
     border-right: 1px solid rgb(136, 136, 136);
     color: white;
     padding: 20px;
@@ -91,11 +96,11 @@ h1{
 }
 #editor{
     width: 65%;
-    height: 95vh;
+    height: 100%;
 }
 #chatgpt {
     width: 20%;
-    height: 95vh;
+    height: 100%;
     border-left: 1px solid rgb(136, 136, 136);
     display: flex;
     flex-direction: column;
@@ -162,13 +167,6 @@ h1{
     user-select: none;
 }
 
-vtbyn
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> refs/remotes/origin/main
 
 .nested {
 display: none;
