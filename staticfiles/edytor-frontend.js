@@ -78,13 +78,8 @@ function showGit(el) {
 
 
 function loadRepoTree() {
-    let url =  document.getElementById('repoUrl').value;
-    if(url != ""){
-        localStorage.setItem('cur-repoUrl', url);
-    }else{
-        url = localStorage.getItem('cur-repoUrl');
-    }    
-
+    const url = localStorage.getItem('cur-repoUrl') || document.getElementById('repoUrl').value;
+    localStorage.setItem('cur-repoUrl', url);
 
     fetch(`/edytor/api/github-tree/?url=${encodeURIComponent(url)}`)
         .then(res => {
@@ -186,13 +181,12 @@ function renderFileTree(tree) {
     
         return div;
     }
+    
 
     Object.keys(root).forEach(name => {
         container.appendChild(createTreeNode(root[name], name));
     });
 }
-
-
 const chatBox = document.getElementById('chat-messages');
 const chatInput = document.getElementById('user-input');
 
@@ -200,7 +194,7 @@ function sendChatMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
 
-    appendMessage("Ty", message);
+    appendMessage("You", message);
     chatInput.value = "";
 
     fetch("/edytor/api/ai/chat/", {
@@ -225,11 +219,17 @@ function sendChatMessage() {
 
 function appendMessage(who, text) {
     const msg = document.createElement("div");
-    msg.innerHTML = `<b>${who}:</b><br>${text}<br><br>`;
+    msg.classList.add('chat-message');
+    if (who === "You") {
+        msg.classList.add('user-message');
+    } else {
+        msg.classList.add('ai-message');
+    }
+    msg.innerHTML = `${text}`;    
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 window.addEventListener("load", () => {
-    appendMessage("Ty", "Co potrafisz?");
+    appendMessage("You", "Co potrafisz?");
     appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
 });

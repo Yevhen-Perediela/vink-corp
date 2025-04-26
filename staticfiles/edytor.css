@@ -93,6 +93,9 @@ h1{
     width: 65%;
     height: 95vh;
 }
+#folders{
+    overflow-y: auto;
+}
 #chatgpt {
     width: 20%;
     height: 95vh;
@@ -107,14 +110,14 @@ h1{
     background-color: #2e2e2e;
     border: none;
     color: white;
-    padding: 8px;
+    padding: 5px;
 }
 #chat-input input:focus {
     outline: none;
 }
 #chat-input button {
     padding: 5px 10px;
-    background-color: #e6f5f7;
+    background-color: #007acc;
     border: none;
     border-radius: 3px;
     color: white;
@@ -187,33 +190,3 @@ padding-left: 15px;
     margin-right: 6px;
   }
   
-
-
-
-
-/* Kolory dla poszczególnych rozszerzeń */
-.fab.fa-python {
-    color: #306998; /* Kolor Pythona */
-}
-
-.fab.fa-js {
-    color: #f7df1e; /* Kolor JavaScriptu */
-}
-
-.fab.fa-php {
-    color: #8e44ad; /* Kolor PHP */
-}
-
-.fas.fa-file-code {
-    color: #28a745; /* Kolor dla plików kodu (HTML, CSS, JS itd.) */
-}
-
-.fas.fa-file-alt {
-    color: #f39c12; /* Kolor Markdown */
-}
-
-.fas.fa-terminal {
-    color: #2d3436; /* Kolor dla plików Shell */
-}
-
-/* Możesz również dodać inne kolory dla pozostałych ikon */

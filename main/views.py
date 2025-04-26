@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .auth.forms import RegisterForm
+from main.auth.forms import RegisterForm
 
 def register_view(request):
     if request.method == 'POST':
