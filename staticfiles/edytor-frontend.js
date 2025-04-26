@@ -175,18 +175,26 @@ const chatBox = document.getElementById('chat-messages');
 const chatInput = document.getElementById('user-input');
 
 function sendChatMessage() {
+    const chatBox = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('user-input');
     const message = chatInput.value.trim();
+
     if (!message) return;
 
-    appendMessage("You", message);
+    appendMessage("Ty", message);
     chatInput.value = "";
+
+    const currentCode = getCodeFromEditor();
 
     fetch("/edytor/api/ai/chat/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ prompt: message })
+        body: JSON.stringify({
+            prompt: message,
+            code: currentCode 
+        })
     })
     .then(res => res.json())
     .then(data => {
@@ -197,9 +205,10 @@ function sendChatMessage() {
         }
     })
     .catch(() => {
-        appendMessage("AI", "Wystąpił błąd sieci.");
+        appendMessage("AI", "Błąd połączenia z serwerem.");
     });
 }
+
 
 function appendMessage(who, text) {
     const msg = document.createElement("div");
