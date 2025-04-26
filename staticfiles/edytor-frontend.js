@@ -32,13 +32,15 @@ const extensionToIconURL = {
     'cpp': 'cplusplus/cplusplus-original.svg',
     'java': 'java/java-original.svg',
     'cs': 'csharp/csharp-original.svg',
-    'txt': 'code/code-original.svg',
-    'default': 'java/folder-original.svg',
 };
 
 function getIconURL(extension) {
-    const filename = extensionToIconURL[extension] || extensionToIconURL['default'];
-    return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${filename}`;
+    const filename = extensionToIconURL[extension];
+    if (filename) {
+        return `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${filename}`;
+    } else {
+        return 'https://img.icons8.com/?size=100&id=1395&format=png&color=FFFFFF';
+    }
 }
 
 
@@ -144,25 +146,39 @@ function renderFileTree(tree) {
     
         if (isFile) {
             const ext = name.split('.').pop().toLowerCase();  // Pobranie rozszerzenia pliku
-            const iconClass = getIconURL(ext);  // Uzyskanie klasy FontAwesome dla ikony
+            const iconURL = getIconURL(ext);
             div.classList.add('tree-item', 'file');
-            div.innerHTML = `<i class="${iconClass}"></i> ${name}`;  // Ikona FontAwesome
+            div.innerHTML = `<img src="${iconURL}" alt="${ext}" class="tree_item_img"> ${name}`;
+
             div.onclick = () => loadFile(obj.path);
         } else {
-            const iconURL = "https://github.com/vscode-icons/vscode-icons/default_folder.svg";
+            const iconURL = "https://cdn.creazilla.com/icons/3234388/folder-icon-md.png";
             const summary = document.createElement('div');
             summary.classList.add('tree-item', 'folder');
-            summary.innerHTML = ` ${name}`;
+            summary.innerHTML = `
+                <img src="${iconURL}" alt="folder" class="tree_item_img"> 
+                ${name}
+            `;
             summary.onclick = () => nested.classList.toggle('active');
+
     
             const nested = document.createElement('div');
             nested.classList.add('nested');
     
-            Object.keys(obj).forEach(childName => {
-                if (childName !== '__file') {
+            Object.keys(obj)
+                .filter(childName => childName !== '__file')
+                .sort((a, b) => {
+                    const aIsFile = obj[a].__file;
+                    const bIsFile = obj[b].__file;
+                    if (aIsFile === bIsFile) {
+                        return a.localeCompare(b); // sortuj alfabetycznie w obrębie folderów/pliki
+                    }
+                    return aIsFile ? 1 : -1; // foldery najpierw, potem pliki
+                })
+                .forEach(childName => {
                     nested.appendChild(createTreeNode(obj[childName], childName));
-                }
-            });
+                });
+
     
             div.appendChild(summary);
             div.appendChild(nested);

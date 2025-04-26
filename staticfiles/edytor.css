@@ -160,23 +160,24 @@ h1{
     cursor: pointer;
     padding-left: 10px;
     user-select: none;
+    
+}
+.tree_item_img{
+    width: 16px;
+    height: 16px;
+    vertical-align: middle; 
+    margin-right: 5px;
+    overflow-x: hidden;
 }
 
-vtbyn
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> refs/remotes/origin/main
 
 .nested {
 display: none;
 padding-left: 15px;
 }
 
-.active {
-display: block;
+.nested.active {
+    display: block;
 }
 
 .icon {
