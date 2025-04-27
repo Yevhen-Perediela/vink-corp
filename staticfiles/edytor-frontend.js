@@ -133,15 +133,46 @@ function loadRepoTree() {
 
     fetch(`/edytor/api/local-tree/?repo=${encodeURIComponent(repo)}`)
         .then(res => res.json())
-        .then(renderFileTree)
+        .then(tree => renderFileTree(tree, repo))
         .catch(err => {
             console.error("Błąd ładowania drzewa:", err);
         });
 }
 
-function renderFileTree(tree) {
+function renderFileTree(tree, repoName) {
     const container = document.getElementById('folders');
     container.innerHTML = '';
+
+    const title = document.createElement('h3');
+    title.textContent = repoName;
+    title.classList.add('repo-title');
+
+    const rootActions = document.createElement('span');
+    rootActions.className = 'folder-actions';
+    rootActions.style.display = 'none';
+    rootActions.innerHTML = `
+        <button class="create-file">📄</button>
+        <button class="create-folder">📁</button>
+    `;
+    title.appendChild(rootActions);
+
+    container.appendChild(title);
+
+    container.addEventListener('click', (e) => {
+        if (!e.target.closest('.tree-item')) {
+            document.querySelectorAll('.folder-actions').forEach(el => el.style.display = 'none');
+            rootActions.style.display = 'inline-block';
+        }
+    });
+
+    rootActions.querySelector('.create-file').onclick = (e) => {
+        e.stopPropagation();
+        createInputForNew('file', '', container);
+    };
+    rootActions.querySelector('.create-folder').onclick = (e) => {
+        e.stopPropagation();
+        createInputForNew('folder', '', container);
+    };
 
     const root = {};
     tree.forEach(entry => {
@@ -223,7 +254,7 @@ function createInputForNew(type, folderPath, container) {
         if (e.key === 'Enter') {
             const name = input.value.trim();
             if (name) {
-                createItem(folderPath + '/' + name, type);
+                createItem(folderPath ? folderPath + '/' + name : name, type);
             }
             inputDiv.remove();
         } else if (e.key === 'Escape') {
