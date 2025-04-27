@@ -17,12 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
-from .api import get_repo_tree, get_file_from_github
+from .api import clone_repo, local_repo_tree, local_repo_file, save_file, create_file, create_folder
 
 
 urlpatterns = [
     path('', views.edytor, name='edytor'),
-    path('api/github-tree/', get_repo_tree),
-    path('api/github-file/', get_file_from_github),
-    path('', views.chat_view, name='chat_view'),
+    path('api/local-tree/', local_repo_tree, name='local_repo_tree'),
+    path('api/local-file/', local_repo_file, name='local_repo_file'),
+    path('chatai/', views.chat_view, name='chat_view'),
+    path('api/clone-repo/', clone_repo, name='clone_repo'),
+    path('api/save-file/', save_file, name='save_file'), 
+    path('api/create-file/', create_file, name='create_file'),
+    path('api/create-folder/', create_folder, name='create_folder'),
+
 ]
