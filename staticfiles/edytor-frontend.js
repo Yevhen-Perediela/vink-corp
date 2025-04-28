@@ -379,27 +379,49 @@ async function cloneRepository() {
     }
 
     try {
-        const response = await fetch('api/clone-repo/', {
+        const response = await fetch('/edytor/api/clone-repo/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken()
             },
-            body: JSON.stringify({ url: repoUrl })
+            body: JSON.stringify({ 
+                url: repoUrl,
+                token: getGitToken()
+            })
         });
 
         const data = await response.json();
+        const repoName = repoUrl.split('/').pop().replace('.git', '');
 
         if (response.ok) {
-            alert(data.message || 'Repozytorium zostało sklonowane!');
+            if (data.message && (data.message.includes('Repozytorium już istnieje lokalnie') || data.message.includes('Sklonowano'))) {
+                localStorage.setItem('cur-repoName', repoName);
+                localStorage.setItem('cur-repoUrl', repoUrl);
+                window.openFiles = [];
+                window.fileContents = {};
+                window.currentEditingPath = null;
+                editor.setValue('wybierz plik :)');
+                loadRepoTree();
+                alert(data.message);
+            } else {
+                alert(data.message || 'Operacja zakończona.');
+            }
         } else {
-            alert(data.error || 'Wystąpił błąd podczas klonowania.');
+            if (data.error && data.error.includes('authentication') || data.error.includes('autoryzacji')) {
+                alert('Błąd autoryzacji! Podaj GitHub Token.');
+                changeGitToken();
+            } else {
+                alert(data.error || 'Wystąpił błąd podczas klonowania.');
+            }
         }
     } catch (error) {
         console.error('Błąd:', error);
-        alert('Coś poszło mocno nie tak...');
+        alert('Coś poszło mocno nie tak podczas klonowania...');
     }
 }
+
+
 
 // Funkcja do pobierania tokena CSRF z ciasteczka
 function getCSRFToken() {
@@ -461,4 +483,92 @@ function appendMessage(who, text) {
     msg.innerHTML = `<strong>${who}:</strong> ${text}`;
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+
+
+async function pullChanges() {
+    const repoName = localStorage.getItem('cur-repoName');
+    if (!repoName) {
+        alert('Najpierw wybierz repozytorium!');
+        return;
+    }
+
+    try {
+        const response = await fetch('api/pull-repo/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({ repo: repoName })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message || 'Repozytorium zostało zaktualizowane!');
+            loadRepoTree(); // po pullu możesz przeładować drzewo
+        } else {
+            alert(data.error || 'Wystąpił błąd podczas aktualizacji.');
+        }
+    } catch (error) {
+        console.error('Błąd pullowania:', error);
+        alert('Coś poszło mocno nie tak podczas pulla...');
+    }
+}
+
+
+
+async function commitChanges() {
+    const repoName = localStorage.getItem('cur-repoName');
+    if (!repoName) {
+        alert('Najpierw wybierz repozytorium!');
+        return;
+    }
+
+    const commitMessage = document.getElementById('commitMessage').value.trim();
+    if (commitMessage === null) {
+        return; // Kliknięto "Anuluj"
+    }
+
+    try {
+        const response = await fetch('api/push-repo/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({ repo: repoName, message: commitMessage })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message || 'Zmiany wypchnięte!');
+        } else {
+            alert(data.error || 'Wystąpił błąd podczas pushowania.');
+        }
+    } catch (error) {
+        console.error('Błąd pushowania:', error);
+        alert('Coś poszło mocno nie tak podczas pushowania...');
+    }
+}
+
+
+function getGitToken() {
+    return sessionStorage.getItem('git-token') || '';
+}
+
+function setGitToken(token) {
+    sessionStorage.setItem('git-token', token);
+}
+
+
+function changeGitToken() {
+    const newToken = prompt('Wprowadź nowy GitHub Token:');
+    if (newToken !== null) {
+        setGitToken(newToken.trim());
+        alert('Token został zapisany w sessionStorage!');
+    }
 }
