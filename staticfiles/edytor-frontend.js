@@ -132,11 +132,20 @@ function loadRepoTree() {
     localStorage.setItem('cur-repoName', repo);
 
     fetch(`/edytor/api/local-tree/?repo=${encodeURIComponent(repo)}`)
-        .then(res => res.json())
-        .then(tree => renderFileTree(tree, repo))
-        .catch(err => {
-            console.error("Błąd ładowania drzewa:", err);
-        });
+    .then(res => res.json())
+    .then(tree => {
+        if (!Array.isArray(tree)) {
+            console.error('Błąd drzewa:', tree.error || 'Nieznany błąd');
+            alert(tree.error || 'Nie udało się załadować repozytorium.');
+            return;
+        }
+        renderFileTree(tree, repo);
+    })
+    .catch(err => {
+        console.error("Błąd ładowania drzewa:", err);
+        alert('Błąd sieci podczas ładowania repozytorium.');
+    });
+
 }
 
 function renderFileTree(tree, repoName) {
@@ -315,3 +324,132 @@ function startEditor() {
 }
 
 startEditor();
+
+
+// right menu
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('header button');
+    const panels = {
+        'chatgpt': document.getElementById('chatgpt'),
+        'small-todo': document.getElementById('small-todo'),
+        'chat': document.getElementById('chat')
+    };
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const panelToShow = button.getAttribute('data-panel');
+            for (const key in panels) {
+                if (panels[key]) {
+                    panels[key].style.display = (key === panelToShow) ? 'flex' : 'none';
+                }
+            }
+        });
+    });
+});
+
+
+function showGit(el) {
+    if (git.style.display === "flex") {
+        git.style.display = "none";
+        edytor.style.width = "80%";
+    } else {
+        git.style.display = "flex";
+        edytor.style.width = "65%";
+        folders.style.display = "none";
+    }
+}
+function showFolders(el) {
+    if (folders.style.display === "block") {
+        folders.style.display = "none";
+        edytor.style.width = "80%";
+    } else {
+        folders.style.display = "block";
+        edytor.style.width = "65%";
+        git.style.display = "none";
+    }
+}
+
+async function cloneRepository() {
+    const urlInput = document.getElementById('repoUrl');
+    const repoUrl = urlInput.value.trim();
+
+    if (!repoUrl) {
+        alert('Podaj link do repozytorium!');
+        return;
+    }
+
+    try {
+        const response = await fetch('api/clone-repo/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({ url: repoUrl })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message || 'Repozytorium zostało sklonowane!');
+        } else {
+            alert(data.error || 'Wystąpił błąd podczas klonowania.');
+        }
+    } catch (error) {
+        console.error('Błąd:', error);
+        alert('Coś poszło mocno nie tak...');
+    }
+}
+
+// Funkcja do pobierania tokena CSRF z ciasteczka
+function getCSRFToken() {
+    const name = 'csrftoken=';
+    const decodedCookies = decodeURIComponent(document.cookie);
+    const cookies = decodedCookies.split(';');
+    for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name)) {
+            return cookie.substring(name.length);
+        }
+    }
+    return '';
+}
+
+
+const chatBox = document.getElementById('chat-messages');
+const chatInput = document.getElementById('user-input');
+
+function sendChatMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    appendMessage("You", message);
+    chatInput.value = "";
+
+    fetch("/edytor/api/ai/chat/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt: message })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.response) {
+            appendMessage("AI", data.response);
+        } else {
+            appendMessage("AI", "Brak odpowiedzi.");
+        }
+    })
+    .catch(() => {
+        appendMessage("AI", "Wystąpił błąd sieci.");
+    });
+}
+
+function appendMessage(who, text) {
+    const msg = document.createElement("div");
+    msg.classList.add('chat-message');
+    msg.innerHTML = `<strong>${who}:</strong> ${text}`;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
