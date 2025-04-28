@@ -42,7 +42,7 @@ input {
 }
 
 input:focus {
-  border-color: #1e90ff;
+  border-color: #ff8000;
   outline: none;
   background-color: #444;
 }
@@ -51,7 +51,7 @@ input:focus {
 button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #1e90ff;
+  background-color: #FF8000;
   color: white;
   border: none;
   border-radius: 8px;
@@ -60,7 +60,7 @@ button {
 }
 
 button:hover {
-  background-color: #0f7ae5;
+  background-color: #ff9933;
 }
 
 /* Ссылка */
@@ -68,7 +68,7 @@ a {
   display: block;
   text-align: center;
   margin-top: 1rem;
-  color: #1e90ff;
+  color: #ff8000;
   text-decoration: none;
 }
 
