@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl-PL">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Logowanie</title>
+    <link rel="stylesheet" href="{% static 'styles/auth.css' %}">
 </head>
 <body>
-<h2>Logowanie</h2>
+
 <form method="POST">
+    <h2>Logowanie</h2>
     {% csrf_token %}
     <input type="text" name="username" placeholder="Nazwa użytkownika">
     <input type="password" name="password" placeholder="Hasło">
     <button type="submit">Zaloguj</button>
+    <a href="{% url 'register' %}">Nie masz jeszcze konta? Zarejestruj się</a>
 </form>
 </body>
 </html>
