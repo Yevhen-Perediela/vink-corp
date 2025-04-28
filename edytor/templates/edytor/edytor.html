@@ -14,9 +14,11 @@
         <h1>Edytor</h1>
         <input type="text" placeholder="Wyszukaj...">
         <span>
-            <button id="czat">Czat</button>
-            <button id="to-do">to-do</button>
-            <button id="AI">AI</button>
+            <button id="czat" data-panel="chatgpt">Czat</button>
+            <button id="to-do" data-panel="small-todo">to-do</button>
+            <button id="AI" data-panel="chat">AI</button>
+
+
         </span>
     </header>
     <div id="main-wrap">
@@ -35,9 +37,16 @@
         </div>
         <div class="menu" id="github">
             <input type="text" placeholder="Link do repo..." id="repoUrl">
-            <button id="git" onclick="loadRepoTree()">Wczytaj</button>
+            <button id="git" onclick="cloneRepository()">Wczytaj</button>
+            <hr>
+            <input type="text" placeholder="Nazwa commitu..." id="commitMessage">
+            <button id="commit" onclick="commitChanges()">Commit & Push</button>
+            <button id="pull" onclick="pullChanges()">Pull</button>
         </div>
-        <div id="editor"></div>
+        <div id='editor-wrap'>
+            <div id="tabs" class="tabs-bar"></div>
+            <div id="editor"></div>
+        </div>
         <div id="chatgpt">
             <div id="chat-messages" style="height: 90%; overflow-y: auto; color: white; padding: 10px;"></div>
                 <div id="chat-input" style="padding: 10px;">
@@ -45,8 +54,34 @@
                     <button onclick="sendChatMessage()">Wyślij</button>
             </div>
         </div>
+        <div id="small-todo">
+
+        </div>
+        <div id="chat">
+
+        </div>
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+    <script>
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' }});
+        require(['vs/editor/editor.main'], function () {
+            window.editor = monaco.editor.create(document.getElementById('editor'), {
+                value: `// Hello, Vink 👋\nconsole.log("Edit me!");`,
+                language: 'python',
+                theme: 'vs-dark',
+                automaticLayout: true,
+            });
+        
+            // <<< Teraz tutaj! >>>
+            window.editor.onDidChangeModelContent(() => {
+                window.editorContentNow = window.editor.getValue();
+                renderTabs();
+            });
+        
+            startEditor(); // <--- I start aplikacji dopiero tutaj!
+        });
+    </script>
     <script src="{% static 'edytor.js' %}"></script>
     <script src="{% static 'edytor-frontend.js' %}"></script>
 </body>
