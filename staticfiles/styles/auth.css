@@ -1,0 +1,83 @@
+/* static/styles/auth.css */
+
+/* Базовая настройка страницы */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #1f1f1f, #2c2c2c);
+  color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Форма */
+form {
+  background: #2b2b2b;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Заголовок формы */
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+/* Поля ввода */
+input {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0 1rem;
+  border: 1px solid #555;
+  background-color: #3a3a3a;
+  color: #f0f0f0;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+input:focus {
+  border-color: #1e90ff;
+  outline: none;
+  background-color: #444;
+}
+
+/* Кнопка */
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #1e90ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0f7ae5;
+}
+
+/* Ссылка */
+a {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: #1e90ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Для отображения ошибок сообщений Django */
+.errorlist {
+  color: #ff4d4d;
+  margin-bottom: 1rem;
+}
