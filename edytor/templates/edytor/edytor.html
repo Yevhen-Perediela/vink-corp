@@ -14,9 +14,11 @@
         <h1>Edytor</h1>
         <input type="text" placeholder="Wyszukaj...">
         <span>
-            <button id="czat">Czat</button>
-            <button id="to-do">to-do</button>
-            <button id="AI">AI</button>
+            <button id="czat" data-panel="chatgpt">Czat</button>
+            <button id="to-do" data-panel="small-todo">to-do</button>
+            <button id="AI" data-panel="chat">AI</button>
+
+
         </span>
     </header>
     <div id="main-wrap">
@@ -36,6 +38,10 @@
         <div class="menu" id="github">
             <input type="text" placeholder="Link do repo..." id="repoUrl">
             <button id="git" onclick="cloneRepository()">Wczytaj</button>
+            <hr>
+            <input type="text" placeholder="Nazwa commitu..." id="commitMessage">
+            <button id="commit" onclick="commitChanges()">Commit & Push</button>
+            <button id="pull" onclick="pullChanges()">Pull</button>
         </div>
         <div id='editor-wrap'>
             <div id="tabs" class="tabs-bar"></div>
@@ -48,6 +54,13 @@
                     <button onclick="sendChatMessage()">Wyślij</button>
             </div>
         </div>
+        <div id="small-todo">
+
+        </div>
+        <div id="chat">
+
+        </div>
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
     <script>

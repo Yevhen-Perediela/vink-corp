@@ -85,6 +85,7 @@ def clone_repo(request):
     import json
     data = json.loads(request.body)
     url = data.get('url')
+    token = data.get('token')
 
     if not url or 'github.com' not in url:
         return JsonResponse({'error': 'Nieprawidłowy link'}, status=400)
@@ -94,6 +95,10 @@ def clone_repo(request):
 
     if os.path.exists(clone_path):
         return JsonResponse({'message': 'Repozytorium już istnieje lokalnie'}, status=200)
+
+    # Jeśli użytkownik podał token, podstaw go do URL
+    if token:
+        url = url.replace('https://', f'https://{token}@')
 
     try:
         subprocess.run(["git", "clone", url, clone_path], check=True)
@@ -234,3 +239,63 @@ def create_folder(request):
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def pull_repo(request):
+    import json
+    data = json.loads(request.body)
+    repo = data.get('repo')
+
+    if not repo:
+        return JsonResponse({'error': 'Brak repozytorium do aktualizacji'}, status=400)
+
+    repo_path = f"/tmp/edytor_repos/{repo}"
+
+    if not os.path.exists(repo_path):
+        return JsonResponse({'error': 'Repozytorium nie istnieje lokalnie'}, status=404)
+
+    try:
+        # Najpierw resetujemy wszystkie zmiany lokalne
+        subprocess.run(["git", "-C", repo_path, "reset", "--hard"], check=True)
+        subprocess.run(["git", "-C", repo_path, "pull"], check=True)
+        return JsonResponse({'message': f'Pobrano najnowsze zmiany w {repo} (z automatycznym resetem)'})
+    except subprocess.CalledProcessError as e:
+        print("Błąd pullowania:", e)
+        return JsonResponse({'error': 'Błąd podczas git pull (nawet po resecie)'}, status=500)
+
+
+@csrf_exempt
+def push_repo(request):
+    import json
+    data = json.loads(request.body)
+    repo = data.get('repo')
+    message = data.get('message', 'Zmiany przez edytor')  # Domyślny komunikat commit'a
+
+    if not repo:
+        return JsonResponse({'error': 'Brak repozytorium do wypchnięcia'}, status=400)
+
+    repo_path = f"/tmp/edytor_repos/{repo}"
+
+    if not os.path.exists(repo_path):
+        return JsonResponse({'error': 'Repozytorium nie istnieje lokalnie'}, status=404)
+
+    try:
+        # Dodaj wszystkie zmiany
+        subprocess.run(["git", "-C", repo_path, "add", "."], check=True)
+
+        # Sprawdź, czy są jakieś zmiany do commitowania
+        result = subprocess.run(["git", "-C", repo_path, "status", "--porcelain"], capture_output=True, text=True)
+        if result.stdout.strip() == "":
+            return JsonResponse({'message': 'Brak zmian do wypchnięcia'})
+
+        # Jeśli są zmiany - zrób commit
+        subprocess.run(["git", "-C", repo_path, "commit", "-m", message], check=True)
+
+        # Wypchnij zmiany
+        subprocess.run(["git", "-C", repo_path, "push"], check=True)
+
+        return JsonResponse({'message': f'Zmiany zostały wypchnięte do {repo} 🚀'})
+    except subprocess.CalledProcessError as e:
+        print("Błąd pushowania:", e)
+        return JsonResponse({'error': 'Błąd podczas pushowania repozytorium'}, status=500)

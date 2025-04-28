@@ -99,9 +99,7 @@ h1{
     text-transform: uppercase;
 
 }
-#github{
-    display: none;
-}
+
 #editor{
     width: 100%;
     height: calc(100% - 45px);
@@ -240,6 +238,7 @@ padding-left: 15px;
     flex-direction: column;
     /* height: 100%; */
     width: 65%;
+    background-color: #1e1e1e;
 }
 
 .new-item-input {
@@ -267,4 +266,61 @@ padding-left: 15px;
     /* position: absolute; */
     text-align: end;
    
+}
+
+#chatgpt, #small-todo, #chat {
+    display: none;
+}
+#chatgpt {
+    display: flex; /* lub block, zależnie od potrzeb */
+}
+
+
+
+#github{
+    display: none;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+#github input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #2d2d2d;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #d4d4d4;
+    font-size: 14px;
+}
+
+#github input[type="text"]::placeholder {
+    color: #888;
+}
+
+#github button {
+    width: 90%;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #0e639c;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#github button:hover {
+    background-color: #1177bb;
+}
+
+#github hr {
+    border: 0;
+    height: 2px;
+    background: #444;
+    margin: 20px 0;
+    width: 100%;
 }
