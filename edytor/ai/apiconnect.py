@@ -1,7 +1,7 @@
 import openai
-#import os
-# #openai.api_key = os.getenv("OPENAI_API_KEY") i dodaj do .env
-openai.api_key = "dodaj_klucz" # na razie tutaj później zostanie zmienione
+import os
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 def ask_gpt(prompt, model="gpt-4.1-nano"):
     response = openai.ChatCompletion.create(
