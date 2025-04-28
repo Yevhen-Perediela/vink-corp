@@ -6,8 +6,6 @@ from .ai.apiconnect import ask_gpt
 def edytor(request):
     return render(request, 'edytor/edytor.html')
 
-
-
 @api_view(['POST'])
 def chat_view(request):
     prompt = request.data.get("prompt", "")
@@ -16,7 +14,6 @@ def chat_view(request):
     if not prompt:
         return Response({"error": "No prompt provided"}, status=400)
 
-    # Prompt łączący wiadomosc i kod
     full_prompt = f"User message: {prompt}\n\nCurrent file content:\n{code}"
 
     try:
@@ -24,3 +21,4 @@ def chat_view(request):
         return Response({"response": response})
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
