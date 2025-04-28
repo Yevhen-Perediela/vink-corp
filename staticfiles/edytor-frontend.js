@@ -145,21 +145,6 @@ function loadRepoTree() {
         console.error("Błąd ładowania drzewa:", err);
         alert('Błąd sieci podczas ładowania repozytorium.');
     });
-
-    .then(res => res.json())
-    .then(tree => {
-        if (!Array.isArray(tree)) {
-            console.error('Błąd drzewa:', tree.error || 'Nieznany błąd');
-            alert(tree.error || 'Nie udało się załadować repozytorium.');
-            return;
-        }
-        renderFileTree(tree, repo);
-    })
-    .catch(err => {
-        console.error("Błąd ładowania drzewa:", err);
-        alert('Błąd sieci podczas ładowania repozytorium.');
-    });
-
 }
 
 function renderFileTree(tree, repoName) {
