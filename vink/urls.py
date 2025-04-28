@@ -21,6 +21,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('edytor/', include('edytor.urls')),
-    path('todo/', include('todo.urls')),
+    path('todo/', include('todo.urls'), name='todo'),
     path('', include('main.urls')),
 ]

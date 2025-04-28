@@ -27,7 +27,11 @@
             </div>
             <div id="small-menu-bottom">
                 <img id='sett' src="{% static 'img/settings.png' %}">
-                <img id='ava' src="{% static 'img/avatar.png' %}">
+                {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">
+                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                </a>
+                {% endif %}
             </div>
         </div>
         <div class="menu" id="folders">
