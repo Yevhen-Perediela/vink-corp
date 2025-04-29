@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'styles/dashboard.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>MojeMenu</h2>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'edytor' %}">🏠 Strona główna</a></li>
+                    <li><a href="{% url 'profile' %}">👤 Profil</a></li>
+                    <li><a href="">⚙️ Ustawienia</a></li>
+                    <li><a href="{% url 'todo' %}">📋 Zadania</a></li>
+                    <li><a href="{% url 'logout' %}">🚪 Wyloguj się</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <h1>Witaj, {{ user.username }}!</h1>
+                <p>Miło Cię znowu widzieć.</p>
+            </header>
+
+            <section class="content">
+                <div class="card">
+                    <h3>Liczba zadań</h3>
+                    <p>
+                        {#skrypt#}
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>Ukończone projekty</h3>
+                    <p>
+                        {#skrypt#}
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>Nowe wiadomości</h3>
+                    <p>
+                        {#skrypt#}
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
