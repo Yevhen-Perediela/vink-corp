@@ -31,8 +31,13 @@
                 <a href="{% url 'profile' %}">
                     <img id='ava' src="{% static 'img/avatar.png' %}">
                 </a>
+                {% else %}
+                 <a href="{% url 'login' %}">
+                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                 </a>
                 {% endif %}
             </div>
+
         </div>
         <div class="menu" id="folders">
             <p>Wczytaj repo</p>
