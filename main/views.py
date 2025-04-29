@@ -29,3 +29,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def welcome(request):
+    return render(request, 'welcome.html')
