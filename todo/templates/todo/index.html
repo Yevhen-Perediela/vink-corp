@@ -82,12 +82,23 @@
                 </div>
                 <div class="mind_board">Mind board</div>
           <div class="whiteboard" id="whiteboard-view" style="display: none;">
-    <div class="toolbar">
-        <button onclick="clearCanvas()">🧹 Wyczyść</button>
-        <button onclick="saveCanvas()">💾 Zapisz</button>
-    </div>
-    <canvas id="board"></canvas>
+              <div class="toolbar">
+                  <label for="colorPicker">Kolor:</label>
+                  <input type="color" id="colorPicker" value="#ff8000">
+
+                  <div class="toolbar-item">
+  <label for="brushSize">Grubość:</label>
+  <input type="range" id="brushSize" min="1" max="20" value="2">
 </div>
+
+                  <button onclick="activateEraser()">Gumka</button>
+                  <button onclick="activateBrush()">Pisak</button>
+                  <button onclick="clearCanvas()">Wyczyść</button>
+                  <button onclick="saveCanvas()">Zapisz</button>
+                  <button onclick="activateArrow()">Strzałka</button>
+              </div>
+              <canvas id="board"></canvas>
+          </div>
             </div>
         </div>
     </div>

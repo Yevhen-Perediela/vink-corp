@@ -4,18 +4,65 @@ window.initWhiteboard = function () {
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
-
+  let arrowMode = false;
+  let startX = 0;
+  let startY = 0;
   let drawing = false;
+  let currentColor = '#ff8000';
+  let brushSize = 2;
+  let isErasing = false;
+
+  const colorPicker = document.getElementById('colorPicker');
+  const brushSlider = document.getElementById('brushSize');
+
+  if (colorPicker) {
+    colorPicker.addEventListener('input', (e) => {
+      currentColor = e.target.value;
+    });
+  }
+
+  if (brushSlider) {
+    brushSlider.addEventListener('input', (e) => {
+      brushSize = parseInt(e.target.value);
+    });
+  }
+
+  window.activateArrow = function () {
+    arrowMode = true;
+    isErasing = false;
+  };
+
+  window.activateEraser = function () {
+    isErasing = true;
+  };
+
+  window.activateBrush = function () {
+    isErasing = false;
+    arrowMode = false;
+};
 
   canvas.addEventListener('mousedown', (e) => {
+  if (arrowMode) {
+    const rect = canvas.getBoundingClientRect();
+    startX = e.clientX - rect.left;
+    startY = e.clientY - rect.top;
+  } else {
     drawing = true;
     draw(e);
-  });
+  }
+});
 
-  canvas.addEventListener('mouseup', () => {
+canvas.addEventListener('mouseup', (e) => {
+  if (arrowMode) {
+    const rect = canvas.getBoundingClientRect();
+    const endX = e.clientX - rect.left;
+    const endY = e.clientY - rect.top;
+    drawArrow(startX, startY, endX, endY);
+  } else {
     drawing = false;
     ctx.beginPath();
-  });
+  }
+});
 
   canvas.addEventListener('mouseout', () => {
     drawing = false;
@@ -31,15 +78,45 @@ window.initWhiteboard = function () {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth = brushSize;
     ctx.lineCap = 'round';
-    ctx.strokeStyle = '#1e90ff';
+    ctx.strokeStyle = isErasing ? '#ffffff' : currentColor;
 
     ctx.lineTo(x, y);
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(x, y);
   }
+
+  function drawArrow(fromX, fromY, toX, toY) {
+  const headLength = 10;
+  const dx = toX - fromX;
+  const dy = toY - fromY;
+  const angle = Math.atan2(dy, dx);
+
+  ctx.strokeStyle = currentColor;
+  ctx.lineWidth = brushSize;
+
+  // линия
+  ctx.beginPath();
+  ctx.moveTo(fromX, fromY);
+  ctx.lineTo(toX, toY);
+  ctx.stroke();
+
+  // стрелка
+  ctx.beginPath();
+  ctx.moveTo(toX, toY);
+  ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
+              toY - headLength * Math.sin(angle - Math.PI / 6));
+  ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6),
+              toY - headLength * Math.sin(angle + Math.PI / 6));
+  ctx.lineTo(toX, toY);
+  ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
+              toY - headLength * Math.sin(angle - Math.PI / 6));
+  ctx.stroke();
+  ctx.fillStyle = currentColor;
+  ctx.fill();
+}
 
   window.clearCanvas = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
