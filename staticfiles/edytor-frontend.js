@@ -120,10 +120,10 @@ document.addEventListener('keydown', e => {
     }
 });
 
-window.editor.onDidChangeModelContent(() => {
-    window.editorContentNow = editor.getValue();
-    renderTabs();
-});
+// window.editor.onDidChangeModelContent(() => {
+//     window.editorContentNow = editor.getValue();
+//     renderTabs();
+// }); 
 
 function loadRepoTree() {
     const url = localStorage.getItem('cur-repoUrl') || document.getElementById('repoUrl').value;
@@ -145,7 +145,6 @@ function loadRepoTree() {
         console.error("Błąd ładowania drzewa:", err);
         alert('Błąd sieci podczas ładowania repozytorium.');
     });
-
 }
 
 function renderFileTree(tree, repoName) {
@@ -438,46 +437,6 @@ function getCSRFToken() {
 }
 
 
-const chatBox = document.getElementById('chat-messages');
-const chatInput = document.getElementById('user-input');
-
-function sendChatMessage() {
-    const message = chatInput.value.trim();
-    if (!message) return;
-
-    appendMessage("You", message);
-    chatInput.value = "";
-
-    fetch("/edytor/api/ai/chat/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt: message })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.response) {
-            appendMessage("AI", data.response);
-        } else {
-            appendMessage("AI", "Brak odpowiedzi.");
-        }
-    })
-    .catch(() => {
-        appendMessage("AI", "Wystąpił błąd sieci.");
-    });
-}
-
-function appendMessage(who, text) {
-    const msg = document.createElement("div");
-    msg.classList.add('chat-message');
-    msg.innerHTML = `<strong>${who}:</strong> ${text}`;
-    chatBox.appendChild(msg);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-
-
 async function pullChanges() {
     const repoName = localStorage.getItem('cur-repoName');
     if (!repoName) {
@@ -563,3 +522,57 @@ function changeGitToken() {
         alert('Token został zapisany w sessionStorage!');
     }
 }
+function sendChatMessage() {
+    const chatInput = document.getElementById('user-input');
+    const message = chatInput.value.trim();
+
+    if (!message) return;
+
+    appendMessage("Ty", message);
+    chatInput.value = "";
+
+    // const currentCode = getCodeFromEditor();
+    const currentCode = editor.getValue();
+
+    fetch("/edytor/api/ai/chat/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            prompt: message,
+            code: currentCode   
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.response) {
+            appendMessage("AI", data.response);
+        } else {
+            appendMessage("AI", "Brak odpowiedzi.");
+        }
+    })
+    .catch(() => {
+        appendMessage("AI", "Błąd połączenia z serwerem.");
+    });
+}
+
+function appendMessage(who, text) {
+    const chatBox = document.getElementById('chat-messages'); 
+    const msg = document.createElement("div");
+    msg.classList.add('chat-message');
+
+    if (who === "Ty") {
+        msg.classList.add('user-message');
+    } else {
+        msg.classList.add('ai-message');
+    }
+
+    msg.innerHTML = `${text}`;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+window.addEventListener("load", () => {
+    appendMessage("Ty", "Co potrafisz?");
+    appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
+});

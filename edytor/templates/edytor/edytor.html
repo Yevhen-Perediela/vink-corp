@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edytor</title>
     <link rel="stylesheet" href="{% static 'edytor.css' %}">
+    <link rel="stylesheet" href="{% static 'ai.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script> -->
 </head>
@@ -61,7 +62,7 @@
                 <div id="chat-input" style="padding: 10px;">
                     <input type="text" id="user-input" placeholder="Napisz coś..." style="width: 70%;">
                     <button onclick="sendChatMessage()">Wyślij</button>
-            </div>
+                </div>
         </div>
         <div id="small-todo">
 
@@ -76,7 +77,7 @@
         require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' }});
         require(['vs/editor/editor.main'], function () {
             window.editor = monaco.editor.create(document.getElementById('editor'), {
-                value: `// Hello, Vink 👋\nconsole.log("Edit me!");`,
+                value: `// Hello, Vink 👋\nconst message = 'Hello world;`,
                 language: 'python',
                 theme: 'vs-dark',
                 automaticLayout: true,
@@ -92,6 +93,7 @@
         });
     </script>
     <script src="{% static 'edytor.js' %}"></script>
+    <script src="{% static 'ai.js' %}"></script>
     <script src="{% static 'edytor-frontend.js' %}"></script>
 </body>
 </html>    

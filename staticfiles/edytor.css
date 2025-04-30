@@ -107,68 +107,6 @@ h1{
 #folders{
     overflow-y: auto;
 }
-#chatgpt {
-    width: 20%;
-    height: 100%;
-    border-left: 1px solid rgb(136, 136, 136);
-    display: flex;
-    flex-direction: column;
-    background-color: #1e1e1e;
-    color: white;
-    font-size: 14px;
-}
-#chat-input input {
-    background-color: #2e2e2e;
-    border: none;
-    color: white;
-    padding: 5px;
-}
-#chat-input input:focus {
-    outline: none;
-}
-#chat-input button {
-    padding: 5px 10px;
-    background-color: #007acc;
-    border: none;
-    border-radius: 3px;
-    color: white;
-    margin-left: 5px;
-}
-.user-message {
-    background-color: #333;
-    align-self:flex-end;
-    text-align: right;
-    color: white;
-    padding: 4%;
-    border-radius: 15px;
-}
-
-.ai-message {
-    align-self: flex-start;
-    color: white;
-    padding: 4%;
-}
-.chat-message {
-    padding: 10px;
-    border-radius: 8px;
-    max-width: 80%;
-    width: fit-content;         /* szerokosc do zawartości */
-    word-wrap: break-word;      /* łamie długie słowa */
-    white-space: pre-wrap;      /* zachowuje \n i spacje */
-    line-height: 1.4;
-    font-size: 14px;
-}
-#chat-messages {
-    padding: 10px;
-    overflow-y: auto;
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-
-
 
 .tree-item {
     cursor: pointer;
@@ -185,7 +123,6 @@ h1{
     margin-right: 5px;
     overflow-x: hidden;
 }
-
 
 .nested {
 display: none;

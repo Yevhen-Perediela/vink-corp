@@ -27,7 +27,7 @@ def handle_code(code, mode="refactor", with_comments=True):
         if with_comments:
             prompt += "\n\nAdd helpful comments too."
     elif mode == "comment":
-        prompt = f"Add comments to this code:\n\n{code}"
+        prompt = f"Add comments to this code:\n\n{code}"12
     elif mode == "explain":
         prompt = f"Explain what the following code does:\n\n{code}"
     elif mode == "diff":
