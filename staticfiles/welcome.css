@@ -39,6 +39,7 @@ header {
 
 nav{
   margin: 30px 0px 0px 0px;
+  z-index: 999;
 }
 nav a{
   text-decoration: none;
@@ -288,4 +289,18 @@ nav a:hover{
   margin: 0;
   letter-spacing: 1px;
   font-weight: 300;
+}
+
+
+#tryit{
+  padding: 5px 10px;
+  background-color: rgb(255, 203, 107);
+  color: black;
+  border-radius: 10px;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+#tryit:hover{
+  background-color: rgb(255, 166, 0);
+  cursor: pointer;
 }
