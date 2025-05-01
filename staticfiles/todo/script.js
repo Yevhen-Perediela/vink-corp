@@ -502,22 +502,6 @@ window.changeTaskSort = changeTaskSort;
 
 var currentDate = new Date();
 
-function drawCalendar() {
-    let currentDate = new Date();
-    let currentYear = currentDate.getFullYear();
-    let currentMonth = currentDate.getMonth() + 1;
-    let daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-    let calendarHTML = "";
-    
-    for (let i = 1; i <= daysInMonth; i++) {
-        calendarHTML += `<div class="day">${i}</div>`;
-    }
-    
-    document.querySelector(".kalendarz > .calendarContent").innerHTML = calendarHTML;
-}
-
-drawCalendar();
-
 function drawCalendar(functionDate) {
   let date = functionDate;
   let currentYear = date.getFullYear();
@@ -601,9 +585,9 @@ function drawCalendar(functionDate) {
     monthText[currentMonth];
 }
 
-drawCalendar(currentDate);
-
 window.drawCalendar = drawCalendar;
+
+drawCalendar(currentDate);
 
 function previousCalendarMounth() {
   currentDate.setMonth(currentDate.getMonth() - 1);

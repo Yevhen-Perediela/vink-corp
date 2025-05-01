@@ -1,4 +1,5 @@
 window.initWhiteboard = function () {
+  console.log("HELLO");
   const canvas = document.getElementById('board');
   const ctx = canvas.getContext('2d');
 
