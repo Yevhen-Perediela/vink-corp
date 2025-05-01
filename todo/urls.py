@@ -21,8 +21,22 @@ from todo import views
 
 urlpatterns = [
     path('', views.main, name='main-todo'),
-    path('add/', views.add_task),
-    path('edit/', views.edit_task),
-    path('delete/', views.delete_task),
-    path('list/', views.list_tasks),
+    path('tasks/add/', views.add_task),
+    path('tasks/edit/', views.edit_task),
+    path('tasks/delete/', views.delete_task),
+    path('tasks/list/', views.list_tasks),
+
+    path('projects/list/', views.list_projects),
+    path('projects/add/', views.add_project),
+    path('projects/edit/', views.edit_project),
+    path('projects/delete/', views.delete_project),
+
+    path('users/add/', views.add_user),
+    path('users/edit/', views.edit_user),
+    path('users/delete/', views.delete_user),
+    path('users/list/', views.list_users),
+
+    path('groupRequest/list/',   views.list_groupRequest),
+    path('groupRequest/add/',    views.add_groupRequest),
+    path('groupRequest/delete/', views.delete_groupRequest),
 ]

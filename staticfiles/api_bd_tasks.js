@@ -1,5 +1,5 @@
 
-const BASE_URL = 'http://127.0.0.1:8000/todo';
+const BASE_URL = 'http://127.0.0.1:8000/todo/tasks';
 
 async function addTask(taskData) {
     const response = await fetch(`${BASE_URL}/add/`, {
@@ -28,7 +28,14 @@ async function deleteTask(taskId) {
     return await response.json();
 }
 
-async function listTasks() {
-    const response = await fetch(`${BASE_URL}/list/`);
+async function listTasks(projectId = null) {
+    const url = projectId
+        ? `${BASE_URL}/list/?project_id=${projectId}`
+        : `${BASE_URL}/list/`;
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return await response.json();
 }
+
+export { addTask, editTask, deleteTask, listTasks };

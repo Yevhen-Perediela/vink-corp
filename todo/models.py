@@ -23,3 +23,30 @@ class Task(models.Model):
 
     def __str__(self):
         return self.text
+    
+
+class User(models.Model):
+    name = models.CharField(max_length=200)
+    friend_id = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+    
+class Project(models.Model):
+    name = models.CharField(max_length=200)
+    origin_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='projects',
+        null=True,
+        blank=True
+    )
+    def __str__(self):
+        return self.name
+
+class GroupRequest(models.Model):
+    from_user = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.from_user.name} -> {self.to_user.name}"

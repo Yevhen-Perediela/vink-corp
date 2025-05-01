@@ -107,13 +107,89 @@ h1 {
 #chatgpt {
   width: 20%;
   height: 100%;
-  border-left: 1px solid rgb(136, 136, 136);
-  display: flex;
-  flex-direction: column;
+  border-right: 1px solid rgb(136, 136, 136);
+  display: grid;
+  grid-template-rows: 55px 1fr;
   background-color: #1e1e1e;
   color: white;
   font-size: 14px;
 }
+#chatgpt > .chatMenu {
+  display: flex;
+  align-items: center;
+  padding: 7.5px;
+  gap: 7.5px;
+}
+
+#chatgpt > .chatMenu > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  flex: 1;
+  border-radius: 5px;
+  background-color: rgb(19, 19, 19);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+#chatgpt > .chatMenu > div:hover,
+#chatgpt > .chatMenu > .selectedChatMenu {
+  flex: 1.3;
+  transform: scale(0.9);
+}
+
+#chatgpt > div:nth-child(n + 3) {
+  display: none;
+}
+
+#chatgpt > .groups > .groupsSearch {
+  width: 100%;
+  padding: 10px;
+}
+
+#chatgpt > .groups > .groupsSearch > input {
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  border: 3px solid rgb(74, 229, 39);
+  color: rgb(74, 229, 39);
+  background-color: rgb(19, 19, 19);
+  padding: 10px;
+  outline: none;
+}
+
+#chatgpt > .groups > .groupsSearch > input:active {
+  animation: shake 0.3s linear both;
+}
+
+@keyframes shake {
+  0% {
+    -webkit-transform: translate(0);
+    transform: translate(0);
+  }
+
+  20% {
+    -webkit-transform: translate(-2px, 2px);
+    transform: translate(-2px, 2px);
+  }
+
+  40% {
+    -webkit-transform: translate(-2px, -2px);
+    transform: translate(-2px, -2px);
+  }
+
+  60% {
+    -webkit-transform: translate(2px, 2px);
+    transform: translate(2px, 2px);
+  }
+
+  80% {
+    -webkit-transform: translate(2px, -2px);
+    transform: translate(2px, -2px);
+  }
+}
+
 #chat-input input {
   background-color: #2e2e2e;
   border: none;
@@ -158,7 +234,7 @@ h1 {
 #chat-messages {
   padding: 10px;
   overflow-y: auto;
-  height: 90%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -271,8 +347,8 @@ h1 {
 }
 
 .todo > .todo_content > div::-webkit-scrollbar {
-    width: 0px;
-    background-color: transparent;
+  width: 0px;
+  background-color: transparent;
 }
 
 .todo > .todo_content > div:nth-child(1) {
@@ -302,9 +378,9 @@ h1 {
   border-radius: 5px;
   border: none;
   outline: none;
-display: flex;
-align-items: center;
-justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 25px;
   position: relative;
   left: -15px;
@@ -314,386 +390,650 @@ justify-content: center;
 }
 
 .todo_content > .list > .addProjectContainer > .add_project_button:hover {
-    width: 60px;
-    height: 36px;
-    transform: translate(-30px, -3px);
+  width: 60px;
+  height: 36px;
+  transform: translate(-30px, -3px);
 }
 
 .list > .addProjectContainer > .add_project_button > .line1 {
-    height: 10px;
-    width: 2px;
-    background-color: white;
-    transition: all 0.3s ease;
+  height: 10px;
+  width: 2px;
+  background-color: white;
+  transition: all 0.3s ease;
 }
 
 .addProjectContainer > .add_project_button > .line1 > .line2 {
-    height: 10px;
-    width: 2px;
-    background-color: white;
-    transform: rotate(90deg);
-    transition: all 0.3s ease;
+  height: 10px;
+  width: 2px;
+  background-color: white;
+  transform: rotate(90deg);
+  transition: all 0.3s ease;
 }
 
 .list > .addProjectContainer > .add_project_button:hover > .line1 {
-    height: 15px;
-    width: 3px;
+  height: 15px;
+  width: 3px;
 }
 
 .list > .addProjectContainer > .add_project_button:hover > .line1 > .line2 {
-    height: 15px;
-    width: 3px;
+  height: 15px;
+  width: 3px;
 }
 
 .todo > .todo_content > .list {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .todo > .todo_content > .list > .list_contents {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
 }
 
 .todo > .todo_content > .list > .list_contents.two_column {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
 .todo_content > .list > .list_contents > div {
-    border: 1px solid rgb(136, 136, 136);
-    min-height: 50px;
-    width: 100%;
-    border-radius: 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    line-height: 16px;
-    position: relative;
+  border: 1px solid rgb(136, 136, 136);
+  min-height: 50px;
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  line-height: 16px;
+  position: relative;
 }
 
 .list > .list_contents > div > .addTaskContainer {
-    display: flex;
+  display: flex;
 }
 
 .list_contents > div > .addTaskContainer > .add_task_input {
-    height: 30px;
-    width: 160px;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    padding: 5px;
+  height: 30px;
+  width: 160px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  padding: 5px;
 }
 
 .list_contents > div > .addTaskContainer > .add_task_button {
-    height: 30px;
-    width: 30px;
-    border-radius: 5px;
-    border: none;
-    outline: none;
+  height: 30px;
+  width: 30px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
   display: flex;
   align-items: center;
   justify-content: center;
-    font-size: 25px;
-    position: relative;
-    left: -15px;
-    background-color: rgb(255, 132, 0);
-    color: white;
-    transition: all 0.3s ease;
-  }
-
-  .list_contents > div > .addTaskContainer > .add_task_button:hover {
-    width: 60px;
-    height: 36px;
-    transform: translate(-30px, -3px);
+  font-size: 25px;
+  position: relative;
+  left: -15px;
+  background-color: rgb(255, 132, 0);
+  color: white;
+  transition: all 0.3s ease;
 }
 
-.list_contents > div > .addTaskContainer:has(.add_task_button:hover) > .tasksStatusBar {
-    transform: translateX(-30px);
+.list_contents > div > .addTaskContainer > .add_task_button:hover {
+  width: 60px;
+  height: 36px;
+  transform: translate(-30px, -3px);
 }
-  
-  .list_contents > div > .addTaskContainer > .add_task_button > .line1 {
-      height: 10px;
-      width: 2px;
-      background-color: white;
-      transition: all 0.3s ease;
-  }
-  
-  .addTaskContainer > .add_task_button > .line1 > .line2 {
-      height: 10px;
-      width: 2px;
-      background-color: white;
-      transform: rotate(90deg);
-      transition: all 0.3s ease;
-  }
 
-  .list_contents > div > .addTaskContainer > .add_task_button:hover > .line1 {
-    height: 15px;
-    width: 3px;
+.list_contents
+  > div
+  > .addTaskContainer:has(.add_task_button:hover)
+  > .tasksStatusBar {
+  transform: translateX(-30px);
+}
+
+.list_contents > div > .addTaskContainer > .add_task_button > .line1 {
+  height: 10px;
+  width: 2px;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.addTaskContainer > .add_task_button > .line1 > .line2 {
+  height: 10px;
+  width: 2px;
+  background-color: white;
+  transform: rotate(90deg);
+  transition: all 0.3s ease;
+}
+
+.list_contents > div > .addTaskContainer > .add_task_button:hover > .line1 {
+  height: 15px;
+  width: 3px;
 }
 
 .addTaskContainer > .add_task_button:hover > .line1 > .line2 {
-    height: 15px;
-    width: 3px;
+  height: 15px;
+  width: 3px;
 }
 
-  .list > .list_contents > div > ul {
-    border: 1px solid rgb(136, 136, 136);
-    width: 100%;
-    border-radius: 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    line-height: 16px;
-  }
+.list > .list_contents > div > ul {
+  border: 1px solid rgb(136, 136, 136);
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  line-height: 16px;
+}
 
-  .list_contents > div > ul > .task {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-  }
+.list_contents > div > ul > .task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
 
-  .list_contents > div > ul > .task > .delete_task_button {
-    height: 15px;
-    width: 15px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    outline: none;
-    background-color: rgb(160, 160, 160);
-    transition: all 0.3s ease;
-    position: absolute;
-    right: 0px;
-  }
+.list_contents > div > ul > .task > .delete_task_button {
+  height: 15px;
+  width: 15px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  background-color: rgb(160, 160, 160);
+  transition: all 0.3s ease;
+  position: absolute;
+  right: 0px;
+}
 
-  .list_contents > div > ul > .task > .delete_task_button:hover {
-    background-color: rgb(229, 45, 39);
-    transform: scale(1.1);
-  }
+.list_contents > div > ul > .task > .delete_task_button:hover {
+  background-color: rgb(255, 69, 69);
+  transform: scale(1.1);
+}
 
-  .list_contents > div > ul > .task > .delete_task_button > .line1 {
-    height: 10px;
-    width: 2px;
-    background-color: white;
-    transform: rotate(45deg);
-  }
+.list_contents > div > ul > .task > .delete_task_button > .line1 {
+  height: 10px;
+  width: 2px;
+  background-color: white;
+  transform: rotate(45deg);
+}
 
-  .list_contents > div > ul > .task > .delete_task_button > .line1 > .line2 {
-    height: 10px;
-    width: 2px;
-    background-color: white;
-    transform: rotate(90deg);
+.list_contents > div > ul > .task > .delete_task_button > .line1 > .line2 {
+  height: 10px;
+  width: 2px;
+  background-color: white;
+  transform: rotate(90deg);
+}
 
-  }
-
-  .list_contents > div > ul > .task > .taskStatusLabel {
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    background-color: transparent;
-    border: 1px solid rgb(136, 136, 136);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
+.list_contents > div > ul > .task > .taskStatusLabel {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 1px solid rgb(136, 136, 136);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .list_contents > div > ul > .task > .taskStatusLabel > .checkmark {
-    height: 0px;
-    width: 0px;
-    background-color: rgb(229, 45, 39);
-    border-radius: 50%;
-    transition: all 0.3s ease;
+  height: 0px;
+  width: 0px;
+  background-color: rgb(255, 69, 69);
+  border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
-  .list_contents > div > ul > .task > .taskStatusLabel > .taskStatus {
-    display: none;
-  }
-
-  .list_contents > div > ul > .task > .taskStatusLabel:has(.taskStatus:checked) > .checkmark {
-    height: 13px;
-    width: 13px;
-    background-color: rgb(74, 229, 39);
-  }
-
-  .list_contents > div > ul > .task > .taskStatusLabel:has(.taskStatus:checked) {
-    border: 1px solid rgb(255, 255, 255);
-  }
-
-  .additionalText {
-    color: rgb(136, 136, 136);
-    font-size: 10px;
-    font-weight: 100;
-  }
-
-  .list_contents > div > .addTaskContainer > .tasksStatusBar {
-    height: 30px;
-    width: 90px;
-    border-radius: 15px;
-    background-color: rgb(136, 136, 136);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    transform: translateX(0px);
-    transition: all 0.3s ease;
-  }
-
-  .list_contents > div > .addTaskContainer > .tasksStatusBar::before {
-    content: "";
-    height: 30px;
-    width: var(--progress-width);
-    background-color: rgb(74, 229, 39);
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    bottom: 0px;
-    transition: all 0.3s ease;
-  }
-
-  .list_contents > div > .addTaskContainer > .tasksStatusBar > .completedTasksPercents {
-    z-index: 2;
-  }
-
-  .list_contents > div > .deleteProjectButton {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: rgb(19, 19, 19);
-    border: none;
-    font-weight: 600;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
-    cursor: pointer;
-    transition-duration: 0.3s;
-    overflow: hidden;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    gap: 2px;
-    transform: translateY(5px) translateX(-5px);
-  }
-
-  .list_contents > div > .deleteProjectButton > .svgIcon {
-    width: 12px;
-    transition-duration: 0.3s;
-    transform: translateY(0px);
-  }
-
-  .list_contents > div > .deleteProjectButton > .svgIcon path {
-    fill: white;
-  }
-
-  .list_contents > div > .deleteProjectButton:hover {
-    transition-duration: 0.3s;
-    background-color: rgb(255, 69, 69);
-    align-items: center;
-    gap: 0;
-    width: 60px;
-    height: 60px;
-    transform: translateY(0px) translateX(0px);
-  }
-
-  .list_contents > div > .deleteProjectButton:hover .svgIcon {
-    width: 20px;
-    transform: translateY(9.5px);
-  }
-
-  .list_contents > div > .deleteProjectButton .bin-top {
-    transform-origin: bottom right;
-    transform: translateX(0px);
-  }
-  .list_contents > div > .deleteProjectButton:hover .bin-top {
-    transition-duration: 0.5s;
-    transform: rotate(70deg) translateX(8.5px);
-  }
-  
-  .todo_content > .list > .addProjectContainer > .sortProjectContainer {
-    height: 30px;
-    width: 90px;
-    border-radius: 15px;
-    display: flex;
-    overflow: hidden;
-    background-color: rgb(60, 60, 60);
-    transform: translateX(0px);
-    transition: all 0.3s ease;
-  }
-
-  .todo_content > .list > .addProjectContainer:has(.add_project_button:hover) > .sortProjectContainer {
-    transform: translateX(-30px);
+.list_contents > div > ul > .task > .taskStatusLabel > .taskStatus {
+  display: none;
 }
 
-  .todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    transform: translateX(7.5px);
-  }
+.list_contents
+  > div
+  > ul
+  > .task
+  > .taskStatusLabel:has(.taskStatus:checked)
+  > .checkmark {
+  height: 13px;
+  width: 13px;
+  background-color: rgb(255, 69, 69);
+}
 
-  .todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine > div {
-    height: 15px;
-    width: 75px;
-    border: 1px solid rgb(136, 136, 136);
-    border-radius: 7.5px;
-  }
+.list_contents
+  > div
+  > ul
+  > .task
+  > .taskStatusLabel.inProgress:has(.taskStatus:checked)
+  > .checkmark {
+  height: 13px;
+  width: 13px;
+  background-color: rgb(255, 132, 0);
+}
 
-  .todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7.5px;
-    transition: all 0.3s ease;
-    transform: translateX(15px);
-  }
+.list_contents
+  > div
+  > ul
+  > .task
+  > .taskStatusLabel.done:has(.taskStatus:checked)
+  > .checkmark {
+  height: 13px;
+  width: 13px;
+  background-color: rgb(74, 229, 39);
+}
 
-  .todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine > div {
-    height: 15px;
-    width: 33.75px;
-    border: 1px solid rgb(136, 136, 136);
-    border-radius: 7.5px;
-  }
+.list_contents > div > ul > .task > .taskStatusLabel:has(.taskStatus:checked) {
+  border: 1px solid rgb(255, 255, 255);
+}
 
-  .kalendarz > .calendarContent {
-    height: 100%;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-  }
+.additionalText {
+  color: rgb(136, 136, 136);
+  font-size: 10px;
+  font-weight: 100;
+}
 
-  .kalendarz > .calendarContent > .day {
-    border: 1px solid rgb(136, 136, 136);
-    height: 100%;
-    width: 100%;
-    padding: 10px;
-    transition: all 0.3s ease;
-    z-index: 1;
-    position: relative;
-    background-color: rgb(19, 19, 19);
-  }
+.list_contents > div > .addTaskContainer > .tasksStatusBar {
+  height: 30px;
+  width: 90px;
+  border-radius: 15px;
+  background-color: rgb(136, 136, 136);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transform: translateX(0px);
+  transition: all 0.3s ease;
+}
 
-  .kalendarz > .calendarContent > .day:hover {
-    height: calc(100% + 6px);
-    width: calc(100% + 6px);
-    border: 6px solid rgb(255, 132, 0);
-    z-index: 2;
-    transform: translate(-3px, -3px);
-  }
+.list_contents > div > .addTaskContainer > .tasksStatusBar::before {
+  content: "";
+  height: 30px;
+  width: var(--progress-width);
+  background-color: rgb(74, 229, 39);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  transition: all 0.3s ease;
+}
+
+.list_contents
+  > div
+  > .addTaskContainer
+  > .tasksStatusBar
+  > .completedTasksPercents {
+  z-index: 2;
+}
+
+.list_contents > div > .deleteProjectButton {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgb(19, 19, 19);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  gap: 2px;
+  transform: translateY(5px) translateX(-5px);
+}
+
+.list_contents > div > .deleteProjectButton > .svgIcon {
+  width: 12px;
+  transition-duration: 0.3s;
+  transform: translateY(0px);
+}
+
+.list_contents > div > .deleteProjectButton > .svgIcon path {
+  fill: white;
+}
+
+.list_contents > div > .deleteProjectButton:hover {
+  transition-duration: 0.3s;
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+  gap: 0;
+  width: 60px;
+  height: 60px;
+  transform: translateY(0px) translateX(0px);
+}
+
+.list_contents > div > .deleteProjectButton:hover .svgIcon {
+  width: 20px;
+  transform: translateY(9.5px);
+}
+
+.list_contents > div > .deleteProjectButton .bin-top {
+  transform-origin: bottom right;
+  transform: translateX(0px);
+}
+.list_contents > div > .deleteProjectButton:hover .bin-top {
+  transition-duration: 0.5s;
+  transform: rotate(70deg) translateX(8.5px);
+}
+
+.todo_content > .list > .addProjectContainer > .sortProjectContainer {
+  height: 30px;
+  width: 90px;
+  border-radius: 15px;
+  display: flex;
+  overflow: hidden;
+  background-color: rgb(60, 60, 60);
+  transform: translateX(0px);
+  transition: all 0.3s ease;
+}
+
+.todo_content
+  > .list
+  > .addProjectContainer:has(.add_project_button:hover)
+  > .sortProjectContainer {
+  transform: translateX(-30px);
+}
+
+.todo_content
+  > .list
+  > .addProjectContainer
+  > .sortProjectContainer
+  > .oneInLine {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  transform: translateX(7.5px);
+}
+
+.todo_content
+  > .list
+  > .addProjectContainer
+  > .sortProjectContainer
+  > .oneInLine
+  > div {
+  height: 15px;
+  width: 75px;
+  border: 1px solid rgb(136, 136, 136);
+  border-radius: 7.5px;
+}
+
+.todo_content
+  > .list
+  > .addProjectContainer
+  > .sortProjectContainer
+  > .twoInLine {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7.5px;
+  transition: all 0.3s ease;
+  transform: translateX(15px);
+}
+
+.todo_content
+  > .list
+  > .addProjectContainer
+  > .sortProjectContainer
+  > .twoInLine
+  > div {
+  height: 15px;
+  width: 33.75px;
+  border: 1px solid rgb(136, 136, 136);
+  border-radius: 7.5px;
+}
+
+.kalendarz > .calendarSection {
+  flex-grow: 1;
+  border-left: 1px solid rgb(136, 136, 136);
+  display: grid;
+  grid-template-rows: 40px 1fr;
+}
+
+.kalendarz > .calendarSection > .calendarContent {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 1px;
+  background-color: rgb(136, 136, 136);
+}
+
+.kalendarz > .calendarSection > .calendarContent > .day {
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  transition: all 0.3s ease;
+  z-index: 1;
+  position: relative;
+  background-color: rgb(19, 19, 19);
+}
+
+.kalendarz > .calendarSection > .calendarContent > .day:hover,
+.kalendarz > .calendarSection > .calendarContent > .day.today:hover {
+  height: calc(100% + 2px);
+  width: calc(100% + 2px);
+  border: 6px solid rgb(255, 132, 0);
+  z-index: 2;
+  transform: translate(-1px, -1px);
+}
+
+.kalendarz > .calendarSection > .calendarContent > .day.empty {
+  pointer-events: none;
+}
+
+.kalendarz > .calendarSection > .calendarContent > .day.today {
+  height: calc(100% + 2px);
+  width: calc(100% + 2px);
+  border: 6px solid rgb(255, 69, 69);
+  z-index: 2;
+  transform: translate(-1px, -1px);
+}
+
+.kalendarz > .calendarSection > .calendarContent > .day.empty:hover {
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  transform: none;
+}
+
+.kalendarz > .calendarSection > .calendarHeader {
+  height: 40px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: rgb(136, 136, 136);
+  gap: 1px;
+}
+
+.kalendarz > .calendarSection > .calendarHeader > div {
+  padding: 10px;
+  background-color: rgb(19, 19, 19);
+  border-bottom: 1px solid rgb(136, 136, 136);
+}
+
+.kalendarz > .calendarDate {
+  height: 100%;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  position: relative;
+}
+
+.calendarDate b,
+.calendarDate .previous,
+.calendarDate .date,
+.calendarDate .next,
+.calendarDate > .todayButton {
+  writing-mode: vertical-rl;
+  rotate: 180deg;
+}
+
+.kalendarz > .calendarDate > button {
+  height: 20px;
+  width: 20px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 69, 69);
+  border: none;
+  outline: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.kalendarz > .calendarDate > button:hover {
+  transform: scale(1.1);
+}
+
+.kalendarz > .calendarDate > button.previous {
+  padding-bottom: 4px;
+}
+
+.kalendarz > .calendarDate > button.next {
+  padding-bottom: 4px;
+  rotate: 0deg;
+}
+
+.kalendarz > .calendarDate > .month {
+  min-height: 85px;
+}
+
+.kalendarz > .calendarDate > .todayButton {
+  position: absolute;
+  top: 10px;
+  height: 40px;
+  width: 20px;
+  background-color: rgb(255, 132, 0);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.list_contents > div > ul > .task > .tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  left: 50%;
+  right: 50%;
+}
+
+.list_contents > div > ul > .task > .tools > .taskPriority {
+  display: flex;
+  align-items: end;
+  gap: 4px;
+}
+
+.list_contents > div > ul > .task > .tools > .taskPriority > label {
+  width: 4px;
+  background-color: rgb(136, 136, 136);
+  transition: all 0.3s ease;
+}
+
+.list_contents > div > ul > .task > .tools > .taskPriority > label > input {
+  display: none;
+}
+
+.list_contents > div > ul > .task > .tools > .taskPriority > .priorityLow {
+  height: 8px;
+}
+
+.list_contents > div > ul > .task > .tools > .taskPriority > .priorityMedium {
+  height: 14px;
+}
+
+.list_contents > div > ul > .task > .tools > .taskPriority > .priorityHigh {
+  height: 20px;
+}
+
+.list_contents > div > ul > .task > .tools > .taskPriority > .priorityLow:hover,
+.list_contents
+  > div
+  > ul
+  > .task
+  > .tools
+  > .taskPriority
+  > .priorityLow:has(input:checked) {
+  background-color: rgb(74, 229, 39);
+}
+
+.list_contents
+  > div
+  > ul
+  > .task
+  > .tools
+  > .taskPriority
+  > .priorityMedium:hover,
+.list_contents
+  > div
+  > ul
+  > .task
+  > .tools
+  > .taskPriority
+  > .priorityMedium:has(input:checked) {
+  background-color: rgb(255, 132, 0);
+}
+
+.list_contents
+  > div
+  > ul
+  > .task
+  > .tools
+  > .taskPriority
+  > .priorityHigh:hover,
+.list_contents
+  > div
+  > ul
+  > .task
+  > .tools
+  > .taskPriority
+  > .priorityHigh:has(input:checked) {
+  background-color: rgb(255, 69, 69);
+}
+
+.mind_board #mindmap {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.mind_board .node text:not(.add-subtask) {
+  font: 12px sans-serif;
+  pointer-events: none;
+  text-anchor: middle;
+}
+.mind_board .node rect {
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+.mind_board .link {
+  fill: none;
+  stroke: #333;
+  stroke-width: 1.5px;
+  marker-end: url(#arrow);
+}
