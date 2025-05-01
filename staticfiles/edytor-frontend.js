@@ -522,6 +522,10 @@ function changeGitToken() {
         alert('Token został zapisany w sessionStorage!');
     }
 }
+
+let lastAISuggestion = "";
+let originalBeforeAISuggestion = "";
+
 function sendChatMessage() {
     const chatInput = document.getElementById('user-input');
     const message = chatInput.value.trim();
@@ -532,7 +536,13 @@ function sendChatMessage() {
     chatInput.value = "";
 
     // const currentCode = getCodeFromEditor();
-    const currentCode = editor.getValue();
+    // const currentCode = editor.getValue();
+
+    const selection = editor.getSelection();
+    const selectedText = editor.getModel().getValueInRange(selection);
+    const currentCode = selectedText.trim() !== "" ? selectedText : editor.getValue();
+
+    originalBeforeAISuggestion = editor.getValue();
 
     fetch("/edytor/ai/apiconnect/", {
         method: "POST",
@@ -547,7 +557,14 @@ function sendChatMessage() {
     .then(res => res.json())
     .then(data => {
         if (data.response) {
-            appendMessage("AI", data.response);
+            // appendMessage("AI", data.response);
+            // lastAISuggestion = data.response;
+            // addAcceptRejectButtons();
+            const extracted = extractCodeFromResponse(data.response);
+            lastAISuggestion = extracted || data.response;
+            appendMessage("AI", data.response);  // pokaż pełną wiadomość użytkownikowi
+            addAcceptRejectButtons();
+
         } else {
             appendMessage("AI", "Brak odpowiedzi.");
         }
@@ -556,7 +573,45 @@ function sendChatMessage() {
         appendMessage("AI", "Błąd połączenia z serwerem.");
     });
 }
+function addAcceptRejectButtons() {
+    const chatInputDiv = document.getElementById('chat-input');
 
+    const acceptBtn = document.createElement('button');
+    acceptBtn.textContent = "Accept";
+    acceptBtn.onclick = () => {
+        editor.setValue(lastAISuggestion);
+        removeAcceptRejectButtons();
+    };
+    acceptBtn.id = "accept-btn";
+    acceptBtn.style.marginLeft = "10px";
+
+    const rejectBtn = document.createElement('button');
+    rejectBtn.textContent = "Reject";
+    rejectBtn.onclick = () => {
+        editor.setValue(originalBeforeAISuggestion);
+        removeAcceptRejectButtons();
+    };
+    rejectBtn.id = "reject-btn";
+    rejectBtn.style.marginLeft = "5px";
+
+    chatInputDiv.appendChild(acceptBtn);
+    chatInputDiv.appendChild(rejectBtn);
+}
+
+function removeAcceptRejectButtons() {
+    const acceptBtn = document.getElementById('accept-btn');
+    const rejectBtn = document.getElementById('reject-btn');
+    if (acceptBtn) acceptBtn.remove();
+    if (rejectBtn) rejectBtn.remove();
+}
+
+function extractCodeFromResponse(text) {
+    const codeBlock = text.match(/```(?:\w*\n)?([\s\S]*?)```/);
+    if (codeBlock && codeBlock[1]) {
+        return codeBlock[1].trim(); // tylko czysty kod z ```...```
+    }
+    return null; // jeśli nie znaleziono bloku kodu
+}
 function appendMessage(who, text) {
     const chatBox = document.getElementById('chat-messages'); 
     const msg = document.createElement("div");
@@ -572,7 +627,11 @@ function appendMessage(who, text) {
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+
+
 window.addEventListener("load", () => {
-    appendMessage("Ty", "Co potrafisz?");
+    appendMessage("Ty", "Hej!");
     appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
 });
+
