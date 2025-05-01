@@ -1,4 +1,4 @@
-#tutaj mają być tylko logowanie i rejestracja
+#tutaj linki do htmla
 from django.urls import path
 from . import views
 
@@ -8,5 +8,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile_view, name='profile'),
     path('todo/', views.todo_view, name='todo'),
-    path('', views.welcome, name='welcome'),
+    path('', views.welcome_view, name='welcome'),
 ]

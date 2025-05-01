@@ -22,7 +22,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('edytor')  # zmień na swoją stronę główną
+            return redirect('welcome')  # zmień na swoją stronę główną
         else:
             messages.error(request, "Nieprawidłowe dane logowania.")
     return render(request, 'login.html')
@@ -39,5 +39,5 @@ def profile_view(request):
 def todo_view(request):
     return render(request, 'todo/templates/todo/index.html')
 
-def welcome(request):
+def welcome_view(request):
     return render(request, 'welcome.html')
