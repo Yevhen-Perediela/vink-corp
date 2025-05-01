@@ -1,14 +1,21 @@
 import openai
-#import os
-# #openai.api_key = os.getenv("OPENAI_API_KEY") i dodaj do .env
-openai.api_key = "dodaj_klucz" # na razie tutaj później zostanie zmienione
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def ask_gpt(prompt, model="gpt-4.1-nano"):
-    response = openai.ChatCompletion.create(
-        model = model,
-        message = [{"role": "user", "content": prompt}]
-    )
-    return response['choices'][0]['message']['content'].strip()
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"💥 Błąd OpenAI API: {e}")
+        raise
+
 
 def refactor_code(code_snippet):
     prompt = f"Refactor the following code: \n\n{code_snippet}"

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from main.auth.forms import RegisterForm
+from django.contrib.auth.decorators import login_required
 
 def register_view(request):
     if request.method == 'POST':
@@ -21,7 +22,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('edytor')  # zmień na swoją stronę główną
+            return redirect('welcome')  # zmień na swoją stronę główną
         else:
             messages.error(request, "Nieprawidłowe dane logowania.")
     return render(request, 'login.html')
@@ -29,3 +30,14 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+@login_required
+def profile_view(request):
+    return render(request, 'dashboard.html', {'user': request.user})
+
+@login_required
+def todo_view(request):
+    return render(request, 'todo/templates/todo/index.html')
+
+def welcome_view(request):
+    return render(request, 'welcome.html')

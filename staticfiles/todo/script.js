@@ -43,6 +43,19 @@ function changeToDoView(element) {
   document
     .querySelector(".todo_content")
     .prepend(document.querySelector(`.${element}`));
+
+//     document.querySelectorAll('.todo_content > div').forEach(div => div.style.display = 'none');
+
+//   const section = document.querySelector(`.todo_content > .${view}`);
+//   if (section) {
+//     section.style.display = 'block';
+//   }
+
+  if (element === 'whiteboard') {
+    setTimeout(() => {
+      initWhiteboard();
+    }, 100);
+  }
 }
 
 window.changeToDoView = changeToDoView;
@@ -488,6 +501,22 @@ function changeTaskSort() {
 window.changeTaskSort = changeTaskSort;
 
 var currentDate = new Date();
+
+function drawCalendar() {
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = currentDate.getMonth() + 1;
+    let daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+    let calendarHTML = "";
+    
+    for (let i = 1; i <= daysInMonth; i++) {
+        calendarHTML += `<div class="day">${i}</div>`;
+    }
+    
+    document.querySelector(".kalendarz > .calendarContent").innerHTML = calendarHTML;
+}
+
+drawCalendar();
 
 function drawCalendar(functionDate) {
   let date = functionDate;

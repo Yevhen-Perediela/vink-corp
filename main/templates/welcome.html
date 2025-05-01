@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vink Workspace</title>
+    <link rel="stylesheet" href="{% static 'welcome.css' %}">
+</head>
+<body>
+    <header>
+        <div id="header-top">
+            <span id="logo">Edytor & To-Do</span>
+            <nav>
+                <a href="{% url 'login' %}">Zaloguj się</a>
+                <a href="{% url 'register' %}">Zarejestruj się</a>
+            </nav>
+        </div>     
+        <p id="header-maintxt">Vink Corporation<br><span id="header-maintxt2">Workspace porgramistyczny - <a id='tryit' src='{% url "edytor" %}'>Wypróbuj</a></span></p>
+        <div class="blur-layer"></div> 
+
+        <div class="carousel3d">
+            <div class="carousel3d-track" id="carouselTrack">
+                <img src="{% static 'img/vscode.jpeg' %}" alt="1">
+                <img src="{% static 'img/todo.png' %}" alt="2">
+                <img src="{% static 'img/vscode.jpeg' %}" alt="3">
+                <img src="{% static 'img/todo3.png' %}" alt="4">
+            </div>
+        </div>   
+    </header>
+    <div id="editor">
+        <div id="editor-wrap">
+            <div id="editor-description">
+                <div class="editor-skewed-inner"></div>
+                <div class="editor-content">
+                    <h2>I. Editor</h2>
+                    <ul class="editor-list">
+                        <li style="--i:6;"><b>> Inteligentne podpowiedzi i autouzupełnianie</b> — dla wielu języków programowania</li>
+                        <li style="--i:5;"><b>> Podświetlanie składni</b> — czytelny kod od razu po otwarciu</li>
+                        <li style="--i:4;"><b>> Obsługa wielu języków</b> — HTML, CSS, JavaScript, Python, PHP, C++, itd.</li>
+                        <li style="--i:3;"><b>> Zintegrowany AI Chat</b> — podgląd plików, szybkie odpowiedzi, tłumaczenia, generowanie kodu</li>
+                        <li style="--i:2;"><b>> Pełna integracja z GIT</b> — pull, push, commit, podgląd zmian bez wychodzenia z edytora</li>
+                        <li style="--i:1;"><b>> Obsługa prywatnych i publicznych repozytoriów</b> — szybkie klonowanie i zarządzanie projektami</li>
+                        <li style="--i:0;"><b>> Minimalistyczny, ale potężny</b> — lekki interfejs z mocą edytora klasy PRO</li>
+                      </ul>                      
+                </div>
+              </div>
+        
+            <img src="{% static 'img/vscode.jpeg' %}">
+        </div>
+        
+
+    </div>
+    <div id="todo">
+        <div id="todo-wrap">
+            <img src="{% static 'img/todo3.png' %}" alt="ToDo obrazek">
+            <div id="todo-description">
+                <div class="todo-skewed-inner"></div>
+                <div class="todo-content">
+                    <h2>II. To-Do</h2>
+                    <ul class="todo-list">
+                        <li style="--i:0;"><b>> Podział na grupy</b> — możesz tworzyć zespoły i dodawać do nich innych użytkowników</li>
+                        <li style="--i:1;"><b>> Współdzielenie zadań w grupie</b> — zadania widoczne i edytowalne dla całego zespołu</li>
+                        <li style="--i:2;"><b>> Priorytety i status</b> — oznaczaj zadania jako pilne, ważne lub zakończone</li>
+                        <li style="--i:3;"><b>> Śledzenie postępu</b> — zmieniaj status: do zrobienia, w trakcie, zakończone</li>
+                        <li style="--i:4;"><b>> Tryby widoku</b> — przełączaj między Kanbanem, listą, kalendarzem i mind boardem</li>
+                        <li style="--i:5;"><b>> White Board</b> — przestrzeń do wspólnego planowania i szkicowania pomysłów</li>
+                        <li style="--i:6;"><b>> Widok zadań według terminu</b> — zadania automatycznie pojawiają się w kalendarzu</li>
+
+                    
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer id="footer">
+        <p>&copy; 2025 Vink Corporation — Wszystkie prawa zastrzeżone</p>
+    </footer>
+    
+    <script src="{% static 'welcome.js' %}"></script>
+</body>
+</html>

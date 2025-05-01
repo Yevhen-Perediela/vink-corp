@@ -46,7 +46,8 @@ h1{
 }
 #main-wrap{
     display: flex;
-    height: 100%;
+    height: calc(100vh - 5%);
+    max-height: calc(100vh - 5%);
 }
 #small-menu{
     width: 5%;
@@ -85,91 +86,36 @@ h1{
 }
 .menu{
     width: 15%;
-    height: 100%;
+    /* height: 100%; */
     border-right: 1px solid rgb(136, 136, 136);
     color: white;
-    padding: 20px;
+    /* padding-top: 20px; */
     box-sizing: border-box;
+    overflow-y: auto;
+    max-height: calc(100vh - 5%);
 }
-#github{
-    display: none;
+.menu h3{
+    padding: 10px;
+    text-transform: uppercase;
+
 }
+
 #editor{
-    width: 65%;
-    height: 100%;
+    width: 100%;
+    height: calc(100% - 45px);
 }
 #folders{
     overflow-y: auto;
 }
-#chatgpt {
-    width: 20%;
-    height: 100%;
-    border-left: 1px solid rgb(136, 136, 136);
-    display: flex;
-    flex-direction: column;
-    background-color: #1e1e1e;
-    color: white;
-    font-size: 14px;
-}
-#chat-input input {
-    background-color: #2e2e2e;
-    border: none;
-    color: white;
-    padding: 5px;
-}
-#chat-input input:focus {
-    outline: none;
-}
-#chat-input button {
-    padding: 5px 10px;
-    background-color: #007acc;
-    border: none;
-    border-radius: 3px;
-    color: white;
-    margin-left: 5px;
-}
-.user-message {
-    background-color: #333;
-    align-self:flex-end;
-    text-align: right;
-    color: white;
-    padding: 4%;
-    border-radius: 15px;
-}
-
-.ai-message {
-    align-self: flex-start;
-    color: white;
-    padding: 4%;
-}
-.chat-message {
-    padding: 10px;
-    border-radius: 8px;
-    max-width: 80%;
-    width: fit-content;         /* szerokosc do zawartości */
-    word-wrap: break-word;      /* łamie długie słowa */
-    white-space: pre-wrap;      /* zachowuje \n i spacje */
-    line-height: 1.4;
-    font-size: 14px;
-}
-#chat-messages {
-    padding: 10px;
-    overflow-y: auto;
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-
-
 
 .tree-item {
     cursor: pointer;
     padding-left: 10px;
     user-select: none;
+    width: 100%;
     
 }
+
 .tree_item_img{
     width: 16px;
     height: 16px;
@@ -177,7 +123,6 @@ h1{
     margin-right: 5px;
     overflow-x: hidden;
 }
-
 
 .nested {
 display: none;
@@ -195,3 +140,124 @@ padding-left: 15px;
     margin-right: 6px;
   }
   
+
+  .tabs-bar {
+    display: flex;
+    background-color: #1e1e1e;
+    color: white;
+    padding: 5px;
+    overflow-x: auto;
+}
+
+.tab-item {
+    background: #252526;
+    border: 1px solid #333;
+    padding: 5px 10px;
+    margin-right: 2px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.tab-item.active {
+    background: rgba(255, 166, 0, 0.674);
+}
+
+.tab-item .tab-icon {
+    margin-left: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#editor-wrap{
+    display: flex;
+    flex-direction: column;
+    /* height: 100%; */
+    width: 65%;
+    background-color: #1e1e1e;
+}
+
+.new-item-input {
+    width: 90%;
+    padding: 2px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.folder-actions button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 16px;
+}
+
+.tree-item.folder{
+    display: flex;
+    align-items: center;
+
+}
+.create-file, .create-folder{
+
+    /* position: absolute; */
+    text-align: end;
+   
+}
+
+#chatgpt, #small-todo, #chat {
+    display: none;
+}
+#chatgpt {
+    display: flex; /* lub block, zależnie od potrzeb */
+}
+
+
+
+#github{
+    display: none;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+#github input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #2d2d2d;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #d4d4d4;
+    font-size: 14px;
+}
+
+#github input[type="text"]::placeholder {
+    color: #888;
+}
+
+#github button {
+    width: 90%;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #0e639c;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#github button:hover {
+    background-color: #1177bb;
+}
+
+#github hr {
+    border: 0;
+    height: 2px;
+    background: #444;
+    margin: 20px 0;
+    width: 100%;
+}

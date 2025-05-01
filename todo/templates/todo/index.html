@@ -24,7 +24,15 @@
             </div>
             <div id="small-menu-bottom">
                 <img id='sett' src="{% static 'img/settings.png' %}">
-                <img id='ava' src="{% static 'img/avatar.png' %}">
+               {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">
+                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                </a>
+                {% else %}
+                 <a href="{% url 'login' %}">
+                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                 </a>
+                {% endif %}
             </div>
         </div>
         <div id="chatgpt">
@@ -107,10 +115,17 @@
                 <div class="mind_board">
                     <svg id="mindmap"></svg>
                 </div>
-                <div class="whiteboard">Whiteboard</div>
+                <div class="whiteboard" id="whiteboard-view" style="display: none;">
+                    <div class="toolbar">
+                        <button onclick="clearCanvas()">🧹 Wyczyść</button>
+                        <button onclick="saveCanvas()">💾 Zapisz</button>
+                    </div>
+                    <canvas id="board"></canvas>
+                </div>
             </div>
         </div>
     </div>
+    <script src="{% static 'scripts/whiteboard.js' %}"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="module" src="{% static 'todo/script.js' %}"></script>
     <script type="module" src="{% static 'todo/mindMap.js' %}"></script>
