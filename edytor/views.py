@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .ai.apiconnect import ask_gpt
+from django.http import JsonResponse
+
 
 def edytor(request):
     return render(request, 'edytor/edytor.html')
@@ -20,5 +22,6 @@ def chat_view(request):
         response = ask_gpt(full_prompt)
         return Response({"response": response})
     except Exception as e:
-        return Response({"error": str(e)}, status=500)
+        # return Response({"error": str(e)}, status=500)
+        return JsonResponse({"error": str(e)}, status=500)
 

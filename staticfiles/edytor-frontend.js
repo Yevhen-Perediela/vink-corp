@@ -534,7 +534,7 @@ function sendChatMessage() {
     // const currentCode = getCodeFromEditor();
     const currentCode = editor.getValue();
 
-    fetch("/edytor/api/ai/chat/", {
+    fetch("/edytor/ai/apiconnect/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

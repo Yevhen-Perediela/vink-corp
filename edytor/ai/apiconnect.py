@@ -1,14 +1,21 @@
 import openai
 import os
-openai.api_key = os.getenv("OPENAI_API_KEY")
+from dotenv import load_dotenv
+load_dotenv()
 
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def ask_gpt(prompt, model="gpt-4.1-nano"):
-    response = openai.ChatCompletion.create(
-        model = model,
-        message = [{"role": "user", "content": prompt}]
-    )
-    return response['choices'][0]['message']['content'].strip()
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"💥 Błąd OpenAI API: {e}")
+        raise
+
 
 def refactor_code(code_snippet):
     prompt = f"Refactor the following code: \n\n{code_snippet}"
@@ -27,7 +34,7 @@ def handle_code(code, mode="refactor", with_comments=True):
         if with_comments:
             prompt += "\n\nAdd helpful comments too."
     elif mode == "comment":
-        prompt = f"Add comments to this code:\n\n{code}"12
+        prompt = f"Add comments to this code:\n\n{code}"
     elif mode == "explain":
         prompt = f"Explain what the following code does:\n\n{code}"
     elif mode == "diff":
