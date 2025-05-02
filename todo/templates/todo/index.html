@@ -36,10 +36,25 @@
             </div>
         </div>
         <div id="chatgpt">
-            <div id="chat-messages" style="height: 90%; overflow-y: auto; color: white; padding: 10px;"></div>
+            <div class="chatMenu">
+                <div class="switchToChat" onclick="selectChatMenu(this, '#chat-messages')">
+                    Chat
+                </div>
+                <div class="switchToGroups" onclick="selectChatMenu(this, '.groups')">
+                    Grupy
+                </div>
+            </div>
+            <div id="chat-messages">
                 <div id="chat-input" style="padding: 10px;">
                     <input type="text" id="user-input" placeholder="Napisz coś..." style="width: 70%;">
                     <button onclick="sendChatMessage()">Wyślij</button>
+                </div>
+            </div>
+            <div class="groups">
+                <div class="groupsSearch">
+                    <input type="text" oninput="searchGroup(this)" placeholder="Search The Matrix...">
+                </div>
+                <div class="search-results"></div>
             </div>
         </div>
         <div class="menu" id="github">
@@ -59,7 +74,7 @@
                 <div class="list">
                     <div class="addProjectContainer">
                         <input type="text" class="add_project_input" placeholder="Nowy projekt">
-                        <button class="add_project_button" onclick="addProject()"><div class="line1"><div class="line2"></div></button>
+                        <button class="add_project_button" onclick="addProjectFunction()"><div class="line1"><div class="line2"></div></button>
                         <div class="sortProjectContainer" onclick="changeTaskSort()">
                                 <div class="oneInLine">
                                     <div></div>
@@ -75,23 +90,44 @@
                     </div>
                 </div>
                 <div class="kalendarz">
-                    
-                    <div class="calendarContent">
-
+                    <div class="calendarDate">
+                        <button class="previous" onclick="previousCalendarMounth()">▼</button>
+                        <span class="date"></span>
+                        <button class="next" onclick="nextCalendarMounth()">▼</button>
+                        <b class="month"></b>
+                        <div class="todayButton" onclick="drawCalendar(new Date())">Dziś</div>
+                    </div>
+                    <div class="calendarSection">
+                        <div class="calendarHeader">
+                            <div>Poniedziałek</div>
+                            <div>Wtorek</div>
+                            <div>Środa</div>
+                            <div>Czwartek</div>
+                            <div>Piątek</div>
+                            <div>Sobota</div>
+                            <div>Niedziela</div>
+                        </div>
+                        <div class="calendarContent">
+    
+                        </div>
                     </div>
                 </div>
-                <div class="mind_board">Mind board</div>
-          <div class="whiteboard" id="whiteboard-view" style="display: none;">
-    <div class="toolbar">
-        <button onclick="clearCanvas()">🧹 Wyczyść</button>
-        <button onclick="saveCanvas()">💾 Zapisz</button>
-    </div>
-    <canvas id="board"></canvas>
-</div>
+                <div class="mind_board">
+                    <svg id="mindmap"></svg>
+                </div>
+                <div class="whiteboard" id="whiteboard-view">
+                    <div class="toolbar">
+                        <button onclick="clearCanvas()">🧹 Wyczyść</button>
+                        <button onclick="saveCanvas()">💾 Zapisz</button>
+                    </div>
+                    <canvas id="board"></canvas>
+                </div>
             </div>
         </div>
     </div>
-    <script src="{% static 'scripts/whiteboard.js' %}"></script>
-    <script src="{% static 'todo/script.js' %}"></script>
+    <script src="{% static './scripts/whiteboard.js' %}"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="module" src="{% static 'todo/script.js' %}"></script>
+    <script type="module" src="{% static 'todo/mindMap.js' %}"></script>
 </body>
 </html>
