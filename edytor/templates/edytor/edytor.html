@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script> -->
 </head>
+
 <body>
     <header>
         <h1>Edytor</h1>
@@ -29,15 +31,14 @@
                 <img src="{% static 'img/github.png' %}" onclick="showGit()">
             </div>
             <div id="small-menu-bottom">
-                <img id='sett' src="{% static 'img/settings.png' %}">
-                {% if user.is_authenticated %}
+                <img id='sett' src="{% static 'img/settings.png' %}"> {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}">
                     <img id='ava' src="{% static 'img/avatar.png' %}">
                 </a>
                 {% else %}
-                 <a href="{% url 'login' %}">
+                <a href="{% url 'login' %}">
                     <img id='ava' src="{% static 'img/avatar.png' %}">
-                 </a>
+                </a>
                 {% endif %}
             </div>
 
@@ -52,6 +53,12 @@
             <input type="text" placeholder="Nazwa commitu..." id="commitMessage">
             <button id="commit" onclick="commitChanges()">Commit & Push</button>
             <button id="pull" onclick="pullChanges()">Pull</button>
+            <hr>
+            <h4 style="color: white; margin-bottom: 10px;">Historia Commitów</h4>
+            <div id="commit-history">
+                
+                <div id="commits-list" style="color: white;"></div>
+            </div>
         </div>
         <div id='editor-wrap'>
             <div id="tabs" class="tabs-bar"></div>
@@ -59,10 +66,10 @@
         </div>
         <div id="chatgpt">
             <div id="chat-messages" style="height: 90%; overflow-y: auto; color: white; padding: 10px;"></div>
-                <div id="chat-input" style="padding: 10px;">
-                    <input type="text" id="user-input" placeholder="Napisz coś..." style="width: 70%;">
-                    <button onclick="sendChatMessage()">Wyślij</button>
-                </div>
+            <div id="chat-input" style="padding: 10px;">
+                <input type="text" id="user-input" placeholder="Napisz coś..." style="width: 70%;">
+                <button onclick="sendChatMessage()">Wyślij</button>
+            </div>
         </div>
         <div id="small-todo">
 
@@ -74,26 +81,31 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
     <script>
-        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' }});
-        require(['vs/editor/editor.main'], function () {
+        require.config({
+            paths: {
+                'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs'
+            }
+        });
+        require(['vs/editor/editor.main'], function() {
             window.editor = monaco.editor.create(document.getElementById('editor'), {
                 value: `// Hello, Vink 👋\nconst message = 'Hello world;`,
                 language: 'python',
                 theme: 'vs-dark',
                 automaticLayout: true,
             });
-        
+
             // <<< Teraz tutaj! >>>
             window.editor.onDidChangeModelContent(() => {
                 window.editorContentNow = window.editor.getValue();
                 renderTabs();
             });
-        
+
             startEditor(); // <--- I start aplikacji dopiero tutaj!
         });
     </script>
     <script src="{% static 'edytor.js' %}"></script>
     <script src="{% static 'edytor-frontend.js' %}"></script>
-    
+
 </body>
-</html>    
+
+</html>

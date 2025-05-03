@@ -3,26 +3,42 @@ var edytor = document.getElementById("editor-wrap");
 var folders = document.getElementById("folders");
 
 const extensionToLanguage = {
-    'py': 'python', 'js': 'javascript', 'ts': 'typescript',
-    'html': 'html', 'css': 'css', 'json': 'json', 'php': 'php',
-    'md': 'markdown', 'sh': 'shell', 'c': 'c', 'cpp': 'cpp',
-    'java': 'java', 'cs': 'csharp', 'txt': 'plaintext',
+    'py': 'python',
+    'js': 'javascript',
+    'ts': 'typescript',
+    'html': 'html',
+    'css': 'css',
+    'json': 'json',
+    'php': 'php',
+    'md': 'markdown',
+    'sh': 'shell',
+    'c': 'c',
+    'cpp': 'cpp',
+    'java': 'java',
+    'cs': 'csharp',
+    'txt': 'plaintext',
 };
 
 const extensionToIconURL = {
-    'py': 'python/python-original.svg', 'js': 'javascript/javascript-original.svg',
-    'ts': 'typescript/typescript-original.svg', 'html': 'html5/html5-original.svg',
-    'css': 'css3/css3-original.svg', 'json': 'code/code-original.svg',
-    'php': 'php/php-original.svg', 'md': 'markdown/markdown-original.svg',
-    'sh': 'bash/bash-original.svg', 'c': 'c/c-original.svg',
-    'cpp': 'cplusplus/cplusplus-original.svg', 'java': 'java/java-original.svg',
+    'py': 'python/python-original.svg',
+    'js': 'javascript/javascript-original.svg',
+    'ts': 'typescript/typescript-original.svg',
+    'html': 'html5/html5-original.svg',
+    'css': 'css3/css3-original.svg',
+    'json': 'code/code-original.svg',
+    'php': 'php/php-original.svg',
+    'md': 'markdown/markdown-original.svg',
+    'sh': 'bash/bash-original.svg',
+    'c': 'c/c-original.svg',
+    'cpp': 'cplusplus/cplusplus-original.svg',
+    'java': 'java/java-original.svg',
     'cs': 'csharp/csharp-original.svg',
 };
 
 function getIconURL(ext) {
-    return extensionToIconURL[ext]
-        ? `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${extensionToIconURL[ext]}`
-        : 'https://img.icons8.com/?size=100&id=1395&format=png&color=FFFFFF';
+    return extensionToIconURL[ext] ?
+        `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${extensionToIconURL[ext]}` :
+        'https://img.icons8.com/?size=100&id=1395&format=png&color=FFFFFF';
 }
 
 function setLanguageByFilename(filename) {
@@ -95,22 +111,22 @@ function saveCurrentFile(alertIfNone = true) {
         return;
     }
     fetch('/edytor/api/save-file/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ repo, file: path, content: editor.getValue() })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            console.log("✅ Zapisano plik");
-            window.fileContents[path] = editor.getValue();
-            window.editorContentNow = editor.getValue();
-            renderTabs();
-        }
-    })
-    .catch(err => {
-        console.error("❌ Błąd zapisu:", err);
-    });
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ repo, file: path, content: editor.getValue() })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                console.log("✅ Zapisano plik");
+                window.fileContents[path] = editor.getValue();
+                window.editorContentNow = editor.getValue();
+                renderTabs();
+            }
+        })
+        .catch(err => {
+            console.error("❌ Błąd zapisu:", err);
+        });
 }
 
 document.addEventListener('keydown', e => {
@@ -132,19 +148,19 @@ function loadRepoTree() {
     localStorage.setItem('cur-repoName', repo);
 
     fetch(`/edytor/api/local-tree/?repo=${encodeURIComponent(repo)}`)
-    .then(res => res.json())
-    .then(tree => {
-        if (!Array.isArray(tree)) {
-            console.error('Błąd drzewa:', tree.error || 'Nieznany błąd');
-            alert(tree.error || 'Nie udało się załadować repozytorium.');
-            return;
-        }
-        renderFileTree(tree, repo);
-    })
-    .catch(err => {
-        console.error("Błąd ładowania drzewa:", err);
-        alert('Błąd sieci podczas ładowania repozytorium.');
-    });
+        .then(res => res.json())
+        .then(tree => {
+            if (!Array.isArray(tree)) {
+                console.error('Błąd drzewa:', tree.error || 'Nieznany błąd');
+                alert(tree.error || 'Nie udało się załadować repozytorium.');
+                return;
+            }
+            renderFileTree(tree, repo);
+        })
+        .catch(err => {
+            console.error("Błąd ładowania drzewa:", err);
+            alert('Błąd sieci podczas ładowania repozytorium.');
+        });
 }
 
 function renderFileTree(tree, repoName) {
@@ -274,22 +290,22 @@ function createInputForNew(type, folderPath, container) {
 function createItem(path, type) {
     const repo = localStorage.getItem('cur-repoName');
     fetch(`/edytor/api/create-${type}/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ repo, path })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            console.log(`✅ Utworzono ${type}:`, path);
-            loadRepoTree();
-        } else {
-            alert(data.error || "Błąd tworzenia");
-        }
-    })
-    .catch(err => {
-        console.error("❌ Błąd tworzenia:", err);
-    });
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ repo, path })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                console.log(`✅ Utworzono ${type}:`, path);
+                loadRepoTree();
+            } else {
+                alert(data.error || "Błąd tworzenia");
+            }
+        })
+        .catch(err => {
+            console.error("❌ Błąd tworzenia:", err);
+        });
 }
 
 function loadFile(path) {
@@ -316,6 +332,7 @@ function startEditor() {
     if (repo) {
         console.log("🔄 Ładuję lokalne repo:", repo);
         loadRepoTree();
+        loadCommitHistory();
     } else {
         console.log("⚠️ Brak repo w localStorage. Wpisz URL i sklonuj repo.");
     }
@@ -357,6 +374,7 @@ function showGit(el) {
         folders.style.display = "none";
     }
 }
+
 function showFolders(el) {
     if (folders.style.display === "block") {
         folders.style.display = "none";
@@ -365,6 +383,58 @@ function showFolders(el) {
         folders.style.display = "block";
         edytor.style.width = "65%";
         git.style.display = "none";
+    }
+}
+
+async function loadCommitHistory() {
+    const repoName = localStorage.getItem('cur-repoName');
+    if (!repoName) return;
+
+    try {
+        const response = await fetch(`/edytor/api/commit-history/?repo=${repoName}`, {
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            console.error(data.error);
+            return;
+        }
+
+        const commitsList = document.getElementById('commits-list');
+        commitsList.innerHTML = '';
+
+        data.commits.forEach(commit => {
+            const commitElement = document.createElement('div');
+            commitElement.className = 'commit-item';
+
+            commitElement.innerHTML = `
+                <div class="commit-message">
+                    <div class="commit-dot"></div>
+                    <div class="commit-title">${commit.message}</div>
+                </div>
+                <div class="commit-meta">
+                    <div class="commit-author">
+                        <i class="fas fa-user" style="margin-right: 4px;"></i>
+                        ${commit.author}
+                    </div>
+                    <div class="commit-date">
+                        <i class="fas fa-clock" style="margin-right: 4px;"></i>
+                        ${commit.date}
+                    </div>
+                </div>
+                <div class="commit-hash">
+                    ${commit.hash.substring(0, 7)}
+                </div>
+            `;
+
+            commitsList.appendChild(commitElement);
+        });
+    } catch (error) {
+        console.error('Błąd podczas pobierania historii:', error);
     }
 }
 
@@ -384,9 +454,9 @@ async function cloneRepository() {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken()
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 url: repoUrl,
-                token: getGitToken()
+                
             })
         });
 
@@ -402,6 +472,7 @@ async function cloneRepository() {
                 window.currentEditingPath = null;
                 editor.setValue('wybierz plik :)');
                 loadRepoTree();
+                loadCommitHistory();
                 alert(data.message);
             } else {
                 alert(data.message || 'Operacja zakończona.');
@@ -458,7 +529,8 @@ async function pullChanges() {
 
         if (response.ok) {
             alert(data.message || 'Repozytorium zostało zaktualizowane!');
-            loadRepoTree(); // po pullu możesz przeładować drzewo
+            loadRepoTree();
+            loadCommitHistory();
         } else {
             alert(data.error || 'Wystąpił błąd podczas aktualizacji.');
         }
@@ -467,8 +539,6 @@ async function pullChanges() {
         alert('Coś poszło mocno nie tak podczas pulla...');
     }
 }
-
-
 
 async function commitChanges() {
     const repoName = localStorage.getItem('cur-repoName');
@@ -496,30 +566,13 @@ async function commitChanges() {
 
         if (response.ok) {
             alert(data.message || 'Zmiany wypchnięte!');
+            loadCommitHistory();
         } else {
             alert(data.error || 'Wystąpił błąd podczas pushowania.');
         }
     } catch (error) {
         console.error('Błąd pushowania:', error);
         alert('Coś poszło mocno nie tak podczas pushowania...');
-    }
-}
-
-
-function getGitToken() {
-    return sessionStorage.getItem('git-token') || '';
-}
-
-function setGitToken(token) {
-    sessionStorage.setItem('git-token', token);
-}
-
-
-function changeGitToken() {
-    const newToken = prompt('Wprowadź nowy GitHub Token:');
-    if (newToken !== null) {
-        setGitToken(newToken.trim());
-        alert('Token został zapisany w sessionStorage!');
     }
 }
 
@@ -545,34 +598,35 @@ function sendChatMessage() {
     originalBeforeAISuggestion = editor.getValue();
 
     fetch("/edytor/ai/apiconnect/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            prompt: message,
-            code: currentCode   
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                prompt: message,
+                code: currentCode
+            })
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.response) {
-            // appendMessage("AI", data.response);
-            // lastAISuggestion = data.response;
-            // addAcceptRejectButtons();
-            const extracted = extractCodeFromResponse(data.response);
-            lastAISuggestion = extracted || data.response;
-            appendMessage("AI", data.response);  // pokaż pełną wiadomość użytkownikowi
-            addAcceptRejectButtons();
+        .then(res => res.json())
+        .then(data => {
+            if (data.response) {
+                // appendMessage("AI", data.response);
+                // lastAISuggestion = data.response;
+                // addAcceptRejectButtons();
+                const extracted = extractCodeFromResponse(data.response);
+                lastAISuggestion = extracted || data.response;
+                appendMessage("AI", data.response); // pokaż pełną wiadomość użytkownikowi
+                addAcceptRejectButtons();
 
-        } else {
-            appendMessage("AI", "Brak odpowiedzi.");
-        }
-    })
-    .catch(() => {
-        appendMessage("AI", "Błąd połączenia z serwerem.");
-    });
+            } else {
+                appendMessage("AI", "Brak odpowiedzi.");
+            }
+        })
+        .catch(() => {
+            appendMessage("AI", "Błąd połączenia z serwerem.");
+        });
 }
+
 function addAcceptRejectButtons() {
     const chatInputDiv = document.getElementById('chat-input');
 
@@ -612,8 +666,9 @@ function extractCodeFromResponse(text) {
     }
     return null; // jeśli nie znaleziono bloku kodu
 }
+
 function appendMessage(who, text) {
-    const chatBox = document.getElementById('chat-messages'); 
+    const chatBox = document.getElementById('chat-messages');
     const msg = document.createElement("div");
     msg.classList.add('chat-message');
 
@@ -629,9 +684,7 @@ function appendMessage(who, text) {
 }
 
 
-
 window.addEventListener("load", () => {
     appendMessage("Ty", "Hej!");
     appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
 });
-

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
-from .api import clone_repo, local_repo_tree, local_repo_file, save_file, create_file, create_folder, pull_repo, push_repo
+from .api import clone_repo, local_repo_tree, local_repo_file, save_file, create_file, create_folder, pull_repo, push_repo, get_commit_history
 
 
 urlpatterns = [
@@ -31,5 +31,5 @@ urlpatterns = [
     path('api/create-folder/', create_folder, name='create_folder'),
     path('api/pull-repo/', pull_repo, name='pull_repo'),
     path('api/push-repo/', push_repo, name='push_repo'),
-
+    path('api/commit-history/', get_commit_history, name='commit_history'),
 ]
