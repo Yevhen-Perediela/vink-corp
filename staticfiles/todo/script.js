@@ -1,31 +1,31 @@
 import { addTask, editTask, deleteTask, listTasks } from "../api_bd_tasks.js";
 import {
-  addProject,
-  editProject,
-  deleteProject,
-  listProjects,
+    addProject,
+    editProject,
+    deleteProject,
+    listProjects,
 } from "../api_bd_projects.js";
 import { addUser, editUser, deleteUser, listUsers } from "../api_bd_users.js";
 import {
-  addGroupRequest,
-  deleteGroupRequest,
-  listGroupRequests,
+    addGroupRequest,
+    deleteGroupRequest,
+    listGroupRequests,
 } from "../api_bd_groupRequests.js";
 
 import { showMindMap } from './mindMap.js';
 
-var userId = 10;
+var userId = parseInt(sessionStorage.getItem("user_id")); // Użyj userId z sessionStorage
 
 async function showMyProjects() {
-  try {
-    const { projects } = await listProjects(userId);
-    console.log(projects);
-    projects.forEach((project) => {
-      addProjectFromDBFunction(project.name, project.id);
-    });
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-  }
+    try {
+        const { projects } = await listProjects(userId);
+        console.log(projects);
+        projects.forEach((project) => {
+            addProjectFromDBFunction(project.name, project.id);
+        });
+    } catch (error) {
+        console.error("Error fetching projects:", error);
+    }
 }
 
 showMyProjects(); // ← teraz userId zostanie użyty poprawnie
@@ -33,58 +33,58 @@ showMyProjects(); // ← teraz userId zostanie użyty poprawnie
 const actions_buttons = document.querySelectorAll(".todo_panel > button");
 
 actions_buttons.forEach((button) => {
-  button.addEventListener("click", () => {
-    actions_buttons.forEach((btn) => btn.classList.remove("active"));
-    button.classList.add("active");
-  });
+    button.addEventListener("click", () => {
+        actions_buttons.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+    });
 });
 
 function changeToDoView(element) {
-  document
-    .querySelector(".todo_content")
-    .prepend(document.querySelector(`.${element}`));
+    document
+        .querySelector(".todo_content")
+        .prepend(document.querySelector(`.${element}`));
 
-//     document.querySelectorAll('.todo_content > div').forEach(div => div.style.display = 'none');
+    //     document.querySelectorAll('.todo_content > div').forEach(div => div.style.display = 'none');
 
-//   const section = document.querySelector(`.todo_content > .${view}`);
-//   if (section) {
-//     section.style.display = 'block';
-//   }
+    //   const section = document.querySelector(`.todo_content > .${view}`);
+    //   if (section) {
+    //     section.style.display = 'block';
+    //   }
 
-  if (element === 'whiteboard') {
-    setTimeout(() => {
-      initWhiteboard();
-    }, 100);
-  }
+    if (element === 'whiteboard') {
+        setTimeout(() => {
+            initWhiteboard();
+        }, 100);
+    }
 }
 
 window.changeToDoView = changeToDoView;
 
 async function addProjectFunction() {
-  try {
-    let everyThingOk = true;
-    let projectNameInput = document.querySelector(".add_project_input").value;
-    const { projects } = await listProjects(userId);
-    console.log("Y" + projects);
-    projects.forEach((project) => {
-      if (project.name === projectNameInput) {
-        everyThingOk = false;
-        document.querySelector(".add_project_input").value = "";
-        document.querySelector(".add_project_input").placeholder =
-          "Projekt już istnieje";
-      } else {
-        document.querySelector(".add_project_input").placeholder =
-          "Nowy projekt";
-      }
-    });
-    if (projectNameInput !== "" && everyThingOk) {
-      addProject({
-        name: projectNameInput,
-        user_id: userId,
-      }).then((data) => {
-        document.querySelector(
-          ".list_contents"
-        ).innerHTML += `<div class="todo${projectNameInput}">
+    try {
+        let everyThingOk = true;
+        let projectNameInput = document.querySelector(".add_project_input").value;
+        const { projects } = await listProjects(userId);
+        console.log("Y" + projects);
+        projects.forEach((project) => {
+            if (project.name === projectNameInput) {
+                everyThingOk = false;
+                document.querySelector(".add_project_input").value = "";
+                document.querySelector(".add_project_input").placeholder =
+                    "Projekt już istnieje";
+            } else {
+                document.querySelector(".add_project_input").placeholder =
+                    "Nowy projekt";
+            }
+        });
+        if (projectNameInput !== "" && everyThingOk) {
+            addProject({
+                name: projectNameInput,
+                user_id: userId,
+            }).then((data) => {
+                document.querySelector(
+                    ".list_contents"
+                ).innerHTML += `<div class="todo${projectNameInput}">
             ${projectNameInput}
             <button class="deleteProjectButton" onclick="deleteProjectFunction('todo${projectNameInput}')">
                 <svg
@@ -138,25 +138,25 @@ async function addProjectFunction() {
                     <div>Add a task to start</div>
                 </ul>
         </div>`;
-        document.querySelector(".add_project_input").value = "";
-        showMindMap();
-      });
+                document.querySelector(".add_project_input").value = "";
+                showMindMap();
+            });
+        }
+    } catch (error) {
+        console.error("Error adding project:", error);
     }
-  } catch (error) {
-    console.error("Error adding project:", error);
-  }
 }
 
 window.addProjectFunction = addProjectFunction;
 
 async function addProjectFromDBFunction(projectName, projectId) {
-  let projectNameInput = projectName;
-  console.log("::" + projectId);
-  const { tasks } = await listTasks(projectId);
-  let taskElements = tasks.length == 0 ? "<div>Add a task to start</div>" : "";
-  tasks.forEach((task) => {
-    console.log("T" + task.id);
-    taskElements += `<div class="task">
+    let projectNameInput = projectName;
+    console.log("::" + projectId);
+    const { tasks } = await listTasks(projectId);
+    let taskElements = tasks.length == 0 ? "<div>Add a task to start</div>" : "";
+    tasks.forEach((task) => {
+        console.log("T" + task.id);
+        taskElements += `<div class="task">
           <label class="taskStatusLabel">
               <input type="checkbox" class="todo${projectName}Task taskStatus" task_status="To Do" oninput="changeTaskStatus(this)" checked>
               <span class="checkmark"></span>
@@ -179,10 +179,10 @@ async function addProjectFromDBFunction(projectName, projectId) {
           <div class="line1"><div class="line2"></div></div>
           </button>
       </div>`;
-  })
-  document.querySelector(
-    ".list_contents"
-  ).innerHTML += `<div class="todo${projectNameInput}">
+    })
+    document.querySelector(
+        ".list_contents"
+    ).innerHTML += `<div class="todo${projectNameInput}">
       ${projectNameInput}
         <button class="deleteProjectButton" onclick="deleteProjectFunction(this, '${projectNameInput}')">
             <svg
@@ -236,24 +236,24 @@ async function addProjectFromDBFunction(projectName, projectId) {
                 ${taskElements}
             </ul>
     </div>`;
-  document.querySelector(".add_project_input").value = "";
+    document.querySelector(".add_project_input").value = "";
 }
 
 async function deleteProjectFunction(element, projectName) {
-  try {
-    let projectElement = element.parentElement;
-    let projectList = document.querySelector(".list_contents");
-    const { projects } = await listProjects(userId);
-    projects.forEach((project) => {
-      if (project.name === projectName) {
-        deleteProject(project.id);
-        projectList.removeChild(projectElement);
-        showMindMap();
-      }
-    });
-  } catch (error) {
-    console.log("Error" + error);
-  }
+    try {
+        let projectElement = element.parentElement;
+        let projectList = document.querySelector(".list_contents");
+        const { projects } = await listProjects(userId);
+        projects.forEach((project) => {
+            if (project.name === projectName) {
+                deleteProject(project.id);
+                projectList.removeChild(projectElement);
+                showMindMap();
+            }
+        });
+    } catch (error) {
+        console.log("Error" + error);
+    }
 }
 
 window.deleteProjectFunction = deleteProjectFunction;
@@ -261,49 +261,49 @@ window.deleteProjectFunction = deleteProjectFunction;
 // <input type="checkbox" class="todo${projectName}Task taskStatus" task_status="todo" oninput="changeCompletedTasksPercents('todo${projectName}Task')">
 
 async function addTaskFunction(element, projectName) {
-  try {
-    let everyThingOk = true;
-    let mainElement = element.parentElement;
-    let sectionElement = mainElement.parentElement;
-    let taskNameInput = mainElement.querySelector(".add_task_input").value;
-    let projectId;
-    const { projects } = await listProjects(userId);
-    projects.forEach(async (project) => {
-      if (project.name === projectName) {
-        projectId = project.id;
-        const { tasks } = await listTasks(projectId);
-        console.log("T" + tasks);
-        tasks.forEach((task) => {
-          if (task.text === taskNameInput) {
-            everyThingOk = false;
-            mainElement.querySelector(".add_task_input").value = "";
-            mainElement.querySelector(".add_task_input").placeholder =
-              "Zadanie już istnieje";
-          } else {
-            mainElement.querySelector(".add_task_input").placeholder =
-              "Nowe zadanie";
-          }
+    try {
+        let everyThingOk = true;
+        let mainElement = element.parentElement;
+        let sectionElement = mainElement.parentElement;
+        let taskNameInput = mainElement.querySelector(".add_task_input").value;
+        let projectId;
+        const { projects } = await listProjects(userId);
+        projects.forEach(async(project) => {
+            if (project.name === projectName) {
+                projectId = project.id;
+                const { tasks } = await listTasks(projectId);
+                console.log("T" + tasks);
+                tasks.forEach((task) => {
+                    if (task.text === taskNameInput) {
+                        everyThingOk = false;
+                        mainElement.querySelector(".add_task_input").value = "";
+                        mainElement.querySelector(".add_task_input").placeholder =
+                            "Zadanie już istnieje";
+                    } else {
+                        mainElement.querySelector(".add_task_input").placeholder =
+                            "Nowe zadanie";
+                    }
+                });
+            }
         });
-      }
-    });
-    if (everyThingOk && taskNameInput !== "" && projectId) {
-      if (
-        sectionElement.querySelector("ul > div").textContent.trim() ===
-        "Add a task to start"
-      ) {
-        sectionElement.querySelector("ul").innerHTML = "";
-      }
-      addTask({
-        text: taskNameInput,
-        priority: "medium",
-        progress: "to_do",
-        due_date: null,
-        project_id: projectId,
-        assigned_user_id: userId,
-      }).then((data) => {
-        sectionElement.querySelector("ul").insertAdjacentHTML(
-          "beforeend",
-          `<div class="task">
+        if (everyThingOk && taskNameInput !== "" && projectId) {
+            if (
+                sectionElement.querySelector("ul > div").textContent.trim() ===
+                "Add a task to start"
+            ) {
+                sectionElement.querySelector("ul").innerHTML = "";
+            }
+            addTask({
+                text: taskNameInput,
+                priority: "medium",
+                progress: "to_do",
+                due_date: null,
+                project_id: projectId,
+                assigned_user_id: userId,
+            }).then((data) => {
+                sectionElement.querySelector("ul").insertAdjacentHTML(
+                    "beforeend",
+                    `<div class="task">
                 <label class="taskStatusLabel">
                     <input type="checkbox" class="todo${projectName}Task taskStatus" task_status="To Do" oninput="changeTaskStatus(this)" checked>
                     <span class="checkmark"></span>
@@ -326,95 +326,95 @@ async function addTaskFunction(element, projectName) {
                 <div class="line1"><div class="line2"></div></div>
                 </button>
             </div>`);
-        mainElement.querySelector(".add_task_input").value = "";
-        changeCompletedTasksPercents(`todo${projectName}Task`);
-        showMindMap();
-      });
+                mainElement.querySelector(".add_task_input").value = "";
+                changeCompletedTasksPercents(`todo${projectName}Task`);
+                showMindMap();
+            });
+        }
+    } catch (error) {
+        console.error("Error adding task:", error);
     }
-  } catch (error) {
-    console.error("Error adding task:", error);
-  }
 }
 
 window.addTaskFunction = addTaskFunction;
 
 async function addMindMapTaskFunction(element, projectName) {
     try {
-      const taskNameInput = prompt("Podaj nazwę zadania:");
-      if (!taskNameInput) return;
-  
-      let projectId = null;
-      let taskExists = false;
-  
-      const { projects } = await listProjects(userId);
-  
-      for (const project of projects) {
-        if (project.name === projectName) {
-          projectId = project.id;
-          const { tasks } = await listTasks(projectId);
-  
-          for (const task of tasks) {
-            if (task.text === taskNameInput) {
-              taskExists = true;
-              alert("Zadanie już istnieje");
-              break;
+        const taskNameInput = prompt("Podaj nazwę zadania:");
+        if (!taskNameInput) return;
+
+        let projectId = null;
+        let taskExists = false;
+
+        const { projects } = await listProjects(userId);
+
+        for (const project of projects) {
+            if (project.name === projectName) {
+                projectId = project.id;
+                const { tasks } = await listTasks(projectId);
+
+                for (const task of tasks) {
+                    if (task.text === taskNameInput) {
+                        taskExists = true;
+                        alert("Zadanie już istnieje");
+                        break;
+                    }
+                }
+
+                break; // już znaleźliśmy projekt, nie szukamy dalej
             }
-          }
-  
-          break; // już znaleźliśmy projekt, nie szukamy dalej
         }
-      }
-  
-      if (taskExists || !projectId) return;
-  
-      const newTask = await addTask({
-        text: taskNameInput,
-        priority: "medium",
-        progress: "to_do",
-        due_date: null,
-        project_id: projectId,
-        assigned_user_id: userId,
-      });
-  
-      console.log("Dodano nowe zadanie do projektu:", projectName, newTask);
-      showMindMap();
-      document.querySelector(
-        ".list_contents"
-      ).innerHTML = "";
-      showMyProjects();
+
+        if (taskExists || !projectId) return;
+
+        const newTask = await addTask({
+            text: taskNameInput,
+            priority: "medium",
+            progress: "to_do",
+            due_date: null,
+            project_id: projectId,
+            assigned_user_id: userId,
+        });
+
+        console.log("Dodano nowe zadanie do projektu:", projectName, newTask);
+        showMindMap();
+        document.querySelector(
+            ".list_contents"
+        ).innerHTML = "";
+        showMyProjects();
     } catch (error) {
-      console.error("Error adding task from mind map:", error);
+        console.error("Error adding task from mind map:", error);
     }
-  }
-  
-  window.addMindMapTaskFunction = addMindMapTaskFunction;
-  export { addMindMapTaskFunction };
-  
+}
+
+window.addMindMapTaskFunction = addMindMapTaskFunction;
+export { addMindMapTaskFunction };
+
 
 async function deleteTaskFunction(element, taskName, projectName) {
-  try {
-    let taskElement = element.parentElement;
-    let sectionElement = taskElement.parentElement;
-    const { projects } = await listProjects(userId);
-    projects.forEach(async (project) => {
-      if (project.name === projectName) {
-        let projectId = project.id;
-        const { tasks } = await listTasks(projectId);
-        tasks.forEach((task) => {
-          if (task.text === taskName) {
-            deleteTask(task.id);
-            sectionElement.removeChild(taskElement);
-            showMindMap();
-            if (!sectionElement.querySelector("div")) {
-              sectionElement.innerHTML = "<div>Add a task to start</div>";
+    try {
+        let taskElement = element.parentElement;
+        let sectionElement = taskElement.parentElement;
+        const { projects } = await listProjects(userId);
+        projects.forEach(async(project) => {
+            if (project.name === projectName) {
+                let projectId = project.id;
+                const { tasks } = await listTasks(projectId);
+                tasks.forEach((task) => {
+                    if (task.text === taskName) {
+                        deleteTask(task.id);
+                        sectionElement.removeChild(taskElement);
+                        showMindMap();
+                        if (!sectionElement.querySelector("div")) {
+                            sectionElement.innerHTML = "<div>Add a task to start</div>";
+                        }
+                    }
+                });
             }
-          }
         });
-      }
-    });
-  } catch (error) {
-    console.log("Error" + error);
-  }
+    } catch (error) {
+        console.log("Error" + error);
+    }
 }
 
 window.deleteTaskFunction = deleteTaskFunction;
@@ -424,40 +424,40 @@ function changePriority(element, taskClass, priorityType) {}
 window.changePriority = changePriority;
 
 function changeTaskStatus(element) {
-  if (element.getAttribute("task_status") === "To Do") {
-    element.checked = true;
-    element.setAttribute("task_status", "In Progress");
-    element.parentElement.classList.add("inProgress");
-  } else if (element.getAttribute("task_status") === "In Progress") {
-    element.checked = true;
-    element.setAttribute("task_status", "Done");
-    element.parentElement.classList.remove("inProgress");
-    element.parentElement.classList.add("done");
-    changeCompletedTasksPercents(`${element.classList[0]}`);
-  } else if (element.getAttribute("task_status") === "Done") {
-    element.checked = true;
-    element.setAttribute("task_status", "To Do");
-    element.parentElement.classList.remove("done");
-    changeCompletedTasksPercents(`${element.classList[0]}`);
-  }
+    if (element.getAttribute("task_status") === "To Do") {
+        element.checked = true;
+        element.setAttribute("task_status", "In Progress");
+        element.parentElement.classList.add("inProgress");
+    } else if (element.getAttribute("task_status") === "In Progress") {
+        element.checked = true;
+        element.setAttribute("task_status", "Done");
+        element.parentElement.classList.remove("inProgress");
+        element.parentElement.classList.add("done");
+        changeCompletedTasksPercents(`${element.classList[0]}`);
+    } else if (element.getAttribute("task_status") === "Done") {
+        element.checked = true;
+        element.setAttribute("task_status", "To Do");
+        element.parentElement.classList.remove("done");
+        changeCompletedTasksPercents(`${element.classList[0]}`);
+    }
 }
 
 window.changeTaskStatus = changeTaskStatus;
 
 function changeCompletedTasksPercents(checkboxesClass) {
-  let allCheckboxes = document.querySelectorAll(`.${checkboxesClass}`).length;
-  let allCheckboxesChecked = document.querySelectorAll(
-    `.taskStatusLabel.done > .${checkboxesClass}:checked`
-  ).length;
-  document
-    .querySelector(`.${checkboxesClass}Bar`)
-    .style.setProperty(
-      "--progress-width",
-      (allCheckboxesChecked / allCheckboxes) * 90 + "px"
-    );
-  document.querySelector(
-    `.${checkboxesClass}Bar > .completedTasksPercents`
-  ).innerHTML = Math.round((allCheckboxesChecked / allCheckboxes) * 100) + "%";
+    let allCheckboxes = document.querySelectorAll(`.${checkboxesClass}`).length;
+    let allCheckboxesChecked = document.querySelectorAll(
+        `.taskStatusLabel.done > .${checkboxesClass}:checked`
+    ).length;
+    document
+        .querySelector(`.${checkboxesClass}Bar`)
+        .style.setProperty(
+            "--progress-width",
+            (allCheckboxesChecked / allCheckboxes) * 90 + "px"
+        );
+    document.querySelector(
+        `.${checkboxesClass}Bar > .completedTasksPercents`
+    ).innerHTML = Math.round((allCheckboxesChecked / allCheckboxes) * 100) + "%";
 }
 
 window.changeCompletedTasksPercents = changeCompletedTasksPercents;
@@ -465,37 +465,37 @@ window.changeCompletedTasksPercents = changeCompletedTasksPercents;
 var taskSortType = 1;
 
 function changeTaskSort() {
-  if (taskSortType === 1) {
-    taskSortType = 2;
-    document.querySelector(".list_contents").classList.add("two_column");
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
-    ).style.transform = "translateX(-75px)";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
-    ).style.transform = "translateX(-67.5px)";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
-    ).style.opacity = "0";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
-    ).style.opacity = "1";
-  } else {
-    taskSortType = 1;
-    document.querySelector(".list_contents").classList.remove("two_column");
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
-    ).style.transform = "translateX(7.5px)";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
-    ).style.transform = "translateX(15px)";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
-    ).style.opacity = "1";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
-    ).style.opacity = "0";
-  }
+    if (taskSortType === 1) {
+        taskSortType = 2;
+        document.querySelector(".list_contents").classList.add("two_column");
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
+        ).style.transform = "translateX(-75px)";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
+        ).style.transform = "translateX(-67.5px)";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
+        ).style.opacity = "0";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
+        ).style.opacity = "1";
+    } else {
+        taskSortType = 1;
+        document.querySelector(".list_contents").classList.remove("two_column");
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
+        ).style.transform = "translateX(7.5px)";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
+        ).style.transform = "translateX(15px)";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
+        ).style.opacity = "1";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
+        ).style.opacity = "0";
+    }
 }
 
 window.changeTaskSort = changeTaskSort;
@@ -503,86 +503,86 @@ window.changeTaskSort = changeTaskSort;
 var currentDate = new Date();
 
 function drawCalendar(functionDate) {
-  let date = functionDate;
-  let currentYear = date.getFullYear();
-  let currentMonth = date.getMonth();
-  let currentDay = date.getDate();
-  console.log(currentDay);
-  let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  let firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    let date = functionDate;
+    let currentYear = date.getFullYear();
+    let currentMonth = date.getMonth();
+    let currentDay = date.getDate();
+    console.log(currentDay);
+    let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    let firstDay = new Date(currentYear, currentMonth, 1).getDay();
 
-  let calendarHTML = "";
+    let calendarHTML = "";
 
-  let daysCounter = 0;
+    let daysCounter = 0;
 
-  let emptyDays = firstDay === 0 ? 6 : firstDay - 1;
-  for (let i = 0; i < emptyDays; i++) {
-    calendarHTML += `<div class="day empty"></div>`;
-    daysCounter++;
-  }
-
-  const today = new Date();
-
-  for (let i = 1; i <= daysInMonth; i++) {
-    const thisDay = new Date(currentYear, currentMonth, i);
-    const isToday = thisDay.toDateString() === today.toDateString();
-
-    calendarHTML += `<div class="day${isToday ? " today" : ""}">${i}</div>`;
-    daysCounter++;
-  }
-
-  if (daysCounter < 35) {
-    for (let i = 0; i < 35 - daysCounter; i++) {
-      calendarHTML += `<div class="day empty"></div>`;
+    let emptyDays = firstDay === 0 ? 6 : firstDay - 1;
+    for (let i = 0; i < emptyDays; i++) {
+        calendarHTML += `<div class="day empty"></div>`;
+        daysCounter++;
     }
-  }
 
-  if (daysCounter > 35) {
-    document.querySelector(
-      ".kalendarz > .calendarSection > .calendarContent"
-    ).style.gridTemplateRows = "repeat(6, 1fr)";
-    for (let i = 0; i < 42 - daysCounter; i++) {
-      calendarHTML += `<div class="day empty"></div>`;
+    const today = new Date();
+
+    for (let i = 1; i <= daysInMonth; i++) {
+        const thisDay = new Date(currentYear, currentMonth, i);
+        const isToday = thisDay.toDateString() === today.toDateString();
+
+        calendarHTML += `<div class="day${isToday ? " today" : ""}">${i}</div>`;
+        daysCounter++;
     }
-  } else {
+
+    if (daysCounter < 35) {
+        for (let i = 0; i < 35 - daysCounter; i++) {
+            calendarHTML += `<div class="day empty"></div>`;
+        }
+    }
+
+    if (daysCounter > 35) {
+        document.querySelector(
+            ".kalendarz > .calendarSection > .calendarContent"
+        ).style.gridTemplateRows = "repeat(6, 1fr)";
+        for (let i = 0; i < 42 - daysCounter; i++) {
+            calendarHTML += `<div class="day empty"></div>`;
+        }
+    } else {
+        document.querySelector(
+            ".kalendarz > .calendarSection > .calendarContent"
+        ).style.gridTemplateRows = "repeat(5, 1fr)";
+    }
+
     document.querySelector(
-      ".kalendarz > .calendarSection > .calendarContent"
-    ).style.gridTemplateRows = "repeat(5, 1fr)";
-  }
+        ".kalendarz > .calendarSection > .calendarContent"
+    ).innerHTML = calendarHTML;
 
-  document.querySelector(
-    ".kalendarz > .calendarSection > .calendarContent"
-  ).innerHTML = calendarHTML;
+    document.querySelector(
+        ".kalendarz > .calendarSection > .calendarContent"
+    ).innerHTML = calendarHTML;
 
-  document.querySelector(
-    ".kalendarz > .calendarSection > .calendarContent"
-  ).innerHTML = calendarHTML;
+    let monthText = [
+        "Styczeń",
+        "Luty",
+        "Marzec",
+        "Kwiecień",
+        "Maj",
+        "Czerwiec",
+        "Lipiec",
+        "Sierpień",
+        "Wrzesień",
+        "Październik",
+        "Listopad",
+        "Grudzień",
+    ];
 
-  let monthText = [
-    "Styczeń",
-    "Luty",
-    "Marzec",
-    "Kwiecień",
-    "Maj",
-    "Czerwiec",
-    "Lipiec",
-    "Sierpień",
-    "Wrzesień",
-    "Październik",
-    "Listopad",
-    "Grudzień",
-  ];
+    let monthNumber = currentMonth + 1;
 
-  let monthNumber = currentMonth + 1;
+    if (monthNumber < 10) {
+        monthNumber = "0" + monthNumber;
+    }
 
-  if (monthNumber < 10) {
-    monthNumber = "0" + monthNumber;
-  }
-
-  document.querySelector(".kalendarz > .calendarDate > .date").innerHTML =
-    monthNumber + "." + currentYear;
-  document.querySelector(".kalendarz > .calendarDate > .month").innerHTML =
-    monthText[currentMonth];
+    document.querySelector(".kalendarz > .calendarDate > .date").innerHTML =
+        monthNumber + "." + currentYear;
+    document.querySelector(".kalendarz > .calendarDate > .month").innerHTML =
+        monthText[currentMonth];
 }
 
 window.drawCalendar = drawCalendar;
@@ -590,15 +590,15 @@ window.drawCalendar = drawCalendar;
 drawCalendar(currentDate);
 
 function previousCalendarMounth() {
-  currentDate.setMonth(currentDate.getMonth() - 1);
-  drawCalendar(currentDate);
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    drawCalendar(currentDate);
 }
 
 window.previousCalendarMounth = previousCalendarMounth;
 
 function nextCalendarMounth() {
-  currentDate.setMonth(currentDate.getMonth() + 1);
-  drawCalendar(currentDate);
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    drawCalendar(currentDate);
 }
 
 window.nextCalendarMounth = nextCalendarMounth;
@@ -620,42 +620,42 @@ window.nextCalendarMounth = nextCalendarMounth;
 // }).then(data => console.log(data));
 
 function selectChatMenu(element, menuType) {
-  let chatgpt = document.querySelector("#chatgpt");
-  chatgpt.prepend(chatgpt.querySelector(`${menuType}`));
-  chatgpt.prepend(chatgpt.querySelector(".chatMenu"));
-  chatgpt.querySelectorAll(".chatMenu > div").forEach((element) => {
-    element.classList.remove("selectedChatMenu");
-  });
-  element.classList.add("selectedChatMenu");
+    let chatgpt = document.querySelector("#chatgpt");
+    chatgpt.prepend(chatgpt.querySelector(`${menuType}`));
+    chatgpt.prepend(chatgpt.querySelector(".chatMenu"));
+    chatgpt.querySelectorAll(".chatMenu > div").forEach((element) => {
+        element.classList.remove("selectedChatMenu");
+    });
+    element.classList.add("selectedChatMenu");
 }
 
 window.selectChatMenu = selectChatMenu;
 
 function showFrends() {
-  listUsers()
-    .then((response) => {
-      if (response.users) {
-        const filteredUsers = response.users.filter(
-          (user) => user.friend_id === 1
-        );
-        console.log(filteredUsers);
+    listUsers()
+        .then((response) => {
+            if (response.users) {
+                const filteredUsers = response.users.filter(
+                    (user) => user.friend_id === 1
+                );
+                console.log(filteredUsers);
 
-        // Wyświetl ich na stronie
-        filteredUsers.forEach((user) => {
-          const userDiv = document.createElement("div");
-          userDiv.textContent = `User: ${user.name} (id: ${user.id})`;
-          document.querySelector(".groups").appendChild(userDiv);
+                // Wyświetl ich na stronie
+                filteredUsers.forEach((user) => {
+                    const userDiv = document.createElement("div");
+                    userDiv.textContent = `User: ${user.name} (id: ${user.id})`;
+                    document.querySelector(".groups").appendChild(userDiv);
+                });
+            } else {
+                console.error(
+                    "No users found or unexpected response format:",
+                    response
+                );
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching users:", error);
         });
-      } else {
-        console.error(
-          "No users found or unexpected response format:",
-          response
-        );
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching users:", error);
-    });
 }
 
 window.showFrends = showFrends;
@@ -663,99 +663,99 @@ window.showFrends = showFrends;
 showFrends();
 
 async function searchGroup(inputElement) {
-  const q = inputElement.value.toLowerCase().trim();
-  const out = document.querySelector(".search-results");
-  out.innerHTML = "";
+    const q = inputElement.value.toLowerCase().trim();
+    const out = document.querySelector(".search-results");
+    out.innerHTML = "";
 
-  if (!q) return;
+    if (!q) return;
 
-  try {
-    const [usersResp, grResp] = await Promise.all([
-      listUsers(),
-      listGroupRequests(),
-    ]);
-    const users = usersResp.users || [];
-    const grs = grResp.group_requests || [];
+    try {
+        const [usersResp, grResp] = await Promise.all([
+            listUsers(),
+            listGroupRequests(),
+        ]);
+        const users = usersResp.users || [];
+        const grs = grResp.group_requests || [];
 
-    const me = users.find((u) => u.id === userId) || {};
-    if (me.friend_id !== null) {
-      inputElement.value = "";
-      inputElement.placeholder =
-        "Jesteś już w grupie i nie możesz wyszukiwać innych.";
-      setTimeout(() => {
-        inputElement.placeholder = "Search The Matrix...";
-      }, 3000);
-      return;
+        const me = users.find((u) => u.id === userId) || {};
+        if (me.friend_id !== null) {
+            inputElement.value = "";
+            inputElement.placeholder =
+                "Jesteś już w grupie i nie możesz wyszukiwać innych.";
+            setTimeout(() => {
+                inputElement.placeholder = "Search The Matrix...";
+            }, 3000);
+            return;
+        }
+
+        const sentToMe = grs
+            .filter((r) => r.to_user === userId)
+            .map((r) => r.from_user);
+        const sentByMe = grs
+            .filter((r) => r.from_user === userId)
+            .map((r) => r.to_user);
+
+        const candidates = users.filter(
+            (u) =>
+            u.id !== userId &&
+            u.friend_id === null &&
+            u.name.toLowerCase().includes(q)
+        );
+
+        for (const u of candidates) {
+            const row = document.createElement("div");
+            row.textContent = u.name + " ";
+
+            if (sentByMe.includes(u.id)) {
+                const wait = document.createElement("button");
+                wait.textContent = "Oczekiwanie";
+                wait.disabled = true;
+                const cancel = document.createElement("button");
+                cancel.textContent = "Anuluj";
+                cancel.onclick = async() => {
+                    const r = grs.find(
+                        (r) => r.from_user === userId && r.to_user === u.id
+                    );
+                    await deleteGroupRequest(r.id);
+                    searchGroup(inputElement);
+                };
+                row.append(wait, cancel);
+            } else if (sentToMe.includes(u.id)) {
+                const btnJoin = document.createElement("button");
+                btnJoin.textContent = "Dołącz";
+                btnJoin.onclick = async() => {
+                    const r = grs.find(
+                        (r) => r.from_user === u.id && r.to_user === userId
+                    );
+                    await deleteGroupRequest(r.id);
+                    await editUser({ id: userId, friend_id: u.id });
+                    searchGroup(inputElement);
+                };
+                const btnReject = document.createElement("button");
+                btnReject.textContent = "Odrzuć";
+                btnReject.onclick = async() => {
+                    const r = grs.find(
+                        (r) => r.from_user === u.id && r.to_user === userId
+                    );
+                    await deleteGroupRequest(r.id);
+                    searchGroup(inputElement);
+                };
+                row.append(btnJoin, btnReject);
+            } else {
+                const btn = document.createElement("button");
+                btn.textContent = "+";
+                btn.onclick = async() => {
+                    await addGroupRequest({ from_id: userId, to_id: u.id });
+                    searchGroup(inputElement);
+                };
+                row.append(btn);
+            }
+
+            out.append(row);
+        }
+    } catch (e) {
+        console.error("searchGroup error:", e);
     }
-
-    const sentToMe = grs
-      .filter((r) => r.to_user === userId)
-      .map((r) => r.from_user);
-    const sentByMe = grs
-      .filter((r) => r.from_user === userId)
-      .map((r) => r.to_user);
-
-    const candidates = users.filter(
-      (u) =>
-        u.id !== userId &&
-        u.friend_id === null &&
-        u.name.toLowerCase().includes(q)
-    );
-
-    for (const u of candidates) {
-      const row = document.createElement("div");
-      row.textContent = u.name + " ";
-
-      if (sentByMe.includes(u.id)) {
-        const wait = document.createElement("button");
-        wait.textContent = "Oczekiwanie";
-        wait.disabled = true;
-        const cancel = document.createElement("button");
-        cancel.textContent = "Anuluj";
-        cancel.onclick = async () => {
-          const r = grs.find(
-            (r) => r.from_user === userId && r.to_user === u.id
-          );
-          await deleteGroupRequest(r.id);
-          searchGroup(inputElement);
-        };
-        row.append(wait, cancel);
-      } else if (sentToMe.includes(u.id)) {
-        const btnJoin = document.createElement("button");
-        btnJoin.textContent = "Dołącz";
-        btnJoin.onclick = async () => {
-          const r = grs.find(
-            (r) => r.from_user === u.id && r.to_user === userId
-          );
-          await deleteGroupRequest(r.id);
-          await editUser({ id: userId, friend_id: u.id });
-          searchGroup(inputElement);
-        };
-        const btnReject = document.createElement("button");
-        btnReject.textContent = "Odrzuć";
-        btnReject.onclick = async () => {
-          const r = grs.find(
-            (r) => r.from_user === u.id && r.to_user === userId
-          );
-          await deleteGroupRequest(r.id);
-          searchGroup(inputElement);
-        };
-        row.append(btnJoin, btnReject);
-      } else {
-        const btn = document.createElement("button");
-        btn.textContent = "+";
-        btn.onclick = async () => {
-          await addGroupRequest({ from_id: userId, to_id: u.id });
-          searchGroup(inputElement);
-        };
-        row.append(btn);
-      }
-
-      out.append(row);
-    }
-  } catch (e) {
-    console.error("searchGroup error:", e);
-  }
 }
 
 window.searchGroup = searchGroup;

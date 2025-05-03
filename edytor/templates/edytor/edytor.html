@@ -102,6 +102,14 @@
 
             startEditor(); // <--- I start aplikacji dopiero tutaj!
         });
+
+
+
+        const userId = "{{ user.id }}";
+        if (userId) {
+            sessionStorage.setItem("user_id", userId);
+            console.log("Zapisano user_id w sessionStorage:", userId);
+        }
     </script>
     <script src="{% static 'edytor.js' %}"></script>
     <script src="{% static 'edytor-frontend.js' %}"></script>

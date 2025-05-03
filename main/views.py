@@ -3,12 +3,17 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from main.auth.forms import RegisterForm
 from django.contrib.auth.decorators import login_required
+from todo.models import UserForProject
 
 def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
+            # UserForProject.objects.create(
+            #     user=form.instance,
+            #     friend_id=None
+            # )
             messages.success(request, "Rejestracja zakończona sukcesem.")
             return redirect('login')
     else:

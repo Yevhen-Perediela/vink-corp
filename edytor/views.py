@@ -8,7 +8,7 @@ from django.http import JsonResponse
 def edytor(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'edytor/edytor.html')
+    return render(request, 'edytor/edytor.html', {'user': request.user})
 
 @api_view(['POST'])
 def chat_view(request):

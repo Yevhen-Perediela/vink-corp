@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="pl-PL">
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <title>Rejestracja</title>
     <link rel="stylesheet" href="{% static 'styles/auth.css' %}">
 </head>
+
 <body>
-<form method="POST">
-    <h2>Rejestracja</h2>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Zarejestruj</button>
-    <a href="{% url 'login' %}">Masz już konto? Zaloguj się</a>
-</form>
+    <form method="POST">
+        <h2>Rejestracja</h2>
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit">Zarejestruj</button>
+        <a href="{% url 'login' %}">Masz już konto? Zaloguj się</a>
+    </form>
 </body>
+
 </html>
