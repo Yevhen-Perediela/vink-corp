@@ -112,41 +112,37 @@
                         </div>
                     </div>
                 </div>
-                <div class="mind_board">Mind board</div>
-          <div class="whiteboard" id="whiteboard-view" style="display: none;">
-              <div class="toolbar">
-                  <label for="colorPicker">Kolor:</label>
-                  <input type="color" id="colorPicker" value="#ff8000">
 
-                  <div class="toolbar-item">
-  <label for="brushSize">Grubość:</label>
-  <input type="range" id="brushSize" min="1" max="20" value="2">
-</div>
-
-                  <button onclick="activateEraser()">Gumka</button>
-                  <button onclick="activateBrush()">Pisak</button>
-                  <button onclick="clearCanvas()">Wyczyść</button>
-                  <button onclick="saveCanvas()">Zapisz</button>
-                  <button onclick="activateArrow()">Strzałka</button>
-              </div>
-              <canvas id="board"></canvas>
-          </div>
                 <div class="mind_board">
                     <svg id="mindmap"></svg>
                 </div>
-                <div class="whiteboard" id="whiteboard-view">
+                
+                <div class="whiteboard" id="whiteboard" >
                     <div class="toolbar">
-                        <button onclick="clearCanvas()">🧹 Wyczyść</button>
-                        <button onclick="saveCanvas()">💾 Zapisz</button>
+                        <label for="colorPicker">Kolor:</label>
+                        <input type="color" id="colorPicker" value="#ff8000">
+                        <div class="toolbar-item">
+                            <label for="brushSize">Grubość:</label>
+                            <input type="range" id="brushSize" min="1" max="20" value="2">
+                        </div>
+                        <button onclick="activateEraser()">Gumka</button>
+                        <button onclick="activateBrush()">Pisak</button>
+                        <button onclick="clearCanvas()">Wyczyść</button>
+                        <button onclick="saveCanvas()">Zapisz</button>
+                        <button onclick="activateArrow()">Strzałka</button>
                     </div>
                     <canvas id="board"></canvas>
                 </div>
+                
+                
             </div>
         </div>
     </div>
-    <script src="{% static './scripts/whiteboard.js' %}"></script>
+    {% comment %} <script src="{% static './scripts/whiteboard.js' %}"></script> {% endcomment %}
+    <script src="{% static 'scripts/whiteboard.js' %}"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="module" src="{% static 'todo/script.js' %}"></script>
     <script type="module" src="{% static 'todo/mindMap.js' %}"></script>
+    
 </body>
 </html>
