@@ -95,13 +95,22 @@ function renderTabs() {
 function closeTab(path) {
     window.openFiles = window.openFiles.filter(p => p !== path);
     saveOpenFiles();
+
     if (path === window.currentEditingPath) {
-        editor.setValue('wybierz plik :)');
-        window.currentEditingPath = null;
-        window.editorContentNow = "";
+        fetch('/edytor/asgii.txt')
+            .then(res => res.text())
+            .then(text => {
+                editor.setValue(text);
+                window.currentEditingPath = null;
+                window.editorContentNow = "";
+                renderTabs();
+            })
+            .catch(err => console.error('Nie udało się pobrać pliku:', err));
+    } else {
+        renderTabs();
     }
-    renderTabs();
 }
+
 
 function saveCurrentFile(alertIfNone = true) {
     const repo = localStorage.getItem('cur-repoName');
@@ -354,14 +363,28 @@ document.addEventListener('DOMContentLoaded', () => {
     buttons.forEach(button => {
         button.addEventListener('click', () => {
             const panelToShow = button.getAttribute('data-panel');
+
+            // Pokaż panel
             for (const key in panels) {
                 if (panels[key]) {
                     panels[key].style.display = (key === panelToShow) ? 'flex' : 'none';
                 }
             }
+
+            // Styl aktywnego przycisku
+            buttons.forEach(btn => {
+                if (btn === button) {
+                    btn.style.borderBottom = '3px solid orange';
+                    btn.style.color = 'black';
+                } else {
+                    btn.style.borderBottom = '0px';
+                    btn.style.color = 'black';
+                }
+            });
         });
     });
 });
+
 
 
 function showGit(el) {
@@ -439,6 +462,7 @@ async function loadCommitHistory() {
 }
 
 async function cloneRepository() {
+    showGithubLoader(true);
     const urlInput = document.getElementById('repoUrl');
     const repoUrl = urlInput.value.trim();
 
@@ -456,7 +480,7 @@ async function cloneRepository() {
             },
             body: JSON.stringify({
                 url: repoUrl,
-                
+
             })
         });
 
@@ -473,7 +497,7 @@ async function cloneRepository() {
                 editor.setValue('wybierz plik :)');
                 loadRepoTree();
                 loadCommitHistory();
-                alert(data.message);
+                // alert(data.message);
             } else {
                 alert(data.message || 'Operacja zakończona.');
             }
@@ -488,6 +512,8 @@ async function cloneRepository() {
     } catch (error) {
         console.error('Błąd:', error);
         alert('Coś poszło mocno nie tak podczas klonowania...');
+    } finally {
+        showGithubLoader(false);
     }
 }
 
@@ -509,6 +535,7 @@ function getCSRFToken() {
 
 
 async function pullChanges() {
+    showGithubLoader(true);
     const repoName = localStorage.getItem('cur-repoName');
     if (!repoName) {
         alert('Najpierw wybierz repozytorium!');
@@ -528,7 +555,7 @@ async function pullChanges() {
         const data = await response.json();
 
         if (response.ok) {
-            alert(data.message || 'Repozytorium zostało zaktualizowane!');
+            // alert(data.message || 'Repozytorium zostało zaktualizowane!');
             loadRepoTree();
             loadCommitHistory();
         } else {
@@ -537,10 +564,13 @@ async function pullChanges() {
     } catch (error) {
         console.error('Błąd pullowania:', error);
         alert('Coś poszło mocno nie tak podczas pulla...');
+    } finally {
+        showGithubLoader(false);
     }
 }
 
 async function commitChanges() {
+    showGithubLoader(true);
     const repoName = localStorage.getItem('cur-repoName');
     if (!repoName) {
         alert('Najpierw wybierz repozytorium!');
@@ -565,7 +595,7 @@ async function commitChanges() {
         const data = await response.json();
 
         if (response.ok) {
-            alert(data.message || 'Zmiany wypchnięte!');
+            // alert(data.message || 'Zmiany wypchnięte!');
             loadCommitHistory();
         } else {
             alert(data.error || 'Wystąpił błąd podczas pushowania.');
@@ -573,6 +603,8 @@ async function commitChanges() {
     } catch (error) {
         console.error('Błąd pushowania:', error);
         alert('Coś poszło mocno nie tak podczas pushowania...');
+    } finally {
+        showGithubLoader(false);
     }
 }
 
@@ -688,3 +720,12 @@ window.addEventListener("load", () => {
     appendMessage("Ty", "Hej!");
     appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
 });
+
+
+
+
+
+function showGithubLoader(show) {
+    const loader = document.getElementById('github-loader');
+    if (loader) loader.style.display = show ? 'block' : 'none';
+}

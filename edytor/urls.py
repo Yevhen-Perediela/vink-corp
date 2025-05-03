@@ -32,4 +32,7 @@ urlpatterns = [
     path('api/pull-repo/', pull_repo, name='pull_repo'),
     path('api/push-repo/', push_repo, name='push_repo'),
     path('api/commit-history/', get_commit_history, name='commit_history'),
+    path('asgii.txt', views.get_ascii_file),
+    path('api/chat/room_name/', views.get_room_name, name='get_room_name'),
+
 ]

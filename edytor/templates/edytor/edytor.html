@@ -8,6 +8,7 @@
     <title>Edytor</title>
     <link rel="stylesheet" href="{% static 'edytor.css' %}">
     <link rel="stylesheet" href="{% static 'ai.css' %}">
+    <link rel="stylesheet" href="{% static 'czat_ws.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script> -->
 </head>
@@ -17,9 +18,9 @@
         <h1>Edytor</h1>
         <input type="text" placeholder="Wyszukaj...">
         <span>
-            <button id="czat" data-panel="chatgpt">Czat</button>
+            <button id="czat" data-panel="chat">Czat</button>
             <button id="to-do" data-panel="small-todo">to-do</button>
-            <button id="AI" data-panel="chat">AI</button>
+            <button id="AI" data-panel="chatgpt">AI</button>
 
 
         </span>
@@ -47,6 +48,9 @@
             <p>Wczytaj repo</p>
         </div>
         <div class="menu" id="github">
+            <div id="github-loader" style="display: none; margin-top: 10px;">
+                <i class="fas fa-spinner fa-spin" style="color: white; font-size: 24px;"></i>
+            </div>
             <input type="text" placeholder="Link do repo..." id="repoUrl">
             <button id="git" onclick="cloneRepository()">Wczytaj</button>
             <hr>
@@ -56,7 +60,7 @@
             <hr>
             <h4 style="color: white; margin-bottom: 10px;">Historia Commitów</h4>
             <div id="commit-history">
-                
+
                 <div id="commits-list" style="color: white;"></div>
             </div>
         </div>
@@ -75,8 +79,15 @@
 
         </div>
         <div id="chat">
-
+            <div id="chat-log-box">
+                <div id="chat-log" class="chat-messages"></div>
+            </div>
+            <div id="chat-input-box">
+                <input id="chat-message-input" type="text" placeholder="Wpisz wiadomość..." data-username="{{ user.username }}">
+                <button id="chat-message-submit">Wyślij</button>
+            </div>
         </div>
+
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
@@ -86,33 +97,41 @@
                 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs'
             }
         });
+
         require(['vs/editor/editor.main'], function() {
-            window.editor = monaco.editor.create(document.getElementById('editor'), {
-                value: `// Hello, Vink 👋\nconst message = 'Hello world;`,
-                language: 'python',
-                theme: 'vs-dark',
-                automaticLayout: true,
-            });
+            // Najpierw pobieramy zawartość pliku
+            fetch('/edytor/asgii.txt')
+                .then(res => res.text())
+                .then(fileContent => {
+                    // Tworzymy edytor z plikiem
+                    window.editor = monaco.editor.create(document.getElementById('editor'), {
+                        value: fileContent, // <<< tutaj wstawiamy zawartość pliku!
+                        language: 'python',
+                        theme: 'vs-dark',
+                        automaticLayout: true,
+                    });
 
-            // <<< Teraz tutaj! >>>
-            window.editor.onDidChangeModelContent(() => {
-                window.editorContentNow = window.editor.getValue();
-                renderTabs();
-            });
+                    window.editorContentNow = fileContent;
 
-            startEditor(); // <--- I start aplikacji dopiero tutaj!
+                    window.editor.onDidChangeModelContent(() => {
+                        window.editorContentNow = window.editor.getValue();
+                        renderTabs();
+                    });
+
+                    startEditor(); // teraz odpalamy główną logikę
+                })
+                .catch(err => {
+                    console.error('Nie udało się załadować pliku:', err);
+                });
         });
 
-
-
-        const userId = "{{ user.id }}";
-        if (userId) {
-            sessionStorage.setItem("user_id", userId);
-            console.log("Zapisano user_id w sessionStorage:", userId);
-        }
+        window.username = "{{ user.username }}";
     </script>
+
     <script src="{% static 'edytor.js' %}"></script>
     <script src="{% static 'edytor-frontend.js' %}"></script>
+
+    <script src="{% static 'websocket.js' %}"></script>
 
 </body>
 

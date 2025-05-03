@@ -220,11 +220,6 @@ h1 {
     display: none;
 }
 
-#chatgpt {
-    display: flex;
-    /* lub block, zależnie od potrzeb */
-}
-
 #github {
     display: none;
     align-items: center;
@@ -274,10 +269,12 @@ h1 {
 
 
 /* Style dla historii commitów */
-#commit-history{
+
+#commit-history {
     margin-top: 10px;
     overflow-y: auto;
 }
+
 .commit-item {
     padding: 8px 12px;
     border-bottom: 1px solid #2d2d2d;
@@ -330,4 +327,11 @@ h1 {
     color: #666;
     margin-top: 4px;
     font-family: monospace;
+}
+
+#github-loader {
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

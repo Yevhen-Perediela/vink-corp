@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'main',
     'rest_framework',
     'corsheaders',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'vink.wsgi.application'
+
+ASGI_APPLICATION = 'vink.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  
+    },
+}
+
 
 
 # Database

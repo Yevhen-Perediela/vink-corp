@@ -4,3 +4,5 @@ djangorestframework
 requests
 django
 django-cors-headers
+channels
+uvicorn

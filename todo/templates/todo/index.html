@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+    <link rel="stylesheet" href="{% static 'czat_ws.css' %}">
 </head>
 <body>
     <header>
@@ -37,17 +38,20 @@
         </div>
         <div id="chatgpt">
             <div class="chatMenu">
-                <div class="switchToChat" onclick="selectChatMenu(this, '#chat-messages')">
+                <div class="switchToChat" onclick="selectChatMenu(this, '#chat')">
                     Chat
                 </div>
                 <div class="switchToGroups" onclick="selectChatMenu(this, '.groups')">
                     Grupy
                 </div>
             </div>
-            <div id="chat-messages">
-                <div id="chat-input" style="padding: 10px;">
-                    <input type="text" id="user-input" placeholder="Napisz coś..." style="width: 70%;">
-                    <button onclick="sendChatMessage()">Wyślij</button>
+            <div id="chat" >
+                <div id="chat-log-box" style='max-height: 79vh; overflow-y: auto;'>
+                    <div id="chat-log" class="chat-messages"></div>
+                </div>
+                <div id="chat-input-box">
+                    <input id="chat-message-input" type="text" placeholder="Wpisz wiadomość..." data-username="{{ user.username }}">
+                    <button id="chat-message-submit">Wyślij</button>
                 </div>
             </div>
             <div class="groups">
@@ -143,6 +147,7 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="module" src="{% static 'todo/script.js' %}"></script>
     <script type="module" src="{% static 'todo/mindMap.js' %}"></script>
-    
+    <script src="{% static 'websocket.js' %}"></script>
+    <script>window.username = "{{ user.username }}";</script>
 </body>
 </html>
