@@ -22,7 +22,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('welcome')  # zmień na swoją stronę główną
+            return redirect('edytor')  # zmień na swoją stronę główną
         else:
             messages.error(request, "Nieprawidłowe dane logowania.")
     return render(request, 'login.html')
@@ -31,12 +31,16 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-@login_required
+
 def profile_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     return render(request, 'dashboard.html', {'user': request.user})
 
-@login_required
+
 def todo_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     return render(request, 'todo/templates/todo/index.html')
 
 def welcome_view(request):

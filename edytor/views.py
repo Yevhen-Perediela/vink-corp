@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .ai.apiconnect import ask_gpt
@@ -6,6 +6,8 @@ from django.http import JsonResponse
 
 
 def edytor(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
     return render(request, 'edytor/edytor.html')
 
 @api_view(['POST'])
