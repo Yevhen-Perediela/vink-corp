@@ -192,19 +192,17 @@ function drawCalendar() {
 drawCalendar();
 
 function changeToDoView(view) {
-  // Скрыть все:
   document.querySelectorAll('.todo_content > div').forEach(div => div.style.display = 'none');
 
-  // Показать выбранный:
   const section = document.querySelector(`.todo_content > .${view}`);
   if (section) {
     section.style.display = 'block';
   }
 
-  // Инициализировать whiteboard, когда он показывается:
   if (view === 'whiteboard') {
     setTimeout(() => {
       initWhiteboard();
-    }, 100); // подождём, чтобы canvas получил размеры
+    }, 100);
   }
 }
+

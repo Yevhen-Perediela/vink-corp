@@ -4,6 +4,7 @@ window.initWhiteboard = function () {
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
+
   let arrowMode = false;
   let startX = 0;
   let startY = 0;
@@ -27,42 +28,53 @@ window.initWhiteboard = function () {
     });
   }
 
+  function setActiveTool(buttonElement) {
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+      btn.classList.remove('active-tool');
+    });
+    buttonElement.classList.add('active-tool');
+  }
+
   window.activateArrow = function () {
     arrowMode = true;
     isErasing = false;
+    setActiveTool(event.currentTarget);
   };
 
   window.activateEraser = function () {
     isErasing = true;
+    arrowMode = false;
+    setActiveTool(event.currentTarget);
   };
 
   window.activateBrush = function () {
     isErasing = false;
     arrowMode = false;
-};
+    setActiveTool(event.currentTarget);
+  };
 
   canvas.addEventListener('mousedown', (e) => {
-  if (arrowMode) {
-    const rect = canvas.getBoundingClientRect();
-    startX = e.clientX - rect.left;
-    startY = e.clientY - rect.top;
-  } else {
-    drawing = true;
-    draw(e);
-  }
-});
+    if (arrowMode) {
+      const rect = canvas.getBoundingClientRect();
+      startX = e.clientX - rect.left;
+      startY = e.clientY - rect.top;
+    } else {
+      drawing = true;
+      draw(e);
+    }
+  });
 
-canvas.addEventListener('mouseup', (e) => {
-  if (arrowMode) {
-    const rect = canvas.getBoundingClientRect();
-    const endX = e.clientX - rect.left;
-    const endY = e.clientY - rect.top;
-    drawArrow(startX, startY, endX, endY);
-  } else {
-    drawing = false;
-    ctx.beginPath();
-  }
-});
+  canvas.addEventListener('mouseup', (e) => {
+    if (arrowMode) {
+      const rect = canvas.getBoundingClientRect();
+      const endX = e.clientX - rect.left;
+      const endY = e.clientY - rect.top;
+      drawArrow(startX, startY, endX, endY);
+    } else {
+      drawing = false;
+      ctx.beginPath();
+    }
+  });
 
   canvas.addEventListener('mouseout', () => {
     drawing = false;
@@ -89,34 +101,32 @@ canvas.addEventListener('mouseup', (e) => {
   }
 
   function drawArrow(fromX, fromY, toX, toY) {
-  const headLength = 10;
-  const dx = toX - fromX;
-  const dy = toY - fromY;
-  const angle = Math.atan2(dy, dx);
+    const headLength = 10;
+    const dx = toX - fromX;
+    const dy = toY - fromY;
+    const angle = Math.atan2(dy, dx);
 
-  ctx.strokeStyle = currentColor;
-  ctx.lineWidth = brushSize;
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = brushSize;
 
-  // линия
-  ctx.beginPath();
-  ctx.moveTo(fromX, fromY);
-  ctx.lineTo(toX, toY);
-  ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(toX, toY);
+    ctx.stroke();
 
-  // стрелка
-  ctx.beginPath();
-  ctx.moveTo(toX, toY);
-  ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
-              toY - headLength * Math.sin(angle - Math.PI / 6));
-  ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6),
-              toY - headLength * Math.sin(angle + Math.PI / 6));
-  ctx.lineTo(toX, toY);
-  ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
-              toY - headLength * Math.sin(angle - Math.PI / 6));
-  ctx.stroke();
-  ctx.fillStyle = currentColor;
-  ctx.fill();
-}
+    ctx.beginPath();
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
+                toY - headLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6),
+                toY - headLength * Math.sin(angle + Math.PI / 6));
+    ctx.lineTo(toX, toY);
+    ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
+                toY - headLength * Math.sin(angle - Math.PI / 6));
+    ctx.stroke();
+    ctx.fillStyle = currentColor;
+    ctx.fill();
+  }
 
   window.clearCanvas = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);

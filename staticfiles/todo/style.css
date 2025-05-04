@@ -773,3 +773,17 @@ input[type=range]::-moz-range-thumb {
   align-items: center;
   gap: 0.5rem;
 }
+
+.active-tool {
+  border: 2px solid white;
+  box-shadow: 0 0 6px 3px rgba(255, 255, 255, 0.7);
+  outline: none;
+}
+
+.toolbar button:hover {
+  transform: scale(1.05);
+}
+
+.toolbar button.active {
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.2);
+}
