@@ -729,14 +729,24 @@ function showDiffView(original, modified) {
     document.body.appendChild(diffContainer);
     diffContainer.appendChild(closeBtn);
 
-    monaco.editor.createDiffEditor(diffContainer, {
+    const fileExt = (window.currentEditingPath || '').split('.').pop();
+    const language = extensionToLanguage[fileExt] || 'plaintext';
+
+    const originalModel = monaco.editor.createModel(original, language);
+    const modifiedModel = monaco.editor.createModel(modified, language);
+
+    const diffEditor = monaco.editor.createDiffEditor(diffContainer, {
         theme: "vs-dark",
         automaticLayout: true,
-    }).setModel({
-        original: monaco.editor.createModel(original, "plaintext"),
-        modified: monaco.editor.createModel(modified, "plaintext")
+        readOnly: true,
+    });
+
+    diffEditor.setModel({
+        original: originalModel,
+        modified: modifiedModel,
     });
 }
+
 
 function appendMessage(who, text) {
     const chatBox = document.getElementById('chat-messages');
@@ -745,11 +755,12 @@ function appendMessage(who, text) {
 
     if (who === "Ty") {
         msg.classList.add('user-message');
+        msg.innerText = text;
     } else {
         msg.classList.add('ai-message');
+        msg.innerHTML = renderFormattedAIResponse(text);
     }
 
-    msg.innerHTML = `${text}`;
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -760,6 +771,17 @@ window.addEventListener("load", () => {
     appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
 });
 
+function renderFormattedAIResponse(text) {
+    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+    return text.replace(codeBlockRegex, (_, lang, code) => {
+        const safeLang = lang || 'plaintext';
+        const escaped = code
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        return `<pre><code class="lang-${safeLang}">${escaped}</code></pre>`;
+    }).replace(/\n/g, '<br>');
+}
 
 
 

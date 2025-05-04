@@ -57,3 +57,19 @@
     flex-direction: column;
     gap: 10px;
 }
+.chat-message pre {
+    background: #2e2e2e;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 13px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.chat-message code {
+    font-family: monospace;
+    white-space: pre-wrap;
+    display: block;
+}
