@@ -12,7 +12,9 @@ from todo.models import UserForProject
 def edytor(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'edytor/edytor.html', {'user': request.user})
+    
+    cur_user = UserForProject.objects.get(user_id=request.user.id)
+    return render(request, 'edytor/edytor.html', {'user': request.user, 'ava': cur_user.avatar})
 
 @api_view(['POST'])
 def chat_view(request):

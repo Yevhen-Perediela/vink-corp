@@ -80,7 +80,9 @@ h1 {
 }
 #small-menu-bottom #ava {
   width: 45px;
+  height: 45px;
   margin: 10px;
+  border-radius: 50%;
 }
 #small-menu-bottom #sett {
   filter: invert(100%);

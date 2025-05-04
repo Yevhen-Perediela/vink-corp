@@ -27,11 +27,11 @@
                 <img id='sett' src="{% static 'img/settings.png' %}">
                {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}">
-                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                    <img id='ava' src="{% static ava %}" alt="Avatar" class="avatar">
                 </a>
                 {% else %}
                  <a href="{% url 'login' %}">
-                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                    <img id='ava' src="{% static ava %}" alt="Avatar" class="avatar">
                  </a>
                 {% endif %}
             </div>

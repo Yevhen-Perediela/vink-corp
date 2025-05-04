@@ -29,6 +29,7 @@ class Task(models.Model):
 class UserForProject(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     friend_id = models.IntegerField(null=True, blank=True)
+    avatar = models.CharField(max_length=255, default='avatars/avatar.png')
 
     def __str__(self):
         return self.user.username

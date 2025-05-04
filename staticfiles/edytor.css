@@ -85,9 +85,11 @@ h1 {
     align-items: center;
 }
 
-#small-menu-bottom #ava {
+#small-menu-bottom img {
     width: 45px;
+    height: 45px;
     margin: 10px;
+    border-radius: 50%;
 }
 
 #small-menu-bottom #sett {
@@ -335,3 +337,5 @@ h1 {
     justify-content: center;
     align-items: center;
 }
+
+
