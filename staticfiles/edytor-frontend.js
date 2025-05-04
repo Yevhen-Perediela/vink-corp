@@ -649,6 +649,13 @@ function sendChatMessage() {
                 lastAISuggestion = extracted || data.response;
                 appendMessage("AI", data.response); // pokaż pełną wiadomość użytkownikowi
                 addAcceptRejectButtons();
+                if (originalSelectedRange) {
+                    const originalText = editor.getModel().getValueInRange(originalSelectedRange);
+                    showDiffView(originalText, lastAISuggestion);
+                } else {
+                    showDiffView(originalBeforeAISuggestion, lastAISuggestion);
+                }
+                
 
             } else {
                 appendMessage("AI", "Brak odpowiedzi.");
@@ -697,6 +704,38 @@ function extractCodeFromResponse(text) {
         return codeBlock[1].trim(); // tylko czysty kod z ```...```
     }
     return null; // jeśli nie znaleziono bloku kodu
+}
+function showDiffView(original, modified) {
+    const diffContainer = document.createElement('div');
+    diffContainer.id = "diff-container";
+    diffContainer.style.position = "absolute";
+    diffContainer.style.top = "0";
+    diffContainer.style.left = "0";
+    diffContainer.style.right = "0";
+    diffContainer.style.bottom = "0";
+    diffContainer.style.zIndex = "10";
+    diffContainer.style.background = "#1e1e1e";
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = "Zamknij podgląd";
+    closeBtn.style.position = "absolute";
+    closeBtn.style.top = "10px";
+    closeBtn.style.right = "20px";
+    closeBtn.style.zIndex = "11";
+    closeBtn.onclick = () => {
+        diffContainer.remove();
+    };
+
+    document.body.appendChild(diffContainer);
+    diffContainer.appendChild(closeBtn);
+
+    monaco.editor.createDiffEditor(diffContainer, {
+        theme: "vs-dark",
+        automaticLayout: true,
+    }).setModel({
+        original: monaco.editor.createModel(original, "plaintext"),
+        modified: monaco.editor.createModel(modified, "plaintext")
+    });
 }
 
 function appendMessage(who, text) {
