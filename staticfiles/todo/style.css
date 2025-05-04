@@ -863,7 +863,7 @@ h1 {
     margin-bottom: 1rem;
     display: flex;
     gap: 1rem;
-  justify-content: center;
+  justify-content: center;;
 }
 
 .toolbar button {
@@ -1122,4 +1122,13 @@ input[type=range]::-moz-range-thumb {
   stroke: #333;
   stroke-width: 1.5px;
   marker-end: url(#arrow);
+}
+
+.active-tool  {
+ background-color: #f97316; /* ярко-оранжевый */
+  color: white;
+  box-shadow: 0 4px 8px rgba(249, 115, 22, 0.4); /* мягкая оранжевая тень */
+  border-radius: 8px;
+  transform: scale(1.03);
+  transition: all 0.2s ease;
 }
