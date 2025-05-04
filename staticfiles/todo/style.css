@@ -1125,9 +1125,9 @@ input[type=range]::-moz-range-thumb {
 }
 
 .active-tool  {
- background-color: #f97316; /* ярко-оранжевый */
+ background-color: #f97316;
   color: white;
-  box-shadow: 0 4px 8px rgba(249, 115, 22, 0.4); /* мягкая оранжевая тень */
+  box-shadow: 0 4px 8px rgba(249, 115, 22, 0.4);
   border-radius: 8px;
   transform: scale(1.03);
   transition: all 0.2s ease;
