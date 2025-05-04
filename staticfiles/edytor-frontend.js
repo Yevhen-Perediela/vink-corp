@@ -649,6 +649,13 @@ function sendChatMessage() {
                 lastAISuggestion = extracted || data.response;
                 appendMessage("AI", data.response); // pokaż pełną wiadomość użytkownikowi
                 addAcceptRejectButtons();
+                if (originalSelectedRange) {
+                    const originalText = editor.getModel().getValueInRange(originalSelectedRange);
+                    showDiffView(originalText, lastAISuggestion);
+                } else {
+                    showDiffView(originalBeforeAISuggestion, lastAISuggestion);
+                }
+                
 
             } else {
                 appendMessage("AI", "Brak odpowiedzi.");
@@ -698,6 +705,48 @@ function extractCodeFromResponse(text) {
     }
     return null; // jeśli nie znaleziono bloku kodu
 }
+function showDiffView(original, modified) {
+    const diffContainer = document.createElement('div');
+    diffContainer.id = "diff-container";
+    diffContainer.style.position = "absolute";
+    diffContainer.style.top = "0";
+    diffContainer.style.left = "0";
+    diffContainer.style.right = "0";
+    diffContainer.style.bottom = "0";
+    diffContainer.style.zIndex = "10";
+    diffContainer.style.background = "#1e1e1e";
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = "Zamknij podgląd";
+    closeBtn.style.position = "absolute";
+    closeBtn.style.top = "10px";
+    closeBtn.style.right = "20px";
+    closeBtn.style.zIndex = "11";
+    closeBtn.onclick = () => {
+        diffContainer.remove();
+    };
+
+    document.body.appendChild(diffContainer);
+    diffContainer.appendChild(closeBtn);
+
+    const fileExt = (window.currentEditingPath || '').split('.').pop();
+    const language = extensionToLanguage[fileExt] || 'plaintext';
+
+    const originalModel = monaco.editor.createModel(original, language);
+    const modifiedModel = monaco.editor.createModel(modified, language);
+
+    const diffEditor = monaco.editor.createDiffEditor(diffContainer, {
+        theme: "vs-dark",
+        automaticLayout: true,
+        readOnly: true,
+    });
+
+    diffEditor.setModel({
+        original: originalModel,
+        modified: modifiedModel,
+    });
+}
+
 
 function appendMessage(who, text) {
     const chatBox = document.getElementById('chat-messages');
@@ -706,11 +755,12 @@ function appendMessage(who, text) {
 
     if (who === "Ty") {
         msg.classList.add('user-message');
+        msg.innerText = text;
     } else {
         msg.classList.add('ai-message');
+        msg.innerHTML = renderFormattedAIResponse(text);
     }
 
-    msg.innerHTML = `${text}`;
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -721,6 +771,17 @@ window.addEventListener("load", () => {
     appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
 });
 
+function renderFormattedAIResponse(text) {
+    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+    return text.replace(codeBlockRegex, (_, lang, code) => {
+        const safeLang = lang || 'plaintext';
+        const escaped = code
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        return `<pre><code class="lang-${safeLang}">${escaped}</code></pre>`;
+    }).replace(/\n/g, '<br>');
+}
 
 
 
