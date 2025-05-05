@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+
 from main.auth.forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 from todo.models import UserForProject
@@ -27,6 +28,7 @@ def register_view(request):
     return render(request, 'register.html', {'form': form})
 
 def login_view(request):
+    error_message = None;
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -36,8 +38,8 @@ def login_view(request):
             next_url = request.GET.get('next', 'edytor') 
             return redirect(next_url)
         else:
-            messages.error(request, "Nieprawidłowe dane logowania.")
-    return render(request, 'login.html')
+           error_message = "Nieprawidłowe dane logowania."
+    return render(request, 'login.html', {'error_message': error_message})
 
 def logout_view(request):
     logout(request)
