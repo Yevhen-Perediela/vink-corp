@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'todo/style.css' %}">
     <link rel="stylesheet" href="{% static 'czat_ws.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
     <header>
@@ -22,6 +23,9 @@
             <div id="small-menu-top">
                 <img src="{% static 'img/folders.png' %}" onclick="showFolders(this)">
                 <img src="{% static 'img/github.png' %}" onclick="showGit()">
+                <span class="material-symbols-outlined openTasksIcon" onclick="openTasks(this)">
+                    assignment
+                    </span>
             </div>
             <div id="small-menu-bottom">
                 <img id='sett' src="{% static 'img/settings.png' %}">
@@ -37,8 +41,9 @@
             </div>
         </div>
         <div id="chatgpt">
+            <div class="regularMenu">
             <div class="chatMenu">
-                <div class="switchToChat" onclick="selectChatMenu(this, '#chat')">
+                <div class="switchToChat selectedChatMenu" onclick="selectChatMenu(this, '#chat-messages')">
                     Chat
                 </div>
                 <div class="switchToGroups" onclick="selectChatMenu(this, '.groups')">
@@ -60,6 +65,15 @@
                 </div>
                 <div class="search-results"></div>
             </div>
+        </div>
+        <div class="allTasks">
+            <div class="tasksSelect">
+                <div class="my selectedChatMenu" onclick="selectTaskFilter(this, 'my')">Moje</div>
+                <div class="all" onclick="selectTaskFilter(this, 'all')">Wszystko</div>
+            </div>
+            <div class="tasksResult">
+            </div>
+        </div>
         </div>
         <div class="menu" id="github">
             <input type="text" placeholder="Link do repo..." id="repoUrl">
