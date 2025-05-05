@@ -946,6 +946,8 @@ async function searchGroup(inputElement) {
         const users = usersResp.users || [];
         const grs = grResp.group_requests || [];
 
+        console.log("GRS", grs);
+
         const me = users.find((u) => u.id === userId) || {};
         if (me.friend_id !== null && me.id !== me.friend_id) {
             inputElement.value = "";
@@ -964,10 +966,9 @@ async function searchGroup(inputElement) {
             .filter((r) => r.from_user === userId)
             .map((r) => r.to_user);
 
-        const candidates = users.filter(
-            (u) =>
+        const candidates = users.filter((u) =>
             u.id !== userId &&
-            u.friend_id === null &&
+            (u.friend_id === null || u.friend_id === u.id) &&
             u.name.toLowerCase().includes(q)
         );
 
