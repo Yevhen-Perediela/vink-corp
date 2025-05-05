@@ -12,17 +12,18 @@
     background-color: #2e2e2e;
     border: none;
     color: white;
-    padding: 5px;
+    padding: 10px;
+    margin-left: 10px;
 }
 #chat-input input:focus {
     outline: none;
 }
 #chat-input button {
-    padding: 5px 10px;
-    background-color: #007acc;
+    padding: 10px ;
+    background-color: #ffffff;
     border: none;
-    border-radius: 3px;
-    color: white;
+    border-radius: 50%;
+    color: rgb(0, 0, 0);
     margin-left: 5px;
 }
 .user-message {
