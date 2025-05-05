@@ -46,11 +46,11 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    if request.method == 'POST' and request.POST.get(''):
+    if request.method == 'POST' and request.POST.get('password'):
         form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
             form.save()
-            update_session_auth_hash(request, form.user)  # Zapobiega wylogowaniu po zmianie hasła
+            update_session_auth_hash(request, form.user) 
             return redirect('profile')
     else:
         form = PasswordChangeForm(user=request.user)
@@ -90,6 +90,9 @@ def profile_view(request):
         team = list({user.id: user for user in team}.values())
     else:
         team = []
+
+    if not team:
+        team = None     
 
     return render(request, 'dashboard.html', {'user': request.user, 'team': team, 'form': form, 'ava': cur_user.avatar})
 
