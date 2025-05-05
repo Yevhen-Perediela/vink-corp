@@ -981,6 +981,7 @@ h1 {
     /* height: 85.5%; */
     display: block;
     border-radius: 10px;
+}
 .kalendarz > .calendarSection > .calendarContent > .day:not(.disabled) {
   /* aby elementFromPoint zawsze "widział" dzień, jeśli np. calendarContent ma tło przezroczyste */
   background-clip: padding-box;
@@ -991,6 +992,7 @@ h1 {
 .kalendarz > .calendarSection > .calendarContent > .day.hover-out,
 .kalendarz > .calendarSection > .calendarContent > .day.today.hover-out {
   transition: all 0.3s ease;
+}
 .toolbar {
     margin-bottom: 1rem;
     display: flex;
@@ -1004,6 +1006,7 @@ h1 {
   width: 100%;
   border: none;
   transform: none;
+}
 .toolbar button {
     background-color: #ff8000;
     color: white;
