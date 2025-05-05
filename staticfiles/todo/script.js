@@ -947,7 +947,7 @@ async function searchGroup(inputElement) {
         const grs = grResp.group_requests || [];
 
         const me = users.find((u) => u.id === userId) || {};
-        if (me.friend_id !== null) {
+        if (me.friend_id !== null && me.id !== me.friend_id) {
             inputElement.value = "";
             inputElement.placeholder =
                 "Jesteś już w grupie i nie możesz wyszukiwać innych.";
