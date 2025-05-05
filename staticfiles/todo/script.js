@@ -935,7 +935,6 @@ async function searchGroup(inputElement) {
     const q = inputElement.value.toLowerCase().trim();
     const out = document.querySelector(".search-results");
     out.innerHTML = "";
-
     if (!q) return;
 
     try {
@@ -946,27 +945,23 @@ async function searchGroup(inputElement) {
         const users = usersResp.users || [];
         const grs = grResp.group_requests || [];
 
-        console.log("GRS", grs);
-
-        const me = users.find((u) => u.id === userId) || {};
+        const me = users.find(u => u.id === userId) || {};
         if (me.friend_id !== null && me.id !== me.friend_id) {
             inputElement.value = "";
-            inputElement.placeholder =
-                "Jesteś już w grupie i nie możesz wyszukiwać innych.";
-            setTimeout(() => {
-                inputElement.placeholder = "Search The Matrix...";
-            }, 3000);
+            inputElement.placeholder = "Jesteś już w grupie i nie możesz wyszukiwać innych.";
+            setTimeout(() => inputElement.placeholder = "Search The Matrix...", 3000);
             return;
         }
 
+        // Use the correct field names here:
         const sentToMe = grs
-            .filter((r) => r.to_user === userId)
-            .map((r) => r.from_user);
+            .filter(r => r.to_id === userId)
+            .map(r => r.from_id);
         const sentByMe = grs
-            .filter((r) => r.from_user === userId)
-            .map((r) => r.to_user);
+            .filter(r => r.from_id === userId)
+            .map(r => r.to_id);
 
-        const candidates = users.filter((u) =>
+        const candidates = users.filter(u =>
             u.id !== userId &&
             (u.friend_id === null || u.friend_id === u.id) &&
             u.name.toLowerCase().includes(q)
@@ -977,44 +972,47 @@ async function searchGroup(inputElement) {
             row.textContent = u.name + " ";
 
             if (sentByMe.includes(u.id)) {
+                // I’ve sent them a request
                 const wait = document.createElement("button");
                 wait.textContent = "Oczekiwanie";
                 wait.disabled = true;
+
                 const cancel = document.createElement("button");
                 cancel.textContent = "Anuluj";
-                cancel.onclick = async() => {
-                    const r = grs.find(
-                        (r) => r.from_user === userId && r.to_user === u.id
-                    );
+                cancel.onclick = async () => {
+                    const r = grs.find(r => r.from_id === userId && r.to_id === u.id);
                     await deleteGroupRequest(r.id);
                     searchGroup(inputElement);
                 };
+
                 row.append(wait, cancel);
+
             } else if (sentToMe.includes(u.id)) {
+                // They’ve sent me a request
                 const btnJoin = document.createElement("button");
                 btnJoin.textContent = "Dołącz";
-                btnJoin.onclick = async() => {
-                    const r = grs.find(
-                        (r) => r.from_user === u.id && r.to_user === userId
-                    );
+                btnJoin.onclick = async () => {
+                    const r = grs.find(r => r.from_id === u.id && r.to_id === userId);
                     await deleteGroupRequest(r.id);
                     await editUser({ id: userId, friend_id: u.id });
                     searchGroup(inputElement);
                 };
+
                 const btnReject = document.createElement("button");
                 btnReject.textContent = "Odrzuć";
-                btnReject.onclick = async() => {
-                    const r = grs.find(
-                        (r) => r.from_user === u.id && r.to_user === userId
-                    );
+                btnReject.onclick = async () => {
+                    const r = grs.find(r => r.from_id === u.id && r.to_id === userId);
                     await deleteGroupRequest(r.id);
                     searchGroup(inputElement);
                 };
+
                 row.append(btnJoin, btnReject);
+
             } else {
+                // No requests: show “+”
                 const btn = document.createElement("button");
                 btn.textContent = "+";
-                btn.onclick = async() => {
+                btn.onclick = async () => {
                     await addGroupRequest({ from_id: userId, to_id: u.id });
                     searchGroup(inputElement);
                 };
@@ -1029,6 +1027,7 @@ async function searchGroup(inputElement) {
 }
 
 window.searchGroup = searchGroup;
+
 
 function refreshSelect() {
   console.log(

@@ -54,10 +54,8 @@ h1 {
 #small-menu {
   width: 5%;
   height: 100%;
-  border-right: 1px solid rgb(136, 136, 136);
   display: flex;
   flex-direction: column;
-  align-items: space-between;
   justify-content: space-between;
 }
 #small-menu-top {
@@ -130,6 +128,7 @@ h1 {
   align-items: center;
   padding: 7.5px;
   gap: 7.5px;
+  border-left: 1px solid rgb(136, 136, 136);
 }
 
 #chatgpt .chatMenu > div {
@@ -158,6 +157,10 @@ h1 {
   display: none;
 }
 
+#chatgpt .groups {
+    border-left: 1px solid rgb(136, 136, 136);
+}
+
 #chatgpt .groups > .groupsSearch {
   width: 100%;
   padding: 10px;
@@ -176,6 +179,10 @@ h1 {
 
 #chatgpt .groups > .groupsSearch > input:active {
   animation: shake 0.3s linear both;
+}
+
+#chatgpt > .allTasks {
+    border-left: 1px solid rgb(136, 136, 136);
 }
 
 #chatgpt > .allTasks > .tasksSelect {
@@ -896,8 +903,8 @@ h1 {
   background: #222;
   padding: 10px;
   border-radius: 20px;
-  width: 1000px;
-  height: 600px;
+  width: 100%;
+  height: 100%;
   flex-direction: column;
   border: 10px solid rgb(19, 19, 19)
 }
