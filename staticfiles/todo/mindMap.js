@@ -168,6 +168,7 @@ function restart() {
     .attr("dy", ".35em")
     .text((d) => d.text);
     ngEnter.append("text").attr("class", "add-subtask")
+    .filter(d => d.parentId === null)
     .attr("x", d => d.r - 8)
     .attr("y", d => -d.r + 12)
     .attr("font-size", "16px").text("+")
