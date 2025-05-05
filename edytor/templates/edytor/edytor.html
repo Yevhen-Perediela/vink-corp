@@ -32,13 +32,13 @@
                 <img src="{% static 'img/github.png' %}" onclick="showGit()">
             </div>
             <div id="small-menu-bottom">
-                <img id='sett' src="{% static 'img/settings.png' %}"> {% if user.is_authenticated %}
+                {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}">
-                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                    <img id='ava' src="{% static ava %}" alt="Avatar" class="avatar">
                 </a>
                 {% else %}
                 <a href="{% url 'login' %}">
-                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                    <img id='ava' src="{% static ava %}" alt="Avatar" class="avatar">
                 </a>
                 {% endif %}
             </div>
@@ -124,7 +124,9 @@
                     console.error('Nie udało się załadować pliku:', err);
                 });
         });
-
+        sessionStorage.setItem('username', '{{ user.username }}');
+        sessionStorage.setItem('user_id', '{{ user.id }}');
+        console.log('{{ user.username }}')
         window.username = "{{ user.username }}";
     </script>
 

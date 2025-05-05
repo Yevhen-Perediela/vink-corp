@@ -6,4 +6,4 @@ from .models import UserForProject
 @receiver(post_save, sender=User)
 def create_user_for_project(sender, instance, created, **kwargs):
     if created:
-        UserForProject.objects.create(user=instance) 
+        UserForProject.objects.create(user=instance, friend_id=instance.id) 

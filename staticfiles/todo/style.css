@@ -80,7 +80,9 @@ h1 {
 }
 #small-menu-bottom #ava {
   width: 45px;
+  height: 45px;
   margin: 10px;
+  border-radius: 50%;
 }
 #small-menu-bottom #sett {
   filter: invert(100%);
@@ -108,20 +110,29 @@ h1 {
   width: 20%;
   height: 100%;
   border-right: 1px solid rgb(136, 136, 136);
+}
+
+#chatgpt > div {
+  height: 100%;
   display: grid;
   grid-template-rows: 55px 1fr;
   background-color: #1e1e1e;
   color: white;
   font-size: 14px;
 }
-#chatgpt > .chatMenu {
+
+#chatgpt > div:nth-child(n + 2) {
+  display: none;
+}
+
+#chatgpt .chatMenu {
   display: flex;
   align-items: center;
   padding: 7.5px;
   gap: 7.5px;
 }
 
-#chatgpt > .chatMenu > div {
+#chatgpt .chatMenu > div {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -133,22 +144,26 @@ h1 {
   transition: all 0.3s ease;
 }
 
-#chatgpt > .chatMenu > div:hover,
-#chatgpt > .chatMenu > .selectedChatMenu {
+#chatgpt .chatMenu > div:hover {
   flex: 1.3;
   transform: scale(0.9);
 }
 
-#chatgpt > div:nth-child(n + 3) {
+#chatgpt .chatMenu > .selectedChatMenu {
+  flex: 1.2;
+  transform: scale(0.9);
+}
+
+#chatgpt > .regularMenu > div:nth-child(n + 3) {
   display: none;
 }
 
-#chatgpt > .groups > .groupsSearch {
+#chatgpt .groups > .groupsSearch {
   width: 100%;
   padding: 10px;
 }
 
-#chatgpt > .groups > .groupsSearch > input {
+#chatgpt .groups > .groupsSearch > input {
   width: 100%;
   height: 40px;
   border-radius: 5px;
@@ -159,8 +174,81 @@ h1 {
   outline: none;
 }
 
-#chatgpt > .groups > .groupsSearch > input:active {
+#chatgpt .groups > .groupsSearch > input:active {
   animation: shake 0.3s linear both;
+}
+
+#chatgpt > .allTasks > .tasksSelect {
+  display: flex;
+  align-items: center;
+  padding: 7.5px;
+  gap: 7.5px;
+}
+
+#chatgpt > .allTasks > .tasksSelect > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  flex: 1;
+  border-radius: 5px;
+  background-color: rgb(19, 19, 19);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+#chatgpt > .allTasks > .tasksSelect > div:hover {
+  flex: 1.3;
+  transform: scale(0.9);
+}
+
+#chatgpt > .allTasks > .tasksSelect > .selectedChatMenu {
+  flex: 1.2;
+  transform: scale(0.9);
+}
+
+#chatgpt > .allTasks > .tasksResult {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 10px;
+  padding-top: 0px;
+  overflow-y: scroll;
+  flex-wrap: wrap;
+  height: min-content;
+  max-height: 100%;
+}
+
+#chatgpt > .allTasks > .tasksResult::-webkit-scrollbar {
+  width: 0px;
+  background-color: transparent;
+}
+
+#chatgpt > .allTasks > .tasksResult > div {
+  padding: 5px;
+  border-radius: 5px;
+  overflow-y: auto;
+  min-height: 50px;
+  flex-grow: 1;
+  min-width: 50px;
+}
+
+#chatgpt > .allTasks > .tasksResult > b {
+  width: 100%;
+  border-radius: 5px;
+  display: flex;
+  gap: 10px;
+}
+
+#chatgpt > .allTasks > .tasksResult > b > span {
+  font-size: 30px;
+  line-height: 15px;
+  color: rgb(255, 69, 69);
+}
+
+#chatgpt > .allTasks > .tasksResult > div::-webkit-scrollbar {
+  width: 0px;
+  background-color: transparent;
 }
 
 @keyframes shake {
@@ -451,6 +539,7 @@ h1 {
   gap: 10px;
   line-height: 16px;
   position: relative;
+  font-size: 20px;
 }
 
 .list > .list_contents > div > .addTaskContainer {
@@ -525,7 +614,7 @@ h1 {
   border: 1px solid rgb(136, 136, 136);
   width: 100%;
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 15px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -537,11 +626,12 @@ h1 {
   align-items: center;
   gap: 10px;
   position: relative;
+  height: 30px;
 }
 
 .list_contents > div > ul > .task > .delete_task_button {
-  height: 15px;
-  width: 15px;
+  height: 20px;
+  width: 20px;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -574,8 +664,8 @@ h1 {
 }
 
 .list_contents > div > ul > .task > .taskStatusLabel {
-  height: 15px;
-  width: 15px;
+  height: 19px;
+  width: 19px;
   border-radius: 50%;
   background-color: transparent;
   border: 1px solid rgb(136, 136, 136);
@@ -603,8 +693,8 @@ h1 {
   > .task
   > .taskStatusLabel:has(.taskStatus:checked)
   > .checkmark {
-  height: 13px;
-  width: 13px;
+  height: 17px;
+  width: 17px;
   background-color: rgb(255, 69, 69);
 }
 
@@ -614,8 +704,8 @@ h1 {
   > .task
   > .taskStatusLabel.inProgress:has(.taskStatus:checked)
   > .checkmark {
-  height: 13px;
-  width: 13px;
+  height: 17px;
+  width: 17px;
   background-color: rgb(255, 132, 0);
 }
 
@@ -625,8 +715,8 @@ h1 {
   > .task
   > .taskStatusLabel.done:has(.taskStatus:checked)
   > .checkmark {
-  height: 13px;
-  width: 13px;
+  height: 17px;
+  width: 17px;
   background-color: rgb(74, 229, 39);
 }
 
@@ -801,6 +891,40 @@ h1 {
   border-radius: 7.5px;
 }
 
+.whiteboard {
+  position: relative;
+  background: #222;
+  padding: 10px;
+  border-radius: 20px;
+  width: 1000px;
+  height: 600px;
+  flex-direction: column;
+  border: 10px solid rgb(19, 19, 19)
+}
+
+#board {
+  background: white;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.toolbar {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.toolbar button {
+  background-color: #1e90ff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
 .kalendarz > .calendarSection {
   flex-grow: 1;
   border-left: 1px solid rgb(136, 136, 136);
@@ -827,28 +951,28 @@ h1 {
   position: relative;
   background-color: rgb(19, 19, 19);
 }
-
-  .kalendarz > .calendarContent > .day:hover {
-    height: calc(100% + 6px);
-    width: calc(100% + 6px);
-    border: 6px solid rgb(255, 132, 0);
-    z-index: 2;
-    transform: translate(-3px, -3px);
-  }
-
-.whiteboard {
-  margin: 15px auto 0px auto;
-  width: 90%;
-  height: 500px;
-  /* display: block; */
+.kalendarz > .calendarSection > .calendarContent > .day > .dayTasks {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
   flex-direction: column;
+  gap: 5px;
 }
-.whiteboard canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-  background: white;
-  border-radius: 6px;
+
+.kalendarz > .calendarSection > .calendarContent > .day > .dayTasks > div {
+  display: flex;
+  gap: 5px;
+}
+
+.kalendarz > .calendarSection > .calendarContent > .day.highlight,
+.kalendarz > .calendarSection > .calendarContent > .day.today.highlight {
+  border: 6px solid rgb(74, 229, 39);
+}
+
+.kalendarz > .calendarSection > .calendarContent > .day.disabled {
+  opacity: 0.9;
+  pointer-events: none;
 }
 
 #board {
@@ -858,14 +982,31 @@ h1 {
     display: block;
     border-radius: 10px;
 }
+.kalendarz > .calendarSection > .calendarContent > .day:not(.disabled) {
+  /* aby elementFromPoint zawsze "widział" dzień, jeśli np. calendarContent ma tło przezroczyste */
+  background-clip: padding-box;
+}
 
+.kalendarz > .calendarSection > .calendarContent > .day.hover,
+.kalendarz > .calendarSection > .calendarContent > .day.today.hover,
+.kalendarz > .calendarSection > .calendarContent > .day.hover-out,
+.kalendarz > .calendarSection > .calendarContent > .day.today.hover-out {
+  transition: all 0.3s ease;
+}
 .toolbar {
     margin-bottom: 1rem;
     display: flex;
     gap: 1rem;
-  justify-content: center;
+  justify-content: center;;
 }
 
+.kalendarz > .calendarSection > .calendarContent > .day.hover-out,
+.kalendarz > .calendarSection > .calendarContent > .day.today.hover-out {
+  height: 100%;
+  width: 100%;
+  border: none;
+  transform: none;
+}
 .toolbar button {
     background-color: #ff8000;
     color: white;
@@ -876,51 +1017,14 @@ h1 {
     font-weight: bold;
 }
 
-input[type=range] {
-  -webkit-appearance: none;
-  width: 150px;
-  height: 6px;
-  background: #ff8000;
-  border-radius: 3px;
-  outline: none;
-  cursor: pointer;
-}
-
-/* Chrome & Safari */
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  background: #ffffff;
-  border: 2px solid #ff8000;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-/* Firefox */
-input[type=range]::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  background: #ffffff;
-  border: 2px solid #ff8000;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.toolbar-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.kalendarz > .calendarSection > .calendarContent > .day:hover,
-.kalendarz > .calendarSection > .calendarContent > .day.today:hover {
+.kalendarz > .calendarSection > .calendarContent > .day.hover,
+.kalendarz > .calendarSection > .calendarContent > .day.today.hover {
   height: calc(100% + 2px);
   width: calc(100% + 2px);
   border: 6px solid rgb(255, 132, 0);
   z-index: 2;
   transform: translate(-1px, -1px);
+  transition: all 0.3s ease;
 }
 
 .kalendarz > .calendarSection > .calendarContent > .day.empty {
@@ -935,12 +1039,25 @@ input[type=range]::-moz-range-thumb {
   transform: translate(-1px, -1px);
 }
 
-.kalendarz > .calendarSection > .calendarContent > .day.empty:hover {
+.kalendarz > .calendarSection > .calendarContent > .day.empty.hover,
+.kalendarz > .calendarSection > .calendarContent > .day.empty.hover-out {
+  transition: all 0.3s ease;
+}
+
+.kalendarz > .calendarSection > .calendarContent > .day.empty.hover-out {
+  height: 100%;
+  width: 100%;
+  border: none;
+  transform: none;
+}
+
+.kalendarz > .calendarSection > .calendarContent > .day.empty.hover {
   height: 100%;
   width: 100%;
   padding: 10px;
   border: none;
   transform: none;
+  transition: all 0.3s ease;
 }
 
 .kalendarz > .calendarSection > .calendarHeader {
@@ -975,6 +1092,7 @@ input[type=range]::-moz-range-thumb {
 .calendarDate > .todayButton {
   writing-mode: vertical-rl;
   rotate: 180deg;
+  text-align: right;
 }
 
 .kalendarz > .calendarDate > button {
@@ -1122,4 +1240,92 @@ input[type=range]::-moz-range-thumb {
   stroke: #333;
   stroke-width: 1.5px;
   marker-end: url(#arrow);
+}
+
+.task > .tools .select {
+  position: relative;
+  font-family: sans-serif;
+  user-select: none;
+}
+
+/* currently selected value */
+.task > .tools .select .selected {
+  background-color: #2a2f3b;
+  color: #fff;
+  padding: 6px 32px 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  width: 125px;
+}
+
+/* arrow indicator */
+.task > .tools .select .selected::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #fff;
+  transform: translateY(-50%) rotate(0deg);
+  transition: transform 200ms;
+}
+
+/* rotate arrow when open */
+.task > .tools .select.open .selected::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* options list hidden by default */
+.task > .tools .select .options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background-color: #2a2f3b;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 200ms, transform 200ms;
+  z-index: 100;
+}
+
+/* show when open */
+.task > .tools .select.open .options {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* each option */
+.task > .tools .select .option {
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 15px;
+  color: white;
+}
+.task > .tools .select .option:hover {
+  background-color: #323741;
+  border-radius: 5px;
+}
+
+.material-symbols-outlined {
+  color: white;
+  font-size: 40px !important;
+  margin: 10px;
+  transition: all 0.3s ease;
+}
+
+.active-tool  {
+ background-color: #f97316;
+  color: white;
+  box-shadow: 0 4px 8px rgba(249, 115, 22, 0.4);
+  border-radius: 8px;
+  transform: scale(1.03);
+  transition: all 0.2s ease;
 }

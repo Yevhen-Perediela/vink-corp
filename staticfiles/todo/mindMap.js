@@ -168,23 +168,24 @@ function restart() {
         .attr("dy", ".35em")
         .text((d) => d.text);
     ngEnter.append("text").attr("class", "add-subtask")
-        .attr("x", d => d.r - 8)
-        .attr("y", d => -d.r + 12)
-        .attr("font-size", "16px").text("+")
-        .on("click", (event, d) => {
-            event.stopPropagation();
-            if (d.parentId === null && d.color === "#98c0ea") {
-                // niebieski – projekt
-                const fakeElement = document.createElement("div"); // placeholder wymagany przez addMindMapTaskFunction
-                addMindMapTaskFunction(fakeElement, d.text); // d.text = nazwa projektu
-            } else {
-                // żółty – zadanie → dodaj lokalnie w mapie
-                const txt = prompt("Tekst pod-zadania:", "");
-                if (!txt) return;
-                addNode(txt, d.x + 150, d.y, 30, d.id);
-                restart();
-            }
-        });
+    .filter(d => d.parentId === null)
+    .attr("x", d => d.r - 8)
+    .attr("y", d => -d.r + 12)
+    .attr("font-size", "16px").text("+")
+    .on("click", (event, d) => {
+      event.stopPropagation();
+      if (d.parentId === null && d.color === "#98c0ea") {
+        // niebieski – projekt
+        const fakeElement = document.createElement("div"); // placeholder wymagany przez addMindMapTaskFunction
+        addMindMapTaskFunction(fakeElement, d.text); // d.text = nazwa projektu
+      } else {
+        // żółty – zadanie → dodaj lokalnie w mapie
+        const txt = prompt("Tekst pod-zadania:", "");
+        if (!txt) return;
+        addNode(txt, d.x + 150, d.y, 30, d.id);
+        restart();
+      }
+    });
 
     nodeGroup = ngEnter.merge(nodeGroup);
     nodeGroup.select("rect").attr("fill", (d) => d.color);

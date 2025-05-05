@@ -1,10 +1,10 @@
 window.initWhiteboard = function () {
-  console.log("HELLO");
   const canvas = document.getElementById('board');
   const ctx = canvas.getContext('2d');
 
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
+
   let arrowMode = false;
   let startX = 0;
   let startY = 0;
@@ -28,42 +28,53 @@ window.initWhiteboard = function () {
     });
   }
 
-  window.activateArrow = function () {
+  function setActiveTool(buttonElement) {
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+      btn.classList.remove('active-tool');
+    });
+    buttonElement.classList.add('active-tool');
+  }
+
+  window.activateArrow = function (e) {
     arrowMode = true;
     isErasing = false;
+    setActiveTool(e.currentTarget);
   };
 
-  window.activateEraser = function () {
+  window.activateEraser = function (e) {
     isErasing = true;
+    arrowMode = false;
+    setActiveTool(e.currentTarget);
   };
 
-  window.activateBrush = function () {
+  window.activateBrush = function (e) {
     isErasing = false;
     arrowMode = false;
-};
+    setActiveTool(e.currentTarget);
+  };
 
   canvas.addEventListener('mousedown', (e) => {
-  if (arrowMode) {
-    const rect = canvas.getBoundingClientRect();
-    startX = e.clientX - rect.left;
-    startY = e.clientY - rect.top;
-  } else {
-    drawing = true;
-    draw(e);
-  }
-});
+    if (arrowMode) {
+      const rect = canvas.getBoundingClientRect();
+      startX = e.clientX - rect.left;
+      startY = e.clientY - rect.top;
+    } else {
+      drawing = true;
+      draw(e);
+    }
+  });
 
-canvas.addEventListener('mouseup', (e) => {
-  if (arrowMode) {
-    const rect = canvas.getBoundingClientRect();
-    const endX = e.clientX - rect.left;
-    const endY = e.clientY - rect.top;
-    drawArrow(startX, startY, endX, endY);
-  } else {
-    drawing = false;
-    ctx.beginPath();
-  }
-});
+  canvas.addEventListener('mouseup', (e) => {
+    if (arrowMode) {
+      const rect = canvas.getBoundingClientRect();
+      const endX = e.clientX - rect.left;
+      const endY = e.clientY - rect.top;
+      drawArrow(startX, startY, endX, endY);
+    } else {
+      drawing = false;
+      ctx.beginPath();
+    }
+  });
 
   canvas.addEventListener('mouseout', () => {
     drawing = false;
@@ -90,43 +101,52 @@ canvas.addEventListener('mouseup', (e) => {
   }
 
   function drawArrow(fromX, fromY, toX, toY) {
-  const headLength = 10;
-  const dx = toX - fromX;
-  const dy = toY - fromY;
-  const angle = Math.atan2(dy, dx);
+    const headLength = 10;
+    const dx = toX - fromX;
+    const dy = toY - fromY;
+    const angle = Math.atan2(dy, dx);
 
-  ctx.strokeStyle = currentColor;
-  ctx.lineWidth = brushSize;
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = brushSize;
 
-  // линия
-  ctx.beginPath();
-  ctx.moveTo(fromX, fromY);
-  ctx.lineTo(toX, toY);
-  ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(toX, toY);
+    ctx.stroke();
 
-  // стрелка
-  ctx.beginPath();
-  ctx.moveTo(toX, toY);
-  ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
-              toY - headLength * Math.sin(angle - Math.PI / 6));
-  ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6),
-              toY - headLength * Math.sin(angle + Math.PI / 6));
-  ctx.lineTo(toX, toY);
-  ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
-              toY - headLength * Math.sin(angle - Math.PI / 6));
-  ctx.stroke();
-  ctx.fillStyle = currentColor;
-  ctx.fill();
-}
+    ctx.beginPath();
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
+        toY - headLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6),
+        toY - headLength * Math.sin(angle + Math.PI / 6));
+    ctx.lineTo(toX, toY);
+    ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
+        toY - headLength * Math.sin(angle - Math.PI / 6));
+    ctx.stroke();
+    ctx.fillStyle = currentColor;
+    ctx.fill();
+  }
 
   window.clearCanvas = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   };
 
   window.saveCanvas = function () {
+    const tempCanvas = document.createElement('canvas');
+    const context = tempCanvas.getContext('2d');
+
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+
+    context.fillStyle = 'white';
+    context.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+    context.drawImage(canvas, 0, 0);
+
     const link = document.createElement('a');
-    link.download = 'whiteboard.png';
-    link.href = canvas.toDataURL();
+    link.download = 'whiteboard.jpg';
+    link.href = tempCanvas.toDataURL('image/jpeg', 0.95);
     link.click();
   };
 };

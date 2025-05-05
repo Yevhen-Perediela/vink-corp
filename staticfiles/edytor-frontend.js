@@ -494,7 +494,14 @@ async function cloneRepository() {
                 window.openFiles = [];
                 window.fileContents = {};
                 window.currentEditingPath = null;
-                editor.setValue('wybierz plik :)');
+                fetch('/edytor/asgii.txt')
+                    .then(res => res.text())
+                    .then(text => {
+                        editor.setValue(text);
+                        window.editorContentNow = "";
+                        renderTabs();
+                    })
+                    .catch(err => console.error('Nie udało się pobrać pliku:', err));
                 loadRepoTree();
                 loadCommitHistory();
                 // alert(data.message);

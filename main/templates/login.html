@@ -13,8 +13,13 @@
     {% csrf_token %}
     <input type="text" name="username" placeholder="Nazwa użytkownika">
     <input type="password" name="password" placeholder="Hasło">
+    {% if error_message %}
+        <p style="color: red">{{ error_message }}</p>
+    {% endif %}
     <button type="submit">Zaloguj</button>
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
     <a href="{% url 'register' %}">Nie masz jeszcze konta? Zarejestruj się</a>
+
 </form>
 </body>
 </html>

@@ -9,7 +9,9 @@ from .models import Task, Project, UserForProject, GroupRequest
 def main(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'todo/index.html', {'user': request.user})
+    
+    cur_user = UserForProject.objects.get(user_id=request.user.id)
+    return render(request, 'todo/index.html', {'user': request.user, 'ava': cur_user.avatar})
 
 
 @csrf_exempt
