@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task, Project, User, GroupRequest
+from .models import Task, Project, UserForProject, GroupRequest
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
@@ -11,9 +11,13 @@ class TaskAdmin(admin.ModelAdmin):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'origin_user_id')
 
-@admin.register(User)
+@admin.register(UserForProject)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'friend_id')
+    list_display = ('id', 'get_username', 'friend_id')
+
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.short_description = 'Username'
 
 @admin.register(GroupRequest)
 class GroupRequestAdmin(admin.ModelAdmin):

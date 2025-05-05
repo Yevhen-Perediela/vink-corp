@@ -1,20 +1,20 @@
 import { addTask, editTask, deleteTask, listTasks } from "../api_bd_tasks.js";
 import {
-  addProject,
-  editProject,
-  deleteProject,
-  listProjects,
+    addProject,
+    editProject,
+    deleteProject,
+    listProjects,
 } from "../api_bd_projects.js";
 import { addUser, editUser, deleteUser, listUsers } from "../api_bd_users.js";
 import {
-  addGroupRequest,
-  deleteGroupRequest,
-  listGroupRequests,
+    addGroupRequest,
+    deleteGroupRequest,
+    listGroupRequests,
 } from "../api_bd_groupRequests.js";
 
 import { showMindMap } from "./mindMap.js";
 
-var userId = 10;
+var userId = parseInt(sessionStorage.getItem("user_id")); // Użyj userId z sessionStorage
 
 async function showMyProjects() {
   try {
@@ -35,16 +35,16 @@ showMyProjects(); // ← teraz userId zostanie użyty poprawnie
 const actions_buttons = document.querySelectorAll(".todo_panel > button");
 
 actions_buttons.forEach((button) => {
-  button.addEventListener("click", () => {
-    actions_buttons.forEach((btn) => btn.classList.remove("active"));
-    button.classList.add("active");
-  });
+    button.addEventListener("click", () => {
+        actions_buttons.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+    });
 });
 
 function changeToDoView(element) {
-  document
-    .querySelector(".todo_content")
-    .prepend(document.querySelector(`.${element}`));
+    document
+        .querySelector(".todo_content")
+        .prepend(document.querySelector(`.${element}`));
 
   //     document.querySelectorAll('.todo_content > div').forEach(div => div.style.display = 'none');
 
@@ -63,30 +63,30 @@ function changeToDoView(element) {
 window.changeToDoView = changeToDoView;
 
 async function addProjectFunction() {
-  try {
-    let everyThingOk = true;
-    let projectNameInput = document.querySelector(".add_project_input").value;
-    const { projects } = await listProjects(userId);
-    console.log("Y" + projects);
-    projects.forEach((project) => {
-      if (project.name === projectNameInput) {
-        everyThingOk = false;
-        document.querySelector(".add_project_input").value = "";
-        document.querySelector(".add_project_input").placeholder =
-          "Projekt już istnieje";
-      } else {
-        document.querySelector(".add_project_input").placeholder =
-          "Nowy projekt";
-      }
-    });
-    if (projectNameInput !== "" && everyThingOk) {
-      addProject({
-        name: projectNameInput,
-        user_id: userId,
-      }).then((data) => {
-        document.querySelector(
-          ".list_contents"
-        ).innerHTML += `<div class="todo${projectNameInput}">
+    try {
+        let everyThingOk = true;
+        let projectNameInput = document.querySelector(".add_project_input").value;
+        const { projects } = await listProjects(userId);
+        console.log("Y" + projects);
+        projects.forEach((project) => {
+            if (project.name === projectNameInput) {
+                everyThingOk = false;
+                document.querySelector(".add_project_input").value = "";
+                document.querySelector(".add_project_input").placeholder =
+                    "Projekt już istnieje";
+            } else {
+                document.querySelector(".add_project_input").placeholder =
+                    "Nowy projekt";
+            }
+        });
+        if (projectNameInput !== "" && everyThingOk) {
+            addProject({
+                name: projectNameInput,
+                user_id: userId,
+            }).then((data) => {
+                document.querySelector(
+                    ".list_contents"
+                ).innerHTML += `<div class="todo${projectNameInput}">
             ${projectNameInput}
             <button class="deleteProjectButton" onclick="deleteProjectFunction('todo${projectNameInput}')">
                 <svg
@@ -638,19 +638,19 @@ async function changeTaskStatus(element, projectId, taskId) {
 window.changeTaskStatus = changeTaskStatus;
 
 function changeCompletedTasksPercents(checkboxesClass) {
-  let allCheckboxes = document.querySelectorAll(`.${checkboxesClass}`).length;
-  let allCheckboxesChecked = document.querySelectorAll(
-    `.taskStatusLabel.done > .${checkboxesClass}:checked`
-  ).length;
-  document
-    .querySelector(`.${checkboxesClass}Bar`)
-    .style.setProperty(
-      "--progress-width",
-      (allCheckboxesChecked / allCheckboxes) * 90 + "px"
-    );
-  document.querySelector(
-    `.${checkboxesClass}Bar > .completedTasksPercents`
-  ).innerHTML = Math.round((allCheckboxesChecked / allCheckboxes) * 100) + "%";
+    let allCheckboxes = document.querySelectorAll(`.${checkboxesClass}`).length;
+    let allCheckboxesChecked = document.querySelectorAll(
+        `.taskStatusLabel.done > .${checkboxesClass}:checked`
+    ).length;
+    document
+        .querySelector(`.${checkboxesClass}Bar`)
+        .style.setProperty(
+            "--progress-width",
+            (allCheckboxesChecked / allCheckboxes) * 90 + "px"
+        );
+    document.querySelector(
+        `.${checkboxesClass}Bar > .completedTasksPercents`
+    ).innerHTML = Math.round((allCheckboxesChecked / allCheckboxes) * 100) + "%";
 }
 
 window.changeCompletedTasksPercents = changeCompletedTasksPercents;
@@ -658,37 +658,37 @@ window.changeCompletedTasksPercents = changeCompletedTasksPercents;
 var taskSortType = 1;
 
 function changeTaskSort() {
-  if (taskSortType === 1) {
-    taskSortType = 2;
-    document.querySelector(".list_contents").classList.add("two_column");
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
-    ).style.transform = "translateX(-75px)";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
-    ).style.transform = "translateX(-67.5px)";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
-    ).style.opacity = "0";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
-    ).style.opacity = "1";
-  } else {
-    taskSortType = 1;
-    document.querySelector(".list_contents").classList.remove("two_column");
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
-    ).style.transform = "translateX(7.5px)";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
-    ).style.transform = "translateX(15px)";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
-    ).style.opacity = "1";
-    document.querySelector(
-      ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
-    ).style.opacity = "0";
-  }
+    if (taskSortType === 1) {
+        taskSortType = 2;
+        document.querySelector(".list_contents").classList.add("two_column");
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
+        ).style.transform = "translateX(-75px)";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
+        ).style.transform = "translateX(-67.5px)";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
+        ).style.opacity = "0";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
+        ).style.opacity = "1";
+    } else {
+        taskSortType = 1;
+        document.querySelector(".list_contents").classList.remove("two_column");
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
+        ).style.transform = "translateX(7.5px)";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
+        ).style.transform = "translateX(15px)";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .oneInLine"
+        ).style.opacity = "1";
+        document.querySelector(
+            ".todo_content > .list > .addProjectContainer > .sortProjectContainer > .twoInLine"
+        ).style.opacity = "0";
+    }
 }
 
 window.changeTaskSort = changeTaskSort;
@@ -847,15 +847,15 @@ function mouseOutTask(element) {
 window.mouseOutTask = mouseOutTask;
 
 function previousCalendarMounth() {
-  currentDate.setMonth(currentDate.getMonth() - 1);
-  drawCalendar(currentDate);
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    drawCalendar(currentDate);
 }
 
 window.previousCalendarMounth = previousCalendarMounth;
 
 function nextCalendarMounth() {
-  currentDate.setMonth(currentDate.getMonth() + 1);
-  drawCalendar(currentDate);
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    drawCalendar(currentDate);
 }
 
 window.nextCalendarMounth = nextCalendarMounth;
@@ -932,99 +932,99 @@ window.showFrends = showFrends;
 showFrends();
 
 async function searchGroup(inputElement) {
-  const q = inputElement.value.toLowerCase().trim();
-  const out = document.querySelector(".search-results");
-  out.innerHTML = "";
+    const q = inputElement.value.toLowerCase().trim();
+    const out = document.querySelector(".search-results");
+    out.innerHTML = "";
 
-  if (!q) return;
+    if (!q) return;
 
-  try {
-    const [usersResp, grResp] = await Promise.all([
-      listUsers(),
-      listGroupRequests(),
-    ]);
-    const users = usersResp.users || [];
-    const grs = grResp.group_requests || [];
+    try {
+        const [usersResp, grResp] = await Promise.all([
+            listUsers(),
+            listGroupRequests(),
+        ]);
+        const users = usersResp.users || [];
+        const grs = grResp.group_requests || [];
 
-    const me = users.find((u) => u.id === userId) || {};
-    if (me.friend_id !== null) {
-      inputElement.value = "";
-      inputElement.placeholder =
-        "Jesteś już w grupie i nie możesz wyszukiwać innych.";
-      setTimeout(() => {
-        inputElement.placeholder = "Search The Matrix...";
-      }, 3000);
-      return;
+        const me = users.find((u) => u.id === userId) || {};
+        if (me.friend_id !== null) {
+            inputElement.value = "";
+            inputElement.placeholder =
+                "Jesteś już w grupie i nie możesz wyszukiwać innych.";
+            setTimeout(() => {
+                inputElement.placeholder = "Search The Matrix...";
+            }, 3000);
+            return;
+        }
+
+        const sentToMe = grs
+            .filter((r) => r.to_user === userId)
+            .map((r) => r.from_user);
+        const sentByMe = grs
+            .filter((r) => r.from_user === userId)
+            .map((r) => r.to_user);
+
+        const candidates = users.filter(
+            (u) =>
+            u.id !== userId &&
+            u.friend_id === null &&
+            u.name.toLowerCase().includes(q)
+        );
+
+        for (const u of candidates) {
+            const row = document.createElement("div");
+            row.textContent = u.name + " ";
+
+            if (sentByMe.includes(u.id)) {
+                const wait = document.createElement("button");
+                wait.textContent = "Oczekiwanie";
+                wait.disabled = true;
+                const cancel = document.createElement("button");
+                cancel.textContent = "Anuluj";
+                cancel.onclick = async() => {
+                    const r = grs.find(
+                        (r) => r.from_user === userId && r.to_user === u.id
+                    );
+                    await deleteGroupRequest(r.id);
+                    searchGroup(inputElement);
+                };
+                row.append(wait, cancel);
+            } else if (sentToMe.includes(u.id)) {
+                const btnJoin = document.createElement("button");
+                btnJoin.textContent = "Dołącz";
+                btnJoin.onclick = async() => {
+                    const r = grs.find(
+                        (r) => r.from_user === u.id && r.to_user === userId
+                    );
+                    await deleteGroupRequest(r.id);
+                    await editUser({ id: userId, friend_id: u.id });
+                    searchGroup(inputElement);
+                };
+                const btnReject = document.createElement("button");
+                btnReject.textContent = "Odrzuć";
+                btnReject.onclick = async() => {
+                    const r = grs.find(
+                        (r) => r.from_user === u.id && r.to_user === userId
+                    );
+                    await deleteGroupRequest(r.id);
+                    searchGroup(inputElement);
+                };
+                row.append(btnJoin, btnReject);
+            } else {
+                const btn = document.createElement("button");
+                btn.textContent = "+";
+                btn.onclick = async() => {
+                    await addGroupRequest({ from_id: userId, to_id: u.id });
+                    searchGroup(inputElement);
+                };
+                row.append(btn);
+            }
+
+            out.append(row);
+        }
+    } catch (e) {
+        console.error("searchGroup error:", e);
     }
-
-    const sentToMe = grs
-      .filter((r) => r.to_user === userId)
-      .map((r) => r.from_user);
-    const sentByMe = grs
-      .filter((r) => r.from_user === userId)
-      .map((r) => r.to_user);
-
-    const candidates = users.filter(
-      (u) =>
-        u.id !== userId &&
-        u.friend_id === null &&
-        u.name.toLowerCase().includes(q)
-    );
-
-    for (const u of candidates) {
-      const row = document.createElement("div");
-      row.textContent = u.name + " ";
-
-      if (sentByMe.includes(u.id)) {
-        const wait = document.createElement("button");
-        wait.textContent = "Oczekiwanie";
-        wait.disabled = true;
-        const cancel = document.createElement("button");
-        cancel.textContent = "Anuluj";
-        cancel.onclick = async () => {
-          const r = grs.find(
-            (r) => r.from_user === userId && r.to_user === u.id
-          );
-          await deleteGroupRequest(r.id);
-          searchGroup(inputElement);
-        };
-        row.append(wait, cancel);
-      } else if (sentToMe.includes(u.id)) {
-        const btnJoin = document.createElement("button");
-        btnJoin.textContent = "Dołącz";
-        btnJoin.onclick = async () => {
-          const r = grs.find(
-            (r) => r.from_user === u.id && r.to_user === userId
-          );
-          await deleteGroupRequest(r.id);
-          await editUser({ id: userId, friend_id: u.id });
-          searchGroup(inputElement);
-        };
-        const btnReject = document.createElement("button");
-        btnReject.textContent = "Odrzuć";
-        btnReject.onclick = async () => {
-          const r = grs.find(
-            (r) => r.from_user === u.id && r.to_user === userId
-          );
-          await deleteGroupRequest(r.id);
-          searchGroup(inputElement);
-        };
-        row.append(btnJoin, btnReject);
-      } else {
-        const btn = document.createElement("button");
-        btn.textContent = "+";
-        btn.onclick = async () => {
-          await addGroupRequest({ from_id: userId, to_id: u.id });
-          searchGroup(inputElement);
-        };
-        row.append(btn);
-      }
-
-      out.append(row);
-    }
-  } catch (e) {
-    console.error("searchGroup error:", e);
-  }
 }
 
 window.searchGroup = searchGroup;

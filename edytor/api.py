@@ -299,3 +299,39 @@ def push_repo(request):
     except subprocess.CalledProcessError as e:
         print("Błąd pushowania:", e)
         return JsonResponse({'error': 'Błąd podczas pushowania repozytorium'}, status=500)
+
+
+@csrf_exempt
+def get_commit_history(request):
+    repo = request.GET.get('repo')
+    if not repo:
+        return JsonResponse({'error': 'Brak repozytorium'}, status=400)
+
+    repo_path = f"/tmp/edytor_repos/{repo}"
+
+    if not os.path.exists(repo_path):
+        return JsonResponse({'error': 'Repozytorium nie istnieje lokalnie'}, status=404)
+
+    try:
+        # Pobieramy historię commitów z dodatkowymi informacjami
+        result = subprocess.run(
+            ["git", "-C", repo_path, "log", "--pretty=format:%H|%an|%ar|%s"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        
+        commits = []
+        for line in result.stdout.strip().split('\n'):
+            commit_hash, author, date, message = line.split('|', 3)
+            commits.append({
+                'hash': commit_hash,
+                'author': author,
+                'date': date,
+                'message': message
+            })
+        
+        return JsonResponse({'commits': commits})
+    except subprocess.CalledProcessError as e:
+        print("Błąd pobierania historii:", e)
+        return JsonResponse({'error': 'Błąd podczas pobierania historii commitów'}, status=500)

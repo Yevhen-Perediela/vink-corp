@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+    <link rel="stylesheet" href="{% static 'czat_ws.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
@@ -30,11 +31,11 @@
                 <img id='sett' src="{% static 'img/settings.png' %}">
                {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}">
-                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                    <img id='ava' src="{% static ava %}" alt="Avatar" class="avatar">
                 </a>
                 {% else %}
                  <a href="{% url 'login' %}">
-                    <img id='ava' src="{% static 'img/avatar.png' %}">
+                    <img id='ava' src="{% static ava %}" alt="Avatar" class="avatar">
                  </a>
                 {% endif %}
             </div>
@@ -49,10 +50,13 @@
                     Grupy
                 </div>
             </div>
-            <div id="chat-messages">
-                <div id="chat-input" style="padding: 10px;">
-                    <input type="text" id="user-input" placeholder="Napisz coś..." style="width: 70%;">
-                    <button onclick="sendChatMessage()">Wyślij</button>
+            <div id="chat" >
+                <div id="chat-log-box" style='max-height: 79vh; overflow-y: auto;'>
+                    <div id="chat-log" class="chat-messages"></div>
+                </div>
+                <div id="chat-input-box">
+                    <input id="chat-message-input" type="text" placeholder="Wpisz wiadomość..." data-username="{{ user.username }}">
+                    <button id="chat-message-submit">Wyślij</button>
                 </div>
             </div>
             <div class="groups">
@@ -126,22 +130,38 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="mind_board">
                     <svg id="mindmap"></svg>
                 </div>
-                <div class="whiteboard" id="whiteboard-view">
+                
+                <div class="whiteboard" id="whiteboard" >
                     <div class="toolbar">
-                        <button onclick="clearCanvas()">🧹 Wyczyść</button>
-                        <button onclick="saveCanvas()">💾 Zapisz</button>
+                        <label for="colorPicker">Kolor:</label>
+                        <input type="color" id="colorPicker" value="#ff8000">
+                        <div class="toolbar-item">
+                            <label for="brushSize">Grubość:</label>
+                            <input type="range" id="brushSize" min="1" max="20" value="2">
+                        </div>
+                        <button class="tool-btn" onclick="activateBrush(event)">Pisak</button>
+                        <button class="tool-btn" onclick="activateEraser(event)">Gumka</button>
+                        <button class="tool-btn" onclick="activateArrow(event)">Strzałka</button>
+                        <button onclick="clearCanvas()">Wyczyść</button>
+                        <button onclick="saveCanvas()">Zapisz</button>
                     </div>
                     <canvas id="board"></canvas>
                 </div>
+                
+                
             </div>
         </div>
     </div>
-    <script src="{% static './scripts/whiteboard.js' %}"></script>
+    {% comment %} <script src="{% static './scripts/whiteboard.js' %}"></script> {% endcomment %}
+    <script src="{% static 'scripts/whiteboard.js' %}"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="module" src="{% static 'todo/script.js' %}"></script>
     <script type="module" src="{% static 'todo/mindMap.js' %}"></script>
+    <script src="{% static 'websocket.js' %}"></script>
+    <script>window.username = "{{ user.username }}";</script>
 </body>
 </html>

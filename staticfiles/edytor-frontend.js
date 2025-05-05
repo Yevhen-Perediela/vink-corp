@@ -3,26 +3,42 @@ var edytor = document.getElementById("editor-wrap");
 var folders = document.getElementById("folders");
 
 const extensionToLanguage = {
-    'py': 'python', 'js': 'javascript', 'ts': 'typescript',
-    'html': 'html', 'css': 'css', 'json': 'json', 'php': 'php',
-    'md': 'markdown', 'sh': 'shell', 'c': 'c', 'cpp': 'cpp',
-    'java': 'java', 'cs': 'csharp', 'txt': 'plaintext',
+    'py': 'python',
+    'js': 'javascript',
+    'ts': 'typescript',
+    'html': 'html',
+    'css': 'css',
+    'json': 'json',
+    'php': 'php',
+    'md': 'markdown',
+    'sh': 'shell',
+    'c': 'c',
+    'cpp': 'cpp',
+    'java': 'java',
+    'cs': 'csharp',
+    'txt': 'plaintext',
 };
 
 const extensionToIconURL = {
-    'py': 'python/python-original.svg', 'js': 'javascript/javascript-original.svg',
-    'ts': 'typescript/typescript-original.svg', 'html': 'html5/html5-original.svg',
-    'css': 'css3/css3-original.svg', 'json': 'code/code-original.svg',
-    'php': 'php/php-original.svg', 'md': 'markdown/markdown-original.svg',
-    'sh': 'bash/bash-original.svg', 'c': 'c/c-original.svg',
-    'cpp': 'cplusplus/cplusplus-original.svg', 'java': 'java/java-original.svg',
+    'py': 'python/python-original.svg',
+    'js': 'javascript/javascript-original.svg',
+    'ts': 'typescript/typescript-original.svg',
+    'html': 'html5/html5-original.svg',
+    'css': 'css3/css3-original.svg',
+    'json': 'code/code-original.svg',
+    'php': 'php/php-original.svg',
+    'md': 'markdown/markdown-original.svg',
+    'sh': 'bash/bash-original.svg',
+    'c': 'c/c-original.svg',
+    'cpp': 'cplusplus/cplusplus-original.svg',
+    'java': 'java/java-original.svg',
     'cs': 'csharp/csharp-original.svg',
 };
 
 function getIconURL(ext) {
-    return extensionToIconURL[ext]
-        ? `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${extensionToIconURL[ext]}`
-        : 'https://img.icons8.com/?size=100&id=1395&format=png&color=FFFFFF';
+    return extensionToIconURL[ext] ?
+        `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${extensionToIconURL[ext]}` :
+        'https://img.icons8.com/?size=100&id=1395&format=png&color=FFFFFF';
 }
 
 function setLanguageByFilename(filename) {
@@ -79,13 +95,22 @@ function renderTabs() {
 function closeTab(path) {
     window.openFiles = window.openFiles.filter(p => p !== path);
     saveOpenFiles();
+
     if (path === window.currentEditingPath) {
-        editor.setValue('wybierz plik :)');
-        window.currentEditingPath = null;
-        window.editorContentNow = "";
+        fetch('/edytor/asgii.txt')
+            .then(res => res.text())
+            .then(text => {
+                editor.setValue(text);
+                window.currentEditingPath = null;
+                window.editorContentNow = "";
+                renderTabs();
+            })
+            .catch(err => console.error('Nie udało się pobrać pliku:', err));
+    } else {
+        renderTabs();
     }
-    renderTabs();
 }
+
 
 function saveCurrentFile(alertIfNone = true) {
     const repo = localStorage.getItem('cur-repoName');
@@ -95,22 +120,22 @@ function saveCurrentFile(alertIfNone = true) {
         return;
     }
     fetch('/edytor/api/save-file/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ repo, file: path, content: editor.getValue() })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            console.log("✅ Zapisano plik");
-            window.fileContents[path] = editor.getValue();
-            window.editorContentNow = editor.getValue();
-            renderTabs();
-        }
-    })
-    .catch(err => {
-        console.error("❌ Błąd zapisu:", err);
-    });
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ repo, file: path, content: editor.getValue() })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                console.log("✅ Zapisano plik");
+                window.fileContents[path] = editor.getValue();
+                window.editorContentNow = editor.getValue();
+                renderTabs();
+            }
+        })
+        .catch(err => {
+            console.error("❌ Błąd zapisu:", err);
+        });
 }
 
 document.addEventListener('keydown', e => {
@@ -132,19 +157,19 @@ function loadRepoTree() {
     localStorage.setItem('cur-repoName', repo);
 
     fetch(`/edytor/api/local-tree/?repo=${encodeURIComponent(repo)}`)
-    .then(res => res.json())
-    .then(tree => {
-        if (!Array.isArray(tree)) {
-            console.error('Błąd drzewa:', tree.error || 'Nieznany błąd');
-            alert(tree.error || 'Nie udało się załadować repozytorium.');
-            return;
-        }
-        renderFileTree(tree, repo);
-    })
-    .catch(err => {
-        console.error("Błąd ładowania drzewa:", err);
-        alert('Błąd sieci podczas ładowania repozytorium.');
-    });
+        .then(res => res.json())
+        .then(tree => {
+            if (!Array.isArray(tree)) {
+                console.error('Błąd drzewa:', tree.error || 'Nieznany błąd');
+                alert(tree.error || 'Nie udało się załadować repozytorium.');
+                return;
+            }
+            renderFileTree(tree, repo);
+        })
+        .catch(err => {
+            console.error("Błąd ładowania drzewa:", err);
+            alert('Błąd sieci podczas ładowania repozytorium.');
+        });
 }
 
 function renderFileTree(tree, repoName) {
@@ -274,22 +299,22 @@ function createInputForNew(type, folderPath, container) {
 function createItem(path, type) {
     const repo = localStorage.getItem('cur-repoName');
     fetch(`/edytor/api/create-${type}/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ repo, path })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            console.log(`✅ Utworzono ${type}:`, path);
-            loadRepoTree();
-        } else {
-            alert(data.error || "Błąd tworzenia");
-        }
-    })
-    .catch(err => {
-        console.error("❌ Błąd tworzenia:", err);
-    });
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ repo, path })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                console.log(`✅ Utworzono ${type}:`, path);
+                loadRepoTree();
+            } else {
+                alert(data.error || "Błąd tworzenia");
+            }
+        })
+        .catch(err => {
+            console.error("❌ Błąd tworzenia:", err);
+        });
 }
 
 function loadFile(path) {
@@ -316,6 +341,7 @@ function startEditor() {
     if (repo) {
         console.log("🔄 Ładuję lokalne repo:", repo);
         loadRepoTree();
+        loadCommitHistory();
     } else {
         console.log("⚠️ Brak repo w localStorage. Wpisz URL i sklonuj repo.");
     }
@@ -337,14 +363,28 @@ document.addEventListener('DOMContentLoaded', () => {
     buttons.forEach(button => {
         button.addEventListener('click', () => {
             const panelToShow = button.getAttribute('data-panel');
+
+            // Pokaż panel
             for (const key in panels) {
                 if (panels[key]) {
                     panels[key].style.display = (key === panelToShow) ? 'flex' : 'none';
                 }
             }
+
+            // Styl aktywnego przycisku
+            buttons.forEach(btn => {
+                if (btn === button) {
+                    btn.style.borderBottom = '3px solid orange';
+                    btn.style.color = 'black';
+                } else {
+                    btn.style.borderBottom = '0px';
+                    btn.style.color = 'black';
+                }
+            });
         });
     });
 });
+
 
 
 function showGit(el) {
@@ -357,6 +397,7 @@ function showGit(el) {
         folders.style.display = "none";
     }
 }
+
 function showFolders(el) {
     if (folders.style.display === "block") {
         folders.style.display = "none";
@@ -368,7 +409,60 @@ function showFolders(el) {
     }
 }
 
+async function loadCommitHistory() {
+    const repoName = localStorage.getItem('cur-repoName');
+    if (!repoName) return;
+
+    try {
+        const response = await fetch(`/edytor/api/commit-history/?repo=${repoName}`, {
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            console.error(data.error);
+            return;
+        }
+
+        const commitsList = document.getElementById('commits-list');
+        commitsList.innerHTML = '';
+
+        data.commits.forEach(commit => {
+            const commitElement = document.createElement('div');
+            commitElement.className = 'commit-item';
+
+            commitElement.innerHTML = `
+                <div class="commit-message">
+                    <div class="commit-dot"></div>
+                    <div class="commit-title">${commit.message}</div>
+                </div>
+                <div class="commit-meta">
+                    <div class="commit-author">
+                        <i class="fas fa-user" style="margin-right: 4px;"></i>
+                        ${commit.author}
+                    </div>
+                    <div class="commit-date">
+                        <i class="fas fa-clock" style="margin-right: 4px;"></i>
+                        ${commit.date}
+                    </div>
+                </div>
+                <div class="commit-hash">
+                    ${commit.hash.substring(0, 7)}
+                </div>
+            `;
+
+            commitsList.appendChild(commitElement);
+        });
+    } catch (error) {
+        console.error('Błąd podczas pobierania historii:', error);
+    }
+}
+
 async function cloneRepository() {
+    showGithubLoader(true);
     const urlInput = document.getElementById('repoUrl');
     const repoUrl = urlInput.value.trim();
 
@@ -384,9 +478,9 @@ async function cloneRepository() {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken()
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 url: repoUrl,
-                token: getGitToken()
+
             })
         });
 
@@ -400,9 +494,17 @@ async function cloneRepository() {
                 window.openFiles = [];
                 window.fileContents = {};
                 window.currentEditingPath = null;
-                editor.setValue('wybierz plik :)');
+                fetch('/edytor/asgii.txt')
+                    .then(res => res.text())
+                    .then(text => {
+                        editor.setValue(text);
+                        window.editorContentNow = "";
+                        renderTabs();
+                    })
+                    .catch(err => console.error('Nie udało się pobrać pliku:', err));
                 loadRepoTree();
-                alert(data.message);
+                loadCommitHistory();
+                // alert(data.message);
             } else {
                 alert(data.message || 'Operacja zakończona.');
             }
@@ -417,6 +519,8 @@ async function cloneRepository() {
     } catch (error) {
         console.error('Błąd:', error);
         alert('Coś poszło mocno nie tak podczas klonowania...');
+    } finally {
+        showGithubLoader(false);
     }
 }
 
@@ -438,6 +542,7 @@ function getCSRFToken() {
 
 
 async function pullChanges() {
+    showGithubLoader(true);
     const repoName = localStorage.getItem('cur-repoName');
     if (!repoName) {
         alert('Najpierw wybierz repozytorium!');
@@ -457,20 +562,22 @@ async function pullChanges() {
         const data = await response.json();
 
         if (response.ok) {
-            alert(data.message || 'Repozytorium zostało zaktualizowane!');
-            loadRepoTree(); // po pullu możesz przeładować drzewo
+            // alert(data.message || 'Repozytorium zostało zaktualizowane!');
+            loadRepoTree();
+            loadCommitHistory();
         } else {
             alert(data.error || 'Wystąpił błąd podczas aktualizacji.');
         }
     } catch (error) {
         console.error('Błąd pullowania:', error);
         alert('Coś poszło mocno nie tak podczas pulla...');
+    } finally {
+        showGithubLoader(false);
     }
 }
 
-
-
 async function commitChanges() {
+    showGithubLoader(true);
     const repoName = localStorage.getItem('cur-repoName');
     if (!repoName) {
         alert('Najpierw wybierz repozytorium!');
@@ -495,33 +602,22 @@ async function commitChanges() {
         const data = await response.json();
 
         if (response.ok) {
-            alert(data.message || 'Zmiany wypchnięte!');
+            // alert(data.message || 'Zmiany wypchnięte!');
+            loadCommitHistory();
         } else {
             alert(data.error || 'Wystąpił błąd podczas pushowania.');
         }
     } catch (error) {
         console.error('Błąd pushowania:', error);
         alert('Coś poszło mocno nie tak podczas pushowania...');
+    } finally {
+        showGithubLoader(false);
     }
 }
 
+let lastAISuggestion = "";
+let originalBeforeAISuggestion = "";
 
-function getGitToken() {
-    return sessionStorage.getItem('git-token') || '';
-}
-
-function setGitToken(token) {
-    sessionStorage.setItem('git-token', token);
-}
-
-
-function changeGitToken() {
-    const newToken = prompt('Wprowadź nowy GitHub Token:');
-    if (newToken !== null) {
-        setGitToken(newToken.trim());
-        alert('Token został zapisany w sessionStorage!');
-    }
-}
 function sendChatMessage() {
     const chatInput = document.getElementById('user-input');
     const message = chatInput.value.trim();
@@ -532,47 +628,172 @@ function sendChatMessage() {
     chatInput.value = "";
 
     // const currentCode = getCodeFromEditor();
-    const currentCode = editor.getValue();
+    // const currentCode = editor.getValue();
+
+    const selection = editor.getSelection();
+    const selectedText = editor.getModel().getValueInRange(selection);
+    const currentCode = selectedText.trim() !== "" ? selectedText : editor.getValue();
+
+    originalBeforeAISuggestion = editor.getValue();
 
     fetch("/edytor/ai/apiconnect/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            prompt: message,
-            code: currentCode   
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                prompt: message,
+                code: currentCode
+            })
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.response) {
-            appendMessage("AI", data.response);
-        } else {
-            appendMessage("AI", "Brak odpowiedzi.");
-        }
-    })
-    .catch(() => {
-        appendMessage("AI", "Błąd połączenia z serwerem.");
+        .then(res => res.json())
+        .then(data => {
+            if (data.response) {
+                // appendMessage("AI", data.response);
+                // lastAISuggestion = data.response;
+                // addAcceptRejectButtons();
+                const extracted = extractCodeFromResponse(data.response);
+                lastAISuggestion = extracted || data.response;
+                appendMessage("AI", data.response); // pokaż pełną wiadomość użytkownikowi
+                addAcceptRejectButtons();
+                if (originalSelectedRange) {
+                    const originalText = editor.getModel().getValueInRange(originalSelectedRange);
+                    showDiffView(originalText, lastAISuggestion);
+                } else {
+                    showDiffView(originalBeforeAISuggestion, lastAISuggestion);
+                }
+                
+
+            } else {
+                appendMessage("AI", "Brak odpowiedzi.");
+            }
+        })
+        .catch(() => {
+            appendMessage("AI", "Błąd połączenia z serwerem.");
+        });
+}
+
+function addAcceptRejectButtons() {
+    const chatInputDiv = document.getElementById('chat-input');
+
+    const acceptBtn = document.createElement('button');
+    acceptBtn.textContent = "Accept";
+    acceptBtn.onclick = () => {
+        editor.setValue(lastAISuggestion);
+        removeAcceptRejectButtons();
+    };
+    acceptBtn.id = "accept-btn";
+    acceptBtn.style.marginLeft = "10px";
+
+    const rejectBtn = document.createElement('button');
+    rejectBtn.textContent = "Reject";
+    rejectBtn.onclick = () => {
+        editor.setValue(originalBeforeAISuggestion);
+        removeAcceptRejectButtons();
+    };
+    rejectBtn.id = "reject-btn";
+    rejectBtn.style.marginLeft = "5px";
+
+    chatInputDiv.appendChild(acceptBtn);
+    chatInputDiv.appendChild(rejectBtn);
+}
+
+function removeAcceptRejectButtons() {
+    const acceptBtn = document.getElementById('accept-btn');
+    const rejectBtn = document.getElementById('reject-btn');
+    if (acceptBtn) acceptBtn.remove();
+    if (rejectBtn) rejectBtn.remove();
+}
+
+function extractCodeFromResponse(text) {
+    const codeBlock = text.match(/```(?:\w*\n)?([\s\S]*?)```/);
+    if (codeBlock && codeBlock[1]) {
+        return codeBlock[1].trim(); // tylko czysty kod z ```...```
+    }
+    return null; // jeśli nie znaleziono bloku kodu
+}
+function showDiffView(original, modified) {
+    const diffContainer = document.createElement('div');
+    diffContainer.id = "diff-container";
+    diffContainer.style.position = "absolute";
+    diffContainer.style.top = "0";
+    diffContainer.style.left = "0";
+    diffContainer.style.right = "0";
+    diffContainer.style.bottom = "0";
+    diffContainer.style.zIndex = "10";
+    diffContainer.style.background = "#1e1e1e";
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = "Zamknij podgląd";
+    closeBtn.style.position = "absolute";
+    closeBtn.style.top = "10px";
+    closeBtn.style.right = "20px";
+    closeBtn.style.zIndex = "11";
+    closeBtn.onclick = () => {
+        diffContainer.remove();
+    };
+
+    document.body.appendChild(diffContainer);
+    diffContainer.appendChild(closeBtn);
+
+    const fileExt = (window.currentEditingPath || '').split('.').pop();
+    const language = extensionToLanguage[fileExt] || 'plaintext';
+
+    const originalModel = monaco.editor.createModel(original, language);
+    const modifiedModel = monaco.editor.createModel(modified, language);
+
+    const diffEditor = monaco.editor.createDiffEditor(diffContainer, {
+        theme: "vs-dark",
+        automaticLayout: true,
+        readOnly: true,
+    });
+
+    diffEditor.setModel({
+        original: originalModel,
+        modified: modifiedModel,
     });
 }
 
+
 function appendMessage(who, text) {
-    const chatBox = document.getElementById('chat-messages'); 
+    const chatBox = document.getElementById('chat-messages');
     const msg = document.createElement("div");
     msg.classList.add('chat-message');
 
     if (who === "Ty") {
         msg.classList.add('user-message');
+        msg.innerText = text;
     } else {
         msg.classList.add('ai-message');
+        msg.innerHTML = renderFormattedAIResponse(text);
     }
 
-    msg.innerHTML = `${text}`;
     chatBox.appendChild(msg);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+
 window.addEventListener("load", () => {
-    appendMessage("Ty", "Co potrafisz?");
+    appendMessage("Ty", "Hej!");
     appendMessage("AI", "Cześć! Jestem asystentem AI edytora Vink. Mogę refaktoryzować, komentować i tłumaczyć Twój kod.");
 });
+
+function renderFormattedAIResponse(text) {
+    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+    return text.replace(codeBlockRegex, (_, lang, code) => {
+        const safeLang = lang || 'plaintext';
+        const escaped = code
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        return `<pre><code class="lang-${safeLang}">${escaped}</code></pre>`;
+    }).replace(/\n/g, '<br>');
+}
+
+
+
+
+function showGithubLoader(show) {
+    const loader = document.getElementById('github-loader');
+    if (loader) loader.style.display = show ? 'block' : 'none';
+}

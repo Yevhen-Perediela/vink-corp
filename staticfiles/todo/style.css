@@ -80,7 +80,9 @@ h1 {
 }
 #small-menu-bottom #ava {
   width: 45px;
+  height: 45px;
   margin: 10px;
+  border-radius: 50%;
 }
 #small-menu-bottom #sett {
   filter: invert(100%);
@@ -973,6 +975,12 @@ h1 {
   pointer-events: none;
 }
 
+#board {
+    background: white;
+    width: 100%;
+    /* height: 85.5%; */
+    display: block;
+    border-radius: 10px;
 .kalendarz > .calendarSection > .calendarContent > .day:not(.disabled) {
   /* aby elementFromPoint zawsze "widział" dzień, jeśli np. calendarContent ma tło przezroczyste */
   background-clip: padding-box;
@@ -983,6 +991,11 @@ h1 {
 .kalendarz > .calendarSection > .calendarContent > .day.hover-out,
 .kalendarz > .calendarSection > .calendarContent > .day.today.hover-out {
   transition: all 0.3s ease;
+.toolbar {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+  justify-content: center;;
 }
 
 .kalendarz > .calendarSection > .calendarContent > .day.hover-out,
@@ -991,6 +1004,14 @@ h1 {
   width: 100%;
   border: none;
   transform: none;
+.toolbar button {
+    background-color: #ff8000;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 .kalendarz > .calendarSection > .calendarContent > .day.hover,
@@ -1295,4 +1316,13 @@ h1 {
   font-size: 40px !important;
   margin: 10px;
   transition: all 0.3s ease;
+}
+
+.active-tool  {
+ background-color: #f97316;
+  color: white;
+  box-shadow: 0 4px 8px rgba(249, 115, 22, 0.4);
+  border-radius: 8px;
+  transform: scale(1.03);
+  transition: all 0.2s ease;
 }

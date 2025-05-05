@@ -41,19 +41,20 @@ INSTALLED_APPS = [
     'edytor',
     'todo',
     'main',
+    'rest_framework',
     'corsheaders',
-
+    'channels',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'vink.urls'
@@ -79,6 +80,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'vink.wsgi.application'
+
+ASGI_APPLICATION = 'vink.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  
+    },
+}
+
 
 
 # Database

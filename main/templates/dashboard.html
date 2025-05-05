@@ -10,46 +10,87 @@
     <div class="container">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <h2>MojeMenu</h2>
+            <h2 style='margin-right: 30px;'>Dashboard</h2>
             <nav>
                 <ul>
-                    <li><a href="{% url 'edytor' %}">🏠 Strona główna</a></li>
-                    <li><a href="{% url 'profile' %}">👤 Profil</a></li>
-                    <li><a href="">⚙️ Ustawienia</a></li>
-                    <li><a href="{% url 'todo' %}">📋 Zadania</a></li>
-                    <li><a href="{% url 'logout' %}">🚪 Wyloguj się</a></li>
+                    <li><a href="{% url 'edytor' %}"><img src='{% static "img/code.png"%}'>Edytor</a></li>
+                    <li><a href="{% url 'todo' %}"><img src='{% static "img/todo_logo.png"%}'>To-do</a></li>
+                    <li><a href="{% url 'logout' %}" id='logout'><img src='{% static "img/logout.png"%}'>Wyloguj się</a></li>
                 </ul>
             </nav>
+            <div id="yesno-widget">
+                <p id="yesno-desc">Zadaj pytanie typu „czy warto deployować dziś?”</p>
+                <input type="text" id="yesno-input" placeholder="Twoje pytanie..." />
+                <button onclick="askYesNo()">Zadaj pytanie</button>
+                <div id="yesno-answer" style="display: none;">
+                    <img id="yesno-gif" src="" alt="Odpowiedź" />
+                    <p id="yesno-result"></p>
+                </div>
+            </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main">
             <header class="header">
-                <h1>Witaj, {{ user.username }}!</h1>
-                <p>Miło Cię znowu widzieć.</p>
+                <div class="header-left">
+                    <img src="{% static ava %}" alt="Avatar" class="avatar">
+                    <h1> {{ user.username }}</h1>
+                </div>    
+                <button class='avatar-btn' type="button" onclick="document.getElementById('avatarInput').click();">Zmień zdjęcie</button>
             </header>
 
             <section class="content">
-                <div class="card">
-                    <h3>Liczba zadań</h3>
-                    <p>
-                        {#skrypt#}
-                    </p>
-                </div>
-                <div class="card">
-                    <h3>Ukończone projekty</h3>
-                    <p>
-                        {#skrypt#}
-                    </p>
-                </div>
-                <div class="card">
-                    <h3>Nowe wiadomości</h3>
-                    <p>
-                        {#skrypt#}
-                    </p>
-                </div>
+                <h2>Osoby w twoim zespole</h2>
+                <table class="team-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in team %}
+                            <tr>
+                                <td><img src="{% static member.avatar %}" alt="Avatar" class="member-avatar"></td>
+                                <td>{{ member.user.username }}</td>
+                                {% if member.user.email %}<td><a href='mailto:{{ member.user.email }}'>{{ member.user.email }}</a></td>{% else %}<td>----</td>{% endif %}
+                                <td>{{ member.user.last_login }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h2>Zmiana hasła:</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Renderowanie pól bez wskazówek -->
+                    <div class="form-row">
+                        <label for="{{ form.old_password.id_for_label }}">Stare hasło:</label>
+                        {{ form.old_password }}
+                    </div>
+                    <div class="form-row">
+                        <label for="{{ form.new_password1.id_for_label }}">Nowe hasło:</label>
+                        {{ form.new_password1 }}
+                    </div>
+                    <div class="form-row">
+                        <label for="{{ form.new_password2.id_for_label }}">Potwierdź nowe hasło:</label>
+                        {{ form.new_password2 }}
+                    </div>
+                    
+                    <button type="submit">Zmień hasło</button>
+                </form>
+                
+                <form id="avatarForm"  method="POST" enctype="multipart/form-data" style="display: none;">
+                    {% csrf_token %}
+                    <input type="file" name="avatar" id="avatarInput" accept="image/*" onchange="document.getElementById('avatarForm').submit();">
+                </form>
+
+                
             </section>
         </main>
     </div>
+    <script src="{% static "scripts/dashboard.js" %}"></script>
 </body>
 </html>
