@@ -51,14 +51,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for member in team %}
+                        {% if team %}
+                            {% for member in team %}
+                                <tr>
+                                    <td><img src="{% static member.avatar %}" alt="Avatar" class="member-avatar"></td>
+                                    <td>{{ member.user.username }}</td>
+                                    {% if member.user.email %}<td><a href='mailto:{{ member.user.email }}'>{{ member.user.email }}</a></td>{% else %}<td>----</td>{% endif %}
+                                    <td>{{ member.user.last_login }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
                             <tr>
-                                <td><img src="{% static member.avatar %}" alt="Avatar" class="member-avatar"></td>
-                                <td>{{ member.user.username }}</td>
-                                {% if member.user.email %}<td><a href='mailto:{{ member.user.email }}'>{{ member.user.email }}</a></td>{% else %}<td>----</td>{% endif %}
-                                <td>{{ member.user.last_login }}</td>
+                                <td colspan='4' style='text-align: center;'> brak </td>
                             </tr>
-                        {% endfor %}
+                        {% endif %}
+
                     </tbody>
                 </table>
                 <h2>Zmiana hasła:</h2>

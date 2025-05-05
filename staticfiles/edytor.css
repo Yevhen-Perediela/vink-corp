@@ -122,6 +122,11 @@ h1 {
     overflow-y: auto;
 }
 
+#folders p{
+    text-align: center;
+    top:10%;
+}
+
 .tree-item {
     cursor: pointer;
     padding-left: 10px;

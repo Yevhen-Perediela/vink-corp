@@ -40,6 +40,7 @@ body {
     margin: 2rem 0;
     display: flex;
     align-items: center;
+    
 
     
 }
@@ -117,7 +118,6 @@ body {
     margin-right: 20px;
 }
 
-/* Content Cards */
 .content {
     padding: 2rem;
 
@@ -190,6 +190,7 @@ body {
 /* Stylowanie komórek */
 .team-table td {
     vertical-align: middle;
+    width: 25%;
 }
 
 .team-table td img {

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+
 from main.auth.forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 from todo.models import UserForProject
@@ -27,6 +28,7 @@ def register_view(request):
     return render(request, 'register.html', {'form': form})
 
 def login_view(request):
+    error_message = None;
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -36,8 +38,8 @@ def login_view(request):
             next_url = request.GET.get('next', 'edytor') 
             return redirect(next_url)
         else:
-            messages.error(request, "Nieprawidłowe dane logowania.")
-    return render(request, 'login.html')
+           error_message = "Nieprawidłowe dane logowania."
+    return render(request, 'login.html', {'error_message': error_message})
 
 def logout_view(request):
     logout(request)
@@ -46,11 +48,11 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    if request.method == 'POST' and request.POST.get(''):
+    if request.method == 'POST' and request.POST.get('password'):
         form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
             form.save()
-            update_session_auth_hash(request, form.user)  # Zapobiega wylogowaniu po zmianie hasła
+            update_session_auth_hash(request, form.user) 
             return redirect('profile')
     else:
         form = PasswordChangeForm(user=request.user)
@@ -90,6 +92,9 @@ def profile_view(request):
         team = list({user.id: user for user in team}.values())
     else:
         team = []
+
+    if not team:
+        team = None     
 
     return render(request, 'dashboard.html', {'user': request.user, 'team': team, 'form': form, 'ava': cur_user.avatar})
 
