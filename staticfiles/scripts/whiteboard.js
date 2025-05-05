@@ -117,12 +117,12 @@ window.initWhiteboard = function () {
     ctx.beginPath();
     ctx.moveTo(toX, toY);
     ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
-                toY - headLength * Math.sin(angle - Math.PI / 6));
+        toY - headLength * Math.sin(angle - Math.PI / 6));
     ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6),
-                toY - headLength * Math.sin(angle + Math.PI / 6));
+        toY - headLength * Math.sin(angle + Math.PI / 6));
     ctx.lineTo(toX, toY);
     ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6),
-                toY - headLength * Math.sin(angle - Math.PI / 6));
+        toY - headLength * Math.sin(angle - Math.PI / 6));
     ctx.stroke();
     ctx.fillStyle = currentColor;
     ctx.fill();
@@ -133,9 +133,20 @@ window.initWhiteboard = function () {
   };
 
   window.saveCanvas = function () {
+    const tempCanvas = document.createElement('canvas');
+    const context = tempCanvas.getContext('2d');
+
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+
+    context.fillStyle = 'white';
+    context.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+    context.drawImage(canvas, 0, 0);
+
     const link = document.createElement('a');
-    link.download = 'whiteboard.png';
-    link.href = canvas.toDataURL();
+    link.download = 'whiteboard.jpg';
+    link.href = tempCanvas.toDataURL('image/jpeg', 0.95);
     link.click();
   };
 };
