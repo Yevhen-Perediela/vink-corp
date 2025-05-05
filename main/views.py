@@ -75,15 +75,29 @@ def profile_view(request):
 
     # Pobieramy wszystkich użytkowników i generujemy listę zespołu
     all_users = UserForProject.objects.all()
-    
 
+    # Filtrujemy użytkowników, którzy mają ten sam friend_id
     users_with_same_friend_id = all_users.filter(friend_id=cur_user.friend_id)
+    # Filtrujemy użytkowników, którzy mają użytkownika jako friend_id
     users_with_user_as_friend = all_users.filter(friend_id=request.user.id)
-    op_user = UserForProject.objects.get(user_id=cur_user.friend_id)
 
-    team = list(users_with_same_friend_id) + list(users_with_user_as_friend) + [op_user]
-    team = [user for user in team if user.user_id != request.user.id]
-    team = list({user.id: user for user in team}.values())
+    # Jeśli friend_id jest ustawione, pobieramy op_user, w przeciwnym razie zostawiamy op_user jako None
+    if cur_user.friend_id:
+        try:
+            op_user = UserForProject.objects.get(user_id=cur_user.friend_id)
+        except UserForProject.DoesNotExist:
+            op_user = None
+    else:
+        op_user = None
+
+    # Tworzymy listę zespołu, ale tylko jeśli friend_id jest ustawione, w przeciwnym razie tabela będzie pusta
+    if cur_user.friend_id:  
+        team = list(users_with_same_friend_id) + list(users_with_user_as_friend) + [op_user]
+        # Filtrujemy, aby usunąć użytkownika, który jest już zalogowany
+        team = [user for user in team if user and user.user_id != request.user.id]
+        team = list({user.id: user for user in team}.values())
+    else:
+        team = []  # Jeśli friend_id jest None, tabela będzie pusta
 
     # Zwracamy odpowiedź z formularzem i zespołem
     return render(request, 'dashboard.html', {'user': request.user, 'team': team, 'form': form, 'ava': cur_user.avatar})
