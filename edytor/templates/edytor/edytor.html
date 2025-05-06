@@ -18,11 +18,10 @@
         <h1>Edytor</h1>
         <input type="text" placeholder="Wyszukaj...">
         <span>
-            <button id="czat" data-panel="chat">Czat</button>
+            <button id="czat" data-panel="chat" style="border-bottom: 3px solid rgb(255, 132, 0);
+            color: black;">Czat</button>
             <button id="to-do" data-panel="small-todo">to-do</button>
             <button id="AI" data-panel="chatgpt">AI</button>
-
-
         </span>
     </header>
     <div id="main-wrap">
@@ -76,7 +75,12 @@
             </div>
         </div>
         <div id="small-todo">
-
+            <div class="tasksSelect">
+                <div class="my selectedChatMenu" onclick="selectTaskFilter(this, 'my')">Moje</div>
+                <div class="all" onclick="selectTaskFilter(this, 'all')">Wszystko</div>
+            </div>
+            <div class="tasksResult">
+            </div>
         </div>
         <div id="chat">
             <div id="chat-log-box">
@@ -130,6 +134,7 @@
         window.username = "{{ user.username }}";
     </script>
 
+<script type="module" src="{% static 'edytor-tasks.js' %}"></script>
     <script src="{% static 'edytor.js' %}"></script>
     <script src="{% static 'edytor-frontend.js' %}"></script>
 

@@ -104,6 +104,11 @@ h1 {
   display: grid;
   grid-template-rows: 55px calc(100% - 55px);
 }
+
+#chat {
+    width: 100%;
+}
+
 #chatgpt {
   width: 20%;
   height: 100%;
@@ -159,6 +164,21 @@ h1 {
 
 #chatgpt .groups {
     border-left: 1px solid rgb(136, 136, 136);
+}
+
+#chatgpt .groups > .search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+#chatgpt .groups > .search-results > div {
+    display: flex;
+    gap: 10px;
+    font-weight: bold;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgb(136, 136, 136);
 }
 
 #chatgpt .groups > .groupsSearch {

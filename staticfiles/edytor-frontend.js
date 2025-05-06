@@ -366,8 +366,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Pokaż panel
             for (const key in panels) {
-                if (panels[key]) {
-                    panels[key].style.display = (key === panelToShow) ? 'flex' : 'none';
+                if (!panels[key]) continue;
+
+                if (key === panelToShow) {
+                  panels[key].style.display = (key === 'small-todo') ? 'grid' : 'flex';
+                } else {
+                  panels[key].style.display = 'none';
                 }
             }
 

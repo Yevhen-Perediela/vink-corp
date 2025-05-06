@@ -935,99 +935,182 @@ async function searchGroup(inputElement) {
     const q = inputElement.value.toLowerCase().trim();
     const out = document.querySelector(".search-results");
     out.innerHTML = "";
-    if (!q) return;
-
-    try {
-        const [usersResp, grResp] = await Promise.all([
-            listUsers(),
-            listGroupRequests(),
-        ]);
-        const users = usersResp.users || [];
-        const grs = grResp.group_requests || [];
-
-        const me = users.find(u => u.id === userId) || {};
-        if (me.friend_id !== null && me.id !== me.friend_id) {
-            inputElement.value = "";
-            inputElement.placeholder = "Jesteś już w grupie i nie możesz wyszukiwać innych.";
-            setTimeout(() => inputElement.placeholder = "Search The Matrix...", 3000);
-            return;
+  
+    // 1) Pobierz użytkowników i zaproszenia
+    const [usersResp, grResp] = await Promise.all([
+      listUsers(),
+      listGroupRequests()
+    ]);
+    const users = usersResp.users || [];
+    const grs   = grResp.group_requests || [];
+  
+    // 2) Rozpoznaj siebie i rolę
+    const me       = users.find(u => u.id === userId) || {};
+    const isLeader = me.friend_id === me.id;
+    const leaderId = isLeader ? me.id : me.friend_id;
+    const groupMembers = leaderId != null
+      ? users.filter(u => u.friend_id === leaderId)
+      : [];
+  
+    // 3) Jeśli pusty q => pokaż tylko członków własnej grupy
+    if (!q) {
+      if (leaderId == null) {
+        out.textContent = "Nie należysz jeszcze do żadnej grupy.";
+        return;
+      }
+      for (const u of groupMembers) {
+        const row = document.createElement("div");
+        row.textContent = u.name + " ";
+  
+        // Lider może usunąć (––) i zobaczyć stan zaproszeń
+        if (isLeader && u.id !== me.id) {
+          const sent = grs.find(r => r.from_id === me.id && r.to_id === u.id);
+          if (sent) {
+            // Oczekiwanie + Anuluj
+            const wait = document.createElement("button");
+            wait.textContent = "Oczekiwanie";
+            wait.disabled = true;
+            const cancel = document.createElement("button");
+            cancel.textContent = "Anuluj";
+            cancel.onclick = async () => {
+              await deleteGroupRequest(sent.id);
+              searchGroup(inputElement);
+            };
+            row.append(wait, cancel);
+          } else {
+            // Zwykły minus – usunięcie z grupy
+            const btnRemove = document.createElement("button");
+            btnRemove.textContent = "–";
+            btnRemove.onclick = async () => {
+              await editUser({ id: u.id, friend_id: u.id });
+              searchGroup(inputElement);
+            };
+            row.append(btnRemove);
+          }
         }
-
-        // Use the correct field names here:
-        const sentToMe = grs
-            .filter(r => r.to_id === userId)
-            .map(r => r.from_id);
-        const sentByMe = grs
-            .filter(r => r.from_id === userId)
-            .map(r => r.to_id);
-
-        const candidates = users.filter(u =>
-            u.id !== userId &&
-            (u.friend_id === null || u.friend_id === u.id) &&
-            u.name.toLowerCase().includes(q)
-        );
-
-        for (const u of candidates) {
-            const row = document.createElement("div");
-            row.textContent = u.name + " ";
-
-            if (sentByMe.includes(u.id)) {
-                // I’ve sent them a request
-                const wait = document.createElement("button");
-                wait.textContent = "Oczekiwanie";
-                wait.disabled = true;
-
-                const cancel = document.createElement("button");
-                cancel.textContent = "Anuluj";
-                cancel.onclick = async () => {
-                    const r = grs.find(r => r.from_id === userId && r.to_id === u.id);
-                    await deleteGroupRequest(r.id);
-                    searchGroup(inputElement);
-                };
-
-                row.append(wait, cancel);
-
-            } else if (sentToMe.includes(u.id)) {
-                // They’ve sent me a request
-                const btnJoin = document.createElement("button");
-                btnJoin.textContent = "Dołącz";
-                btnJoin.onclick = async () => {
-                    const r = grs.find(r => r.from_id === u.id && r.to_id === userId);
-                    await deleteGroupRequest(r.id);
-                    await editUser({ id: userId, friend_id: u.id });
-                    searchGroup(inputElement);
-                };
-
-                const btnReject = document.createElement("button");
-                btnReject.textContent = "Odrzuć";
-                btnReject.onclick = async () => {
-                    const r = grs.find(r => r.from_id === u.id && r.to_id === userId);
-                    await deleteGroupRequest(r.id);
-                    searchGroup(inputElement);
-                };
-
-                row.append(btnJoin, btnReject);
-
-            } else {
-                // No requests: show “+”
-                const btn = document.createElement("button");
-                btn.textContent = "+";
-                btn.onclick = async () => {
-                    await addGroupRequest({ from_id: userId, to_id: u.id });
-                    searchGroup(inputElement);
-                };
-                row.append(btn);
-            }
-
-            out.append(row);
-        }
-    } catch (e) {
-        console.error("searchGroup error:", e);
+        out.append(row);
+      }
+      return;
     }
-}
+  
+    // 4) Przy q: buduj kandydatów
+    let candidates;
+    if (isLeader) {
+      // lider widzi wszystkich poza sobą
+      candidates = users.filter(u => u.id !== me.id && u.name.toLowerCase().includes(q));
+    } else {
+      // członek widzi tylko swoją grupę
+      candidates = groupMembers.filter(u => u.id !== me.id && u.name.toLowerCase().includes(q));
+    }
+  
+    // 5) Przygotuj zbiory zaproszeń
+    const sentByMe = grs.filter(r => r.from_id === me.id).map(r => r.to_id);
+    const sentToMe = grs.filter(r => r.to_id   === me.id).map(r => r.from_id);
+  
+    // 6) Renderuj każdy kandydat z odpowiednim UI
+    for (const u of candidates) {
+      const row = document.createElement("div");
+      row.textContent = u.name + " ";
+  
+      const inSomeGroup = u.friend_id !== null && u.friend_id !== u.id;
+      const inMyGroup   = u.friend_id === leaderId;
+  
+      if (inSomeGroup && !inMyGroup) {
+        // w innej grupie – zablokowany
+        row.append(document.createTextNode("🔒"));
+      }
+      else if (inMyGroup) {
+        // w mojej grupie
+        if (isLeader && u.id !== me.id) {
+          // lider: usuń lub pokaż stan zaproszenia
+          if (sentByMe.includes(u.id)) {
+            const wait = document.createElement("button");
+            wait.textContent = "Oczekiwanie";
+            wait.disabled = true;
+            const cancel = document.createElement("button");
+            cancel.textContent = "Anuluj";
+            cancel.onclick = async () => {
+              const r = grs.find(r => r.from_id === me.id && r.to_id === u.id);
+              await deleteGroupRequest(r.id);
+              searchGroup(inputElement);
+            };
+            row.append(wait, cancel);
+          } else {
+            const btnRemove = document.createElement("button");
+            btnRemove.textContent = "–";
+            btnRemove.onclick = async () => {
+              await editUser({ id: u.id, friend_id: u.id });
+              searchGroup(inputElement);
+            };
+            row.append(btnRemove);
+          }
+        } else {
+          // zwykły członek: potwierdzenie
+          row.append(document.createTextNode("✓"));
+        }
+      }
+      else {
+        // nikt jeszcze w grupie ani nie wysłał
+        if (isLeader) {
+          if (sentByMe.includes(u.id)) {
+            // oczekiwanie + anuluj
+            const wait = document.createElement("button");
+            wait.textContent = "Oczekiwanie";
+            wait.disabled = true;
+            const cancel = document.createElement("button");
+            cancel.textContent = "Anuluj";
+            cancel.onclick = async () => {
+              const r = grs.find(r => r.from_id === me.id && r.to_id === u.id);
+              await deleteGroupRequest(r.id);
+              searchGroup(inputElement);
+            };
+            row.append(wait, cancel);
+          } else {
+            // wyślij zaproszenie
+            const btnAdd = document.createElement("button");
+            btnAdd.textContent = "+";
+            btnAdd.onclick = async () => {
+              await addGroupRequest({ from_id: me.id, to_id: u.id });
+              searchGroup(inputElement);
+            };
+            row.append(btnAdd);
+          }
+        } else {
+          // ktoś wysłał do mnie?
+          if (sentToMe.includes(u.id)) {
+            const btnJoin = document.createElement("button");
+            btnJoin.textContent = "Dołącz";
+            btnJoin.onclick = async () => {
+              const r = grs.find(r => r.from_id === u.id && r.to_id === me.id);
+              await deleteGroupRequest(r.id);
+              await editUser({ id: me.id, friend_id: u.id });
+              searchGroup(inputElement);
+            };
+            const btnReject = document.createElement("button");
+            btnReject.textContent = "Odrzuć";
+            btnReject.onclick = async () => {
+              const r = grs.find(r => r.from_id === u.id && r.to_id === me.id);
+              await deleteGroupRequest(r.id);
+              searchGroup(inputElement);
+            };
+            row.append(btnJoin, btnReject);
+          } else {
+            // bez uprawnień
+            row.append(document.createTextNode("—"));
+          }
+        }
+      }
+  
+      out.append(row);
+    }
+  }
+  
+  window.searchGroup = searchGroup;
 
-window.searchGroup = searchGroup;
-
+  let emptyInput = document.createElement("input");
+  emptyInput.value = "";
+  
+  searchGroup(emptyInput);
 
 function refreshSelect() {
   console.log(
