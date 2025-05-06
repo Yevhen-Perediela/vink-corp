@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 from .ai.apiconnect import ask_gpt
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 import os
+import openai
 from todo.models import UserForProject
 
 def edytor(request):
@@ -16,24 +19,22 @@ def edytor(request):
     cur_user = UserForProject.objects.get(user_id=request.user.id)
     return render(request, 'edytor/edytor.html', {'user': request.user, 'ava': cur_user.avatar})
 
+@csrf_exempt
 @api_view(['POST'])
 def chat_view(request):
-    prompt = request.data.get("prompt", "")
-    code = request.data.get("code", "")
-
-    if not prompt:
-        return Response({"error": "No prompt provided"}, status=400)
-
-    full_prompt = f"User message: {prompt}\n\nCurrent file content:\n{code}"
-
     try:
+        prompt = request.data.get("prompt", "")
+        code = request.data.get("code", "")
+
+        if not prompt:
+            return Response({"error": "No prompt provided"}, status=400)
+
+        full_prompt = f"User message: {prompt}\n\nCurrent file content:\n{code}"
+
         response = ask_gpt(full_prompt)
         return Response({"response": response})
     except Exception as e:
-        # return Response({"error": str(e)}, status=500)
-        return JsonResponse({"error": str(e)}, status=500)
-
-
+        return Response({"error": str(e)}, status=500)
 
 @csrf_exempt
 def get_ascii_file(request):
