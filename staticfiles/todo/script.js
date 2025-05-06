@@ -1062,7 +1062,9 @@ async function searchGroup(inputElement) {
               });
               // 4) Refresh the list
               searchGroup(inputElement);
+              changeCompletedTasksPercents(`todo${projectName}Task`);
               showMindMap();
+              refreshSelect();
               showTasks();
               drawCalendar(currentDate);
             };
