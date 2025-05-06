@@ -66,6 +66,7 @@ h1 {
 }
 
 #small-menu-top {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: center;
