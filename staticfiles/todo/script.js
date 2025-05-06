@@ -1062,6 +1062,9 @@ async function searchGroup(inputElement) {
               });
               // 4) Refresh the list
               searchGroup(inputElement);
+              showMindMap();
+              showTasks();
+              drawCalendar(currentDate);
             };
           
             const btnReject = document.createElement("button");
