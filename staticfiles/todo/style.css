@@ -1342,6 +1342,7 @@ h1 {
 }
 
 .material-symbols-outlined {
+  cursor: pointer;
   color: white;
   font-size: 40px !important;
   margin: 10px;
